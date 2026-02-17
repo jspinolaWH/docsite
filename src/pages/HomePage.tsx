@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useDocs } from '../hooks/useDocs';
+import { useTheme } from '../hooks/useTheme';
 import { CATEGORIES } from '../types';
 
 export function HomePage() {
   const { grouped } = useDocs();
+  const { theme } = useTheme();
 
   return (
     <div className="home-page">
@@ -15,13 +17,16 @@ export function HomePage() {
       <div className="category-cards">
         {Object.entries(CATEGORIES).map(([catId, config]) => {
           const catDocs = grouped[catId] || [];
+          const categoryColor =
+            theme === 'dark' ? config.darkColor : config.color;
+
           return (
             <div
               key={catId}
               className="category-card"
-              style={{ borderTopColor: config.color }}
+              style={{ borderTopColor: categoryColor }}
             >
-              <h2 style={{ color: config.color }}>{config.label}</h2>
+              <h2 style={{ color: categoryColor }}>{config.label}</h2>
               <p className="category-count">{catDocs.length} documents</p>
               <ul>
                 {catDocs.map((doc) => (

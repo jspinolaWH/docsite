@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useDocs } from '../hooks/useDocs';
+import { useTheme } from '../hooks/useTheme';
 import { CATEGORIES } from '../types';
 
 export function Sidebar() {
   const { grouped } = useDocs();
+  const { theme } = useTheme();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
   const toggle = (cat: string) =>
@@ -42,17 +44,19 @@ export function Sidebar() {
         {Object.entries(CATEGORIES).map(([catId, config]) => {
           const docs = grouped[catId] || [];
           const isCollapsed = collapsed[catId] ?? false;
+          const categoryColor =
+            theme === 'dark' ? config.darkColor : config.color;
 
           return (
             <div key={catId} className="sidebar-category">
               <button
                 className="sidebar-category-header"
                 onClick={() => toggle(catId)}
-                style={{ borderLeftColor: config.color }}
+                style={{ borderLeftColor: categoryColor }}
               >
                 <span
                   className="sidebar-category-label"
-                  style={{ color: config.color }}
+                  style={{ color: categoryColor }}
                 >
                   {config.label}
                 </span>

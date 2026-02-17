@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { SearchBar } from './SearchBar';
+import { ThemeToggle } from './ThemeToggle';
 import { Link } from 'react-router-dom';
 
 export function Layout() {
@@ -24,6 +25,7 @@ export function Layout() {
             WasteHero 2.0 Docs
           </Link>
         </div>
+        <ThemeToggle />
         <SearchBar />
       </header>
 
