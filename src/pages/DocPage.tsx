@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useDocs } from '../hooks/useDocs';
 import { BreadCrumb } from '../components/BreadCrumb';
 import { DocMeta } from '../components/DocMeta';
@@ -11,6 +12,11 @@ export function DocPage() {
   const { getBySlug } = useDocs();
 
   const doc = slug ? getBySlug(slug) : undefined;
+
+  // Scroll to top when document changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
 
   if (!doc) {
     return (
