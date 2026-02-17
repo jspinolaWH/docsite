@@ -25,8 +25,10 @@ export function Layout() {
             WasteHero 2.0 Docs
           </Link>
         </div>
-        <ThemeToggle />
-        <SearchBar />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <ThemeToggle />
+          <SearchBar />
+        </div>
       </header>
 
       <div className="main-container">
