@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import GithubSlugger from 'github-slugger';
 
 interface TocItem {
   id: string;
@@ -9,14 +10,12 @@ interface TocItem {
 export function TableOfContents({ content }: { content: string }) {
   const headings = useMemo(() => {
     const items: TocItem[] = [];
+    const slugger = new GithubSlugger();
     const regex = /^(#{2,4})\s+(.+)$/gm;
     let match;
     while ((match = regex.exec(content)) !== null) {
       const text = match[2].replace(/[*`]/g, '').trim();
-      const id = text
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-');
+      const id = slugger.slug(text);
       items.push({ id, text, level: match[1].length });
     }
     return items;
