@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { DocsContext } from './hooks/useDocs';
 import { useDocsProvider } from './hooks/useDocs';
 import { Layout } from './components/Layout';
@@ -11,7 +11,7 @@ export default function App() {
 
   return (
     <DocsContext.Provider value={docsCtx}>
-      <HashRouter>
+      <BrowserRouter basename="/docsite">
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
@@ -19,7 +19,7 @@ export default function App() {
             <Route path="/search" element={<SearchResultsPage />} />
           </Route>
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </DocsContext.Provider>
   );
 }
