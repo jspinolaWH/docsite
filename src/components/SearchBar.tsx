@@ -5,7 +5,7 @@ import { useDocs } from '../hooks/useDocs';
 export function SearchBar() {
   const { searchQuery, setSearchQuery } = useDocs();
   const navigate = useNavigate();
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
