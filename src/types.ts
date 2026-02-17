@@ -22,16 +22,6 @@ export interface CategoryConfig {
 }
 
 export const CATEGORIES: Record<string, CategoryConfig> = {
-  'gap-analysis': {
-    id: 'gap-analysis',
-    label: 'Gap Analysis',
-    color: '#dc2626',
-    bgColor: '#fef2f2',
-    borderColor: '#fecaca',
-    darkColor: '#fca5a5',
-    darkBgColor: '#450a0a',
-    darkBorderColor: '#7f1d1d',
-  },
   concepts: {
     id: 'concepts',
     label: 'Concepts & Reference',
@@ -41,16 +31,6 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     darkColor: '#c4b5fd',
     darkBgColor: '#3b0764',
     darkBorderColor: '#6b21a8',
-  },
-  'user-guides': {
-    id: 'user-guides',
-    label: 'User Guides',
-    color: '#2563eb',
-    bgColor: '#eff6ff',
-    borderColor: '#bfdbfe',
-    darkColor: '#93c5fd',
-    darkBgColor: '#1e3a8a',
-    darkBorderColor: '#1e40af',
   },
   'sprint-planning': {
     id: 'sprint-planning',
