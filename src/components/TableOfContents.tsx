@@ -11,7 +11,8 @@ export function TableOfContents({ content }: { content: string }) {
   const headings = useMemo(() => {
     const items: TocItem[] = [];
     const slugger = new GithubSlugger();
-    const regex = /^(#{2,4})\s+(.+)$/gm;
+    // Only match H2 (##) headings for cleaner TOC
+    const regex = /^(#{2})\s+(.+)$/gm;
     let match;
     while ((match = regex.exec(content)) !== null) {
       const text = match[2].replace(/[*`]/g, '').trim();
