@@ -42,6 +42,8 @@ function parseFrontmatter(raw: string): {
       if (val === '' || val === undefined) {
         currentKey = key;
         inArray = true;
+      } else if (val === '[]') {
+        meta[key] = [];
       } else {
         meta[key] = val.replace(/^"|"$/g, '');
       }
