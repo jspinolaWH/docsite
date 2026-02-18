@@ -41,6 +41,10 @@ export function Sidebar() {
           </svg>
         </a>
 
+        <NavLink to="/diagrams" className="sidebar-home">
+          Diagrams
+        </NavLink>
+
         {Object.entries(CATEGORIES).map(([catId, config]) => {
           const docs = grouped[catId] || [];
           const isCollapsed = collapsed[catId] ?? false;

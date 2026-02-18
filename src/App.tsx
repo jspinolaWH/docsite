@@ -6,6 +6,7 @@ import { Layout } from './components/Layout';
 import { HomePage } from './pages/HomePage';
 import { DocPage } from './pages/DocPage';
 import { SearchResultsPage } from './pages/SearchResultsPage';
+import { DiagramsPage } from './pages/DiagramsPage';
 
 export default function App() {
   const docsCtx = useDocsProvider();
@@ -20,6 +21,7 @@ export default function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/doc/:slug" element={<DocPage />} />
               <Route path="/search" element={<SearchResultsPage />} />
+              <Route path="/diagrams" element={<DiagramsPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
