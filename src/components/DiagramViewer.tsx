@@ -13,13 +13,6 @@ export function DiagramViewer({ src, title }: DiagramViewerProps) {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    const delta = e.deltaY * -0.001;
-    const newScale = Math.min(Math.max(0.5, scale + delta), 5);
-    setScale(newScale);
-  };
-
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
@@ -56,6 +49,22 @@ export function DiagramViewer({ src, title }: DiagramViewerProps) {
     return () => window.removeEventListener('mouseup', handleGlobalMouseUp);
   }, []);
 
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const delta = e.deltaY * -0.001;
+      setScale((prevScale) => Math.min(Math.max(0.5, prevScale + delta), 5));
+    };
+
+    // Add event listener with passive: false to allow preventDefault
+    element.addEventListener('wheel', handleWheel, { passive: false });
+    return () => element.removeEventListener('wheel', handleWheel);
+  }, []);
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -76,7 +85,6 @@ export function DiagramViewer({ src, title }: DiagramViewerProps) {
       <div
         ref={containerRef}
         style={styles.viewer}
-        onWheel={handleWheel}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
