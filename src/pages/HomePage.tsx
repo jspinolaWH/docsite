@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useDocs } from '../hooks/useDocs';
 import { useTheme } from '../hooks/useTheme';
-import { CATEGORIES } from '../types';
+import { CATEGORIES, DIAGRAM_LINKS } from '../types';
 
 export function HomePage() {
   const { grouped } = useDocs();
@@ -16,10 +16,32 @@ export function HomePage() {
 
       <div className="category-cards">
         {Object.entries(CATEGORIES).map(([catId, config]) => {
-          const catDocs = grouped[catId] || [];
           const categoryColor =
             theme === 'dark' ? config.darkColor : config.color;
 
+          // Special handling for diagrams category
+          if (catId === 'diagrams') {
+            return (
+              <div
+                key={catId}
+                className="category-card"
+                style={{ borderTopColor: categoryColor }}
+              >
+                <h2 style={{ color: categoryColor }}>{config.label}</h2>
+                <p className="category-count">{DIAGRAM_LINKS.length} diagram types</p>
+                <ul>
+                  {DIAGRAM_LINKS.map((link) => (
+                    <li key={link.slug}>
+                      <Link to={`/diagrams/${link.slug}`}>{link.title}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          }
+
+          // Regular docs categories
+          const catDocs = grouped[catId] || [];
           return (
             <div
               key={catId}
