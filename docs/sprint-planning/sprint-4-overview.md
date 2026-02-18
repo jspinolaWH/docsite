@@ -1,17 +1,17 @@
 ---
-slug: sprint-1-overview
-title: Sprint 1 Overview
+slug: sprint-4-overview
+title: Sprint 4 Overview
 category: sprint-planning
-subcategory: sprint-1
+subcategory: sprint-4
 order: 1
 description: Not decided yet
 related: []
 tags:
-  - sprint-1
+  - sprint-4
   - planning
 ---
 
-# Sprint 1 Overview
+# Sprint 4 Overview
 
 ## Sprint Goals
 
