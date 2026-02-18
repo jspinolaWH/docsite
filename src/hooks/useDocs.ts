@@ -13,6 +13,7 @@ import { loadDocs } from '../utils/loadDocs';
 interface DocsContextValue {
   docs: DocEntry[];
   grouped: Record<string, DocEntry[]>;
+  groupedBySubcategory: Record<string, Record<string, DocEntry[]>>;
   getBySlug: (slug: string) => DocEntry | undefined;
   search: (query: string) => DocEntry[];
   searchQuery: string;
@@ -34,6 +35,29 @@ export function useDocsProvider() {
     for (const doc of docs) {
       if (!groups[doc.category]) groups[doc.category] = [];
       groups[doc.category].push(doc);
+    }
+    return groups;
+  }, [docs]);
+
+  const groupedBySubcategory = useMemo(() => {
+    const groups: Record<string, Record<string, DocEntry[]>> = {};
+    for (const catId of Object.keys(CATEGORIES)) {
+      groups[catId] = {};
+    }
+    for (const doc of docs) {
+      if (!groups[doc.category]) groups[doc.category] = {};
+      if (doc.subcategory) {
+        if (!groups[doc.category][doc.subcategory]) {
+          groups[doc.category][doc.subcategory] = [];
+        }
+        groups[doc.category][doc.subcategory].push(doc);
+      } else {
+        // Docs without subcategory go in a special "__root__" group
+        if (!groups[doc.category]['__root__']) {
+          groups[doc.category]['__root__'] = [];
+        }
+        groups[doc.category]['__root__'].push(doc);
+      }
     }
     return groups;
   }, [docs]);
@@ -75,7 +99,7 @@ export function useDocsProvider() {
     [docs, fuse]
   );
 
-  return { docs, grouped, getBySlug, search, searchQuery, setSearchQuery };
+  return { docs, grouped, groupedBySubcategory, getBySlug, search, searchQuery, setSearchQuery };
 }
 
 export function useDocs() {

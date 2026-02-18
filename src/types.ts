@@ -2,6 +2,7 @@ export interface DocEntry {
   slug: string;
   title: string;
   category: string;
+  subcategory?: string; // Optional subcategory for nested organization
   order: number;
   description: string;
   related: string[];
@@ -64,3 +65,13 @@ export const DIAGRAM_LINKS: DiagramLink[] = [
   { slug: 'entity-diagrams', title: 'Entity Diagrams' },
   { slug: 'flow-diagrams', title: 'Flow Diagrams' },
 ];
+
+// Subcategories for sprint-planning
+export const SPRINT_SUBCATEGORIES: Record<string, string> = {
+  'sprint-1': 'Sprint 1',
+  'sprint-2': 'Sprint 2',
+  'sprint-3': 'Sprint 3',
+  'sprint-4': 'Sprint 4',
+  'sprint-5': 'Sprint 5',
+  'sprint-6': 'Sprint 6',
+};

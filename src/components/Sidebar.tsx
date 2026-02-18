@@ -2,15 +2,15 @@ import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useDocs } from '../hooks/useDocs';
 import { useTheme } from '../hooks/useTheme';
-import { CATEGORIES, DIAGRAM_LINKS } from '../types';
+import { CATEGORIES, DIAGRAM_LINKS, SPRINT_SUBCATEGORIES } from '../types';
 
 export function Sidebar() {
-  const { grouped } = useDocs();
+  const { grouped, groupedBySubcategory } = useDocs();
   const { theme } = useTheme();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
-  const toggle = (cat: string) =>
-    setCollapsed((prev) => ({ ...prev, [cat]: !prev[cat] }));
+  const toggle = (key: string) =>
+    setCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
 
   return (
     <aside className="sidebar">
@@ -90,6 +90,114 @@ export function Sidebar() {
                       </li>
                     ))}
                   </ul>
+                )}
+              </div>
+            );
+          }
+
+          // Special handling for sprint-planning with subcategories
+          if (catId === 'sprint-planning') {
+            const subcategoryGroups = groupedBySubcategory[catId] || {};
+            const rootDocs = subcategoryGroups['__root__'] || [];
+
+            return (
+              <div key={catId} className="sidebar-category">
+                <button
+                  className="sidebar-category-header"
+                  onClick={() => toggle(catId)}
+                  style={{ borderLeftColor: categoryColor }}
+                >
+                  <span
+                    className="sidebar-category-label"
+                    style={{ color: categoryColor }}
+                  >
+                    {config.label}
+                  </span>
+                  <span
+                    className={`sidebar-chevron ${isCollapsed ? '' : 'open'}`}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 12 12">
+                      <path
+                        d="M4 2l4 4-4 4"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      />
+                    </svg>
+                  </span>
+                </button>
+
+                {!isCollapsed && (
+                  <div>
+                    {/* Root level docs (no subcategory) */}
+                    {rootDocs.length > 0 && (
+                      <ul className="sidebar-docs">
+                        {rootDocs.map((doc) => (
+                          <li key={doc.slug}>
+                            <NavLink
+                              to={`/doc/${doc.slug}`}
+                              className={({ isActive }) =>
+                                `sidebar-link${isActive ? ' active' : ''}`
+                              }
+                            >
+                              {doc.title}
+                            </NavLink>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {/* Subcategories (Sprint 1-6) */}
+                    {Object.entries(SPRINT_SUBCATEGORIES).map(([subId, subLabel]) => {
+                      const subDocs = subcategoryGroups[subId] || [];
+                      if (subDocs.length === 0) return null;
+
+                      const subKey = `${catId}-${subId}`;
+                      const isSubCollapsed = collapsed[subKey] ?? false;
+
+                      return (
+                        <div key={subId} className="sidebar-subcategory">
+                          <button
+                            className="sidebar-subcategory-header"
+                            onClick={() => toggle(subKey)}
+                          >
+                            <span className="sidebar-subcategory-label">
+                              {subLabel}
+                            </span>
+                            <span
+                              className={`sidebar-chevron ${isSubCollapsed ? '' : 'open'}`}
+                            >
+                              <svg width="10" height="10" viewBox="0 0 12 12">
+                                <path
+                                  d="M4 2l4 4-4 4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+
+                          {!isSubCollapsed && (
+                            <ul className="sidebar-docs sidebar-subdocs">
+                              {subDocs.map((doc) => (
+                                <li key={doc.slug}>
+                                  <NavLink
+                                    to={`/doc/${doc.slug}`}
+                                    className={({ isActive }) =>
+                                      `sidebar-link${isActive ? ' active' : ''}`
+                                    }
+                                  >
+                                    {doc.title}
+                                  </NavLink>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 )}
               </div>
             );
