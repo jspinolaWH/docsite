@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Automatic Additional Service</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9fafb;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+            color: #111827;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .mermaid {
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scenario 3: Automatic Additional Service</h1>
+        <p class="subtitle">Driver marks access denied, system AUTOMATICALLY applies fee - no manual request (PD-38)</p>
+
+        <div class="mermaid">
+graph LR
+    START3([Driver Arrives<br/>at Property]) --> CHECK3{Can Access<br/>Gate/Property?}
+
+    CHECK3 -->|Gate Locked| MARK3[Driver Marks Ticket:<br/>Status = Access Denied<br/>────────<br/>No manual request needed]
+    CHECK3 -->|Yes| OK3[Complete Service<br/>Status = Completed]
+
+    MARK3 --> RULE3[PD-38: Automatic Rule Triggers<br/>────────<br/>IF status = access_denied<br/>THEN add_cancellation_fee<br/>────────<br/>System checks predefined rules]
+
+    RULE3 --> AUTO3[System AUTOMATICALLY<br/>Adds Service:<br/>────────<br/>Cancellation Fee €25<br/>No driver/office action needed]
+
+    AUTO3 --> INV3[Invoice Generated:<br/>────────<br/>Collection: €0 not completed<br/>Cancellation Fee: €25 automatic<br/>────────<br/>TOTAL: €25]
+
+    OK3 --> NORM3[Invoice:<br/>Collection: €50<br/>TOTAL: €50]
+
+    style MARK3 fill:#dbeafe
+    style RULE3 fill:#fef3c7
+    style AUTO3 fill:#fee2e2
+    style INV3 fill:#dcfce7,stroke:#059669,stroke-width:3px
+    style NORM3 fill:#d1fae5
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Pricing Calculation Flow</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9fafb;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+            color: #111827;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .mermaid {
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scenario 1: Complete Pricing Calculation Flow</h1>
+        <p class="subtitle">How the system calculates the final price for a service order with all steps</p>
+
+        <div class="mermaid">
+graph TD
+    START([Customer Orders<br/>Mixed Waste Collection]) --> GET[Get Customer Attributes]
+
+    GET --> A1[Customer Type:<br/>Business]
+    GET --> A2[Property Location:<br/>55.67, 12.54]
+    GET --> A3[Service Responsibility:<br/>Municipal]
+    GET --> A4[Product R/D Code:<br/>R1]
+
+    A2 --> ZONE[PD-325: Zone Lookup<br/>Check coordinates]
+    ZONE --> ZRESULT[Zone Determined:<br/>Urban Zone]
+
+    A1 & ZRESULT & A3 & A4 --> FIND[Find Price in Price List]
+
+    FIND --> PL[Price List:<br/>Municipal 2026]
+    PL --> SEARCH[Search Product:<br/>Mixed Waste Collection]
+
+    SEARCH --> ROWS[4 Price Rows Found]
+
+    ROWS --> R1[Row 1<br/>Private+Urban+Municipal+R1<br/>€50/ton]
+    ROWS --> R2[Row 2<br/>Business+Urban+Municipal+R1<br/>€70/ton<br/>✓ MATCHES ALL 4]
+    ROWS --> R3[Row 3<br/>Any+Rural+Any+R1<br/>€85/ton]
+    ROWS --> R4[Row 4<br/>Any+Any+Any+Any<br/>€60/ton fallback]
+
+    R2 --> MATCH[PD-330 Matching:<br/>Row 2 = Perfect Match<br/>All 4 conditions match]
+
+    MATCH --> BASE[BASE PRICE<br/>€70/ton]
+
+    BASE --> Q1{Service Level<br/>Selected?}
+    Q1 -->|Express 1 day| S1[PD-37, PD-324<br/>Service Speed<br/>+€40]
+    Q1 -->|Scheduled| S0[+€0]
+
+    S1 --> Q2{Service Date<br/>Weekend/Holiday?}
+    S0 --> Q2
+
+    Q2 -->|Saturday| T1[PD-323<br/>Weekend Surcharge<br/>+€10]
+    Q2 -->|Weekday| T0[+€0]
+
+    T1 --> Q3{Additional<br/>Services?}
+    T0 --> Q3
+
+    Q3 -->|Driver requests| AS1[PD-38<br/>Difficult Access<br/>Reverse up driveway<br/>+€10]
+    Q3 -->|None| AS0[+€0]
+
+    AS1 --> CALC[Calculate Total]
+    AS0 --> CALC
+
+    CALC --> SUM[€70 base<br/>+ €40 express<br/>+ €10 weekend<br/>+ €10 difficult access]
+
+    SUM --> FINAL[FINAL PRICE<br/>€130/ton]
+
+    FINAL --> LOCK[Price Locked<br/>on Ticket Creation]
+
+    style BASE fill:#dbeafe
+    style FINAL fill:#dcfce7,stroke:#059669,stroke-width:3px
+    style MATCH fill:#fef3c7
+    style ZRESULT fill:#e0e7ff
+    style R2 fill:#d1fae5
+    style LOCK fill:#d1fae5
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>

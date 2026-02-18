@@ -2,9 +2,44 @@ import { HTMLDiagramViewer } from '../components/HTMLDiagramViewer';
 
 const diagrams = [
   {
-    id: 'pricing-flow',
-    title: 'WasteHero 2.0 - Pricing Calculation Flow',
-    src: '/docsite/diagrams/html/wh2_pricing_flow_6.html',
+    id: '01-pricing-calculation',
+    title: 'Scenario 1: Complete Pricing Calculation Flow',
+    src: '/docsite/diagrams/html/01-pricing-calculation-flow.html',
+  },
+  {
+    id: '02-fallback-pricing',
+    title: 'Scenario 2: Fallback Pricing (No Perfect Match)',
+    src: '/docsite/diagrams/html/02-fallback-pricing.html',
+  },
+  {
+    id: '03-automatic-service',
+    title: 'Scenario 3: Automatic Additional Service',
+    src: '/docsite/diagrams/html/03-automatic-additional-service.html',
+  },
+  {
+    id: '04-driver-initiated',
+    title: 'Scenario 4: Driver-Initiated Additional Service',
+    src: '/docsite/diagrams/html/04-driver-initiated-service.html',
+  },
+  {
+    id: '05-bulk-update',
+    title: 'Scenario 5: Bulk Price Update',
+    src: '/docsite/diagrams/html/05-bulk-price-update.html',
+  },
+  {
+    id: '06-scheduled-increase',
+    title: 'Scenario 6: Scheduled Price Increase',
+    src: '/docsite/diagrams/html/06-scheduled-price-increase.html',
+  },
+  {
+    id: '07-multiple-surcharges',
+    title: 'Scenario 7: Multiple Surcharges Stack',
+    src: '/docsite/diagrams/html/07-multiple-surcharges.html',
+  },
+  {
+    id: '08-time-based',
+    title: 'Scenario 8: Time-Based Pricing (Per Hour)',
+    src: '/docsite/diagrams/html/08-time-based-pricing.html',
   },
 ];
 

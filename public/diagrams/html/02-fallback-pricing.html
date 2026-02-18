@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Fallback Pricing</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9fafb;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+            color: #111827;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .mermaid {
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scenario 2: Fallback Pricing (No Perfect Match)</h1>
+        <p class="subtitle">When no exact match found, system uses row with MOST matching conditions (PD-330)</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 400px; gap: 30px; align-items: start;">
+            <div class="mermaid">
+graph TD
+    START2([Customer Orders<br/>Mixed Waste]) --> GET2[Customer: Industrial<br/>Location: Suburbs Zone<br/>Responsibility: Custom<br/>R/D: R3]
+
+    GET2 --> SEARCH2[Search Price List]
+
+    SEARCH2 --> ROWS2[Available Price Rows:]
+
+    ROWS2 --> R2A[Row 1: Business+Urban+Municipal+R1<br/>Matches: 0 ❌]
+    ROWS2 --> R2B[Row 2: Any+Suburbs+Any+R1<br/>Matches: 1 Zone ⚠️<br/>Price: €75]
+    ROWS2 --> R2C[Row 3: Any+Any+Any+R3<br/>Matches: 1 R/D ⚠️<br/>Price: €78]
+    ROWS2 --> R2D[Row 4: Any+Any+Any+Any<br/>Fallback ✓]
+
+    R2B --> BEST[PD-330: Tied at 1 match<br/>Pick lowest price = Row 2]
+    R2C -.Not selected<br/>Higher price.-> BEST
+
+    BEST --> BASE2[Base: €75/ton]
+    BASE2 --> FINAL2[TOTAL: €75/ton]
+
+    style BEST fill:#fef3c7
+    style FINAL2 fill:#dcfce7,stroke:#059669,stroke-width:3px
+            </div>
+
+            <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; height: fit-content; position: sticky; top: 20px;">
+                <h3 style="margin-top: 0; color: #1e40af; font-size: 16px;">📘 PD-330: Matching Logic</h3>
+
+                <div style="font-size: 13px; color: #1e40af; line-height: 1.7;">
+                    <strong>When retrieving a price:</strong><br><br>
+
+                    <strong>1.</strong> The system checks if there is a row where <strong>ALL the requested attributes match</strong><br><br>
+
+                    <strong>2.</strong> If an exact match is found, that row is selected<br><br>
+
+                    <strong>3.</strong> If NO exact match is found, the row with the <strong>HIGHEST NUMBER of matching attributes</strong> is selected
+                </div>
+
+                <div style="background: #fef3c7; border: 1px solid #fcd34d; padding: 12px; border-radius: 8px; margin-top: 16px;">
+                    <div style="font-weight: 600; color: #92400e; font-size: 13px; margin-bottom: 8px;">⚠️ Tie-Breaking: Lowest Price Wins</div>
+                    <div style="font-size: 12px; color: #92400e; line-height: 1.6;">
+                        <strong>PD-330:</strong> "In case of a tie, additional logic may apply, such as 'select first' or <strong>'select lowest price'</strong>"<br><br>
+
+                        When multiple rows have the same number of matches, the system picks the one with the <strong>LOWEST PRICE</strong>.<br><br>
+
+                        This benefits customers - if multiple equally-good matches exist, they get the best deal!
+                    </div>
+                </div>
+
+                <div style="background: #dcfce7; border: 1px solid #86efac; padding: 12px; border-radius: 8px; margin-top: 16px;">
+                    <div style="font-weight: 600; color: #065f46; font-size: 13px; margin-bottom: 8px;">✓ This Scenario:</div>
+                    <div style="font-size: 12px; color: #065f46; line-height: 1.6;">
+                        Row 2 (€75) and Row 3 (€78) tied at 1 match → Select lowest price → Row 2 (€75/ton)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Scheduled Price Increase</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9fafb;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+            color: #111827;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .mermaid {
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scenario 6: Scheduled Price Increase</h1>
+        <p class="subtitle">Municipality mandates 5% increase starting January 1st (PD-328)</p>
+
+        <div class="mermaid">
+graph TD
+    START5([Dec 15: Plan Update]) --> SCHED5[PD-328: Schedule<br/>────────<br/>Products: All municipal<br/>Increase: 5%<br/>Effective: Jan 1, 2026]
+
+    SCHED5 --> PEND5[Status: Pending<br/>Current: €50<br/>Future: €52.50]
+
+    PEND5 --> DEC5{Order Date?}
+
+    DEC5 -->|Dec 28, 2025| OLD5[Before Jan 1<br/>Use: €50]
+    DEC5 -->|Jan 5, 2026| NEW5[After Jan 1<br/>Use: €52.50]
+
+    OLD5 --> INV5A[Invoice: €50]
+    NEW5 --> INV5B[Invoice: €52.50]
+
+    style SCHED5 fill:#fef3c7
+    style PEND5 fill:#dbeafe
+    style OLD5 fill:#fee2e2
+    style NEW5 fill:#dcfce7,stroke:#059669,stroke-width:3px
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>

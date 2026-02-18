@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Driver-Initiated Additional Service</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9fafb;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+            color: #111827;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .mermaid {
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scenario 4: Driver-Initiated Additional Service</h1>
+        <p class="subtitle">Driver detects need, creates request, office approves - different from automatic (PD-38)</p>
+
+        <div class="mermaid">
+graph LR
+    START4([Driver at Property]) --> DETECT4[Driver Detects:<br/>Must reverse up<br/>long narrow driveway]
+
+    DETECT4 --> REQ4[PD-38: Driver Creates Request<br/>via Mobile App<br/>────────<br/>Service: Difficult Access<br/>Reason: Narrow driveway<br/>Photo attached<br/>────────<br/>NOT automatic!]
+
+    REQ4 --> OFFICE4[Request Sent to Office]
+
+    OFFICE4 --> REV4{Office Reviews<br/>Request}
+
+    REV4 -->|Approve| APP4[✓ Approved<br/>────────<br/>PD-38: Office approval required<br/>Difficult Access: €10]
+    REV4 -->|Reject| REJ4[✗ Rejected<br/>────────<br/>Reason: Standard access<br/>No charge]
+
+    APP4 --> ADD4[Added to Invoice:<br/>────────<br/>Collection: €50<br/>Difficult Access: €10<br/>────────<br/>TOTAL: €60]
+
+    REJ4 --> NORM4[Invoice:<br/>────────<br/>Collection: €50<br/>TOTAL: €50]
+
+    style DETECT4 fill:#dbeafe
+    style REQ4 fill:#fef3c7
+    style REV4 fill:#e0e7ff
+    style APP4 fill:#d1fae5
+    style REJ4 fill:#fee2e2
+    style ADD4 fill:#dcfce7,stroke:#059669,stroke-width:3px
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Time-Based Pricing</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9fafb;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+            color: #111827;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .mermaid {
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scenario 8: Time-Based Pricing (Per Hour) - Edge Case</h1>
+        <p class="subtitle">On-site inspection service charged per hour, runs overtime (PD-326)</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 380px; gap: 30px; align-items: start;">
+            <div class="mermaid">
+graph TD
+    START8([Customer Orders:<br/>On-site Waste Audit]) --> PROD8[Product:<br/>On-site Inspection Service]
+
+    PROD8 --> UNIT8[PD-326: Pricing Unit<br/>────────<br/>€85 per hour<br/>────────<br/>NOT per ton/collection<br/>Time-based pricing]
+
+    UNIT8 --> EST8[Estimated Time:<br/>2 hours]
+
+    EST8 --> QUOTE8[Initial Quote:<br/>€85 × 2h = €170]
+
+    QUOTE8 --> ACTUAL8{Actual Time<br/>Taken?}
+
+    ACTUAL8 -->|Completed in 1.5h| UNDER8[Under Estimate<br/>────────<br/>Actual: 1.5h × €85<br/>= €127.50]
+
+    ACTUAL8 -->|Took 3.5h| OVER8[Over Estimate<br/>────────<br/>Actual: 3.5h × €85<br/>= €297.50<br/>────────<br/>Edge case: Overtime!]
+
+    UNDER8 --> INV8A[Invoice: €127.50<br/>Customer charged less]
+
+    OVER8 --> WARN8[System Alert:<br/>Exceeded estimate by 75%<br/>Requires approval]
+
+    WARN8 --> APP8[Office Approves<br/>Overtime justified]
+
+    APP8 --> INV8B[Invoice: €297.50<br/>────────<br/>3.5 hours documented<br/>Reason: Complex site]
+
+    style UNIT8 fill:#fef3c7
+    style OVER8 fill:#fee2e2
+    style WARN8 fill:#fef3c7
+    style INV8B fill:#dcfce7,stroke:#059669,stroke-width:3px
+    style INV8A fill:#d1fae5
+            </div>
+
+            <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; height: fit-content; position: sticky; top: 20px;">
+                <h3 style="margin-top: 0; color: #1e40af; font-size: 16px;">📘 PD-326: Pricing Units</h3>
+
+                <div style="font-size: 13px; color: #1e40af; line-height: 1.7;">
+                    <strong>6 Supported Unit Types:</strong><br><br>
+
+                    • <strong>€/piece</strong> - per collection, per service<br>
+                    • <strong>€/kg or €/ton</strong> - weight-based<br>
+                    • <strong>€/m³</strong> - volume-based (cubic)<br>
+                    • <strong>€/liter</strong> - volume-based (liquid)<br>
+                    • <strong>€/meter</strong> - distance-based<br>
+                    • <strong>€/hour</strong> - time-based ⭐<br><br>
+
+                    <strong>PD-326:</strong> "Pricing units ensure price corresponds to the nature of the product"
+                </div>
+
+                <div style="background: #fef3c7; border: 1px solid #fcd34d; padding: 12px; border-radius: 8px; margin-top: 16px;">
+                    <div style="font-weight: 600; color: #92400e; font-size: 13px; margin-bottom: 8px;">⚠️ Edge Case: Overtime</div>
+                    <div style="font-size: 12px; color: #92400e; line-height: 1.6;">
+                        Time-based pricing can exceed estimates!<br><br>
+
+                        <strong>Best Practice:</strong><br>
+                        • Set approval threshold (e.g., >50% over estimate)<br>
+                        • Document actual time worked<br>
+                        • Provide justification for overtime
+                    </div>
+                </div>
+
+                <div style="background: #dcfce7; border: 1px solid #86efac; padding: 12px; border-radius: 8px; margin-top: 16px;">
+                    <div style="font-weight: 600; color: #065f46; font-size: 13px; margin-bottom: 8px;">✓ This Scenario:</div>
+                    <div style="font-size: 12px; color: #065f46; line-height: 1.6;">
+                        Estimated 2h (€170) → Actual 3.5h (€297.50) → 75% over → Requires approval → Justified by complex site → Invoiced
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>

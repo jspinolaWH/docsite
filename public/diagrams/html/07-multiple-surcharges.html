@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Multiple Surcharges Stack</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9fafb;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+            color: #111827;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .mermaid {
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scenario 7: Multiple Surcharges Stack</h1>
+        <p class="subtitle">Emergency service on Christmas Day (PD-324 + PD-323)</p>
+
+        <div class="mermaid">
+graph TD
+    START6([Emergency Request<br/>December 25]) --> BASE6[Base Price:<br/>€50/ton]
+
+    BASE6 --> SPEED6[PD-324: Service Level<br/>Emergency same-day<br/>+€70]
+
+    SPEED6 --> TIME6[PD-323: Holiday<br/>December 25 Christmas<br/>+€25]
+
+    TIME6 --> CALC6[Calculate Total]
+
+    CALC6 --> SUM6[€50 base<br/>+ €70 emergency<br/>+ €25 holiday<br/>────────<br/>€145/ton]
+
+    SUM6 --> JUSTIFY[Customer Accepts:<br/>Urgent need justifies<br/>premium pricing]
+
+    JUSTIFY --> FINAL6[INVOICE: €145/ton]
+
+    style SPEED6 fill:#fee2e2
+    style TIME6 fill:#fef3c7
+    style FINAL6 fill:#dcfce7,stroke:#059669,stroke-width:3px
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>

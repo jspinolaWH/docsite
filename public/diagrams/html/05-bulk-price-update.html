@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Bulk Price Update</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9fafb;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+            color: #111827;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .mermaid {
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Scenario 5: Bulk Price Update</h1>
+        <p class="subtitle">Admin increases all rural prices by 10% (PD-331)</p>
+
+        <div class="mermaid">
+graph LR
+    START4([Admin Opens<br/>Price List]) --> SELECT4[Select Rows:<br/>Zone = Rural<br/>────────<br/>15 rows selected]
+
+    SELECT4 --> BULK4[PD-331: Bulk Edit<br/>Increase by 10%]
+
+    BULK4 --> PREV4[Preview:<br/>€80 → €88<br/>€85 → €93.50]
+
+    PREV4 --> APPLY4[Apply Changes]
+
+    APPLY4 --> LOG4[PD-329: Log Entry<br/>Who: Admin<br/>What: +10%<br/>Why: Rural costs up]
+
+    LOG4 --> DONE4[✓ 15 Prices Updated]
+
+    style BULK4 fill:#fef3c7
+    style LOG4 fill:#e0e7ff
+    style DONE4 fill:#dcfce7,stroke:#059669,stroke-width:3px
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>
