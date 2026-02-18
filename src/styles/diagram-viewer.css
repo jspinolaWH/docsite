@@ -13,6 +13,11 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
+  padding: 0;
+}
+
+.diagram-button svg {
+  display: block;
 }
 
 .diagram-button:hover {

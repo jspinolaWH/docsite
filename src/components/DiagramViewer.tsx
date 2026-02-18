@@ -11,6 +11,7 @@ export function DiagramViewer({ src, title }: DiagramViewerProps) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -43,6 +44,22 @@ export function DiagramViewer({ src, title }: DiagramViewerProps) {
     setPosition({ x: 0, y: 0 });
   };
 
+  const toggleFullscreen = async () => {
+    if (!containerRef.current) return;
+
+    try {
+      if (!document.fullscreenElement) {
+        await containerRef.current.requestFullscreen();
+        setIsFullscreen(true);
+      } else {
+        await document.exitFullscreen();
+        setIsFullscreen(false);
+      }
+    } catch (error) {
+      console.error('Error toggling fullscreen:', error);
+    }
+  };
+
   useEffect(() => {
     const handleGlobalMouseUp = () => setIsDragging(false);
     window.addEventListener('mouseup', handleGlobalMouseUp);
@@ -65,8 +82,17 @@ export function DiagramViewer({ src, title }: DiagramViewerProps) {
     return () => element.removeEventListener('wheel', handleWheel);
   }, []);
 
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
   return (
-    <div style={styles.container}>
+    <div ref={containerRef} style={{ ...styles.container, ...(isFullscreen ? styles.fullscreenContainer : {}) }}>
       <div style={styles.header}>
         <h3 style={styles.title}>{title}</h3>
         <div style={styles.controls}>
@@ -80,11 +106,21 @@ export function DiagramViewer({ src, title }: DiagramViewerProps) {
           <button onClick={resetZoom} className="diagram-reset-button" title="Reset View">
             Reset
           </button>
+          <button onClick={toggleFullscreen} className="diagram-button" title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}>
+            {isFullscreen ? (
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M1 6h4V2M15 10h-4v4M11 2v4h4M5 14v-4H1" />
+              </svg>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M2 2v4m0-4h4m-4 0l4 4M14 14v-4m0 4h-4m4 0l-4-4M14 2v4m0-4h-4m4 0l-4 4M2 14v-4m0 4h4m-4 0l4-4" />
+              </svg>
+            )}
+          </button>
         </div>
       </div>
       <div
-        ref={containerRef}
-        style={styles.viewer}
+        style={{ ...styles.viewer, ...(isFullscreen ? styles.fullscreenViewer : {}) }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -101,7 +137,7 @@ export function DiagramViewer({ src, title }: DiagramViewerProps) {
         </div>
       </div>
       <div style={styles.hint}>
-        💡 Scroll to zoom, drag to pan, or use the controls above
+        💡 Scroll to zoom, drag to pan, or use the controls above{isFullscreen && ' • Press ESC to exit fullscreen'}
       </div>
     </div>
   );
@@ -195,5 +231,18 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'var(--color-bg-secondary)',
     borderTop: '1px solid var(--color-border)',
     textAlign: 'center',
+  },
+  fullscreenContainer: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    zIndex: 9999,
+    margin: 0,
+    borderRadius: 0,
+  },
+  fullscreenViewer: {
+    height: 'calc(100vh - 120px)',
   },
 };
