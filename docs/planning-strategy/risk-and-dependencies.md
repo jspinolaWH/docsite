@@ -1,8 +1,8 @@
 ---
 slug: risk-and-dependencies
 title: Risks, Dependencies & Open Questions
-category: concepts
-order: 5
+category: planning-strategy
+order: 2
 description: Risk register, critical external dependencies, and open decisions that need answers before each release
 related:
   - delivery-plan-overview

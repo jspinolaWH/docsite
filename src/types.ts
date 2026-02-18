@@ -48,6 +48,16 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     darkBgColor: '#3b0764',
     darkBorderColor: '#6b21a8',
   },
+  'planning-strategy': {
+    id: 'planning-strategy',
+    label: 'Planning & Strategy',
+    color: '#d97706',
+    bgColor: '#fffbeb',
+    borderColor: '#fde68a',
+    darkColor: '#fcd34d',
+    darkBgColor: '#3b1a00',
+    darkBorderColor: '#b45309',
+  },
   'sprint-planning': {
     id: 'sprint-planning',
     label: 'Sprint Planning',

@@ -1,8 +1,8 @@
 ---
 slug: delivery-plan-overview
 title: Delivery Plan Overview
-category: concepts
-order: 4
+category: planning-strategy
+order: 1
 description: Executive summary of the 6-sprint delivery plan — 3 releases from March to May 2026, team, timeline, business value, and risk profile
 related:
   - sprint-1-overview
