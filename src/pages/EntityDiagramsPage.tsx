@@ -1,4 +1,5 @@
 import { DiagramViewer } from '../components/DiagramViewer';
+import { DiagramTableOfContents } from '../components/DiagramTableOfContents';
 
 const diagrams = [
   {
@@ -15,34 +16,38 @@ const diagrams = [
 
 export function EntityDiagramsPage() {
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h1 style={styles.title}>Entity Relationship Diagrams</h1>
-        <p style={styles.description}>
-          Database schema and entity relationships for the product pricing system.
-          These diagrams show how different entities (Price Lists, Products, Zones, etc.) relate to each other.
-        </p>
-      </div>
+    <div className="doc-page">
+      <div className="doc-layout">
+        <article className="doc-article">
+          <div style={styles.header}>
+            <h1 style={styles.title}>Entity Relationship Diagrams</h1>
+            <p style={styles.description}>
+              Database schema and entity relationships for the product pricing system.
+              These diagrams show how different entities (Price Lists, Products, Zones, etc.) relate to each other.
+            </p>
+          </div>
 
-      <div style={styles.content}>
-        {diagrams.map((diagram) => (
-          <DiagramViewer
-            key={diagram.id}
-            src={diagram.src}
-            title={diagram.title}
-          />
-        ))}
+          <div style={styles.content}>
+            {diagrams.map((diagram) => (
+              <div id={diagram.id} key={diagram.id}>
+                <DiagramViewer
+                  src={diagram.src}
+                  title={diagram.title}
+                />
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <aside className="doc-sidebar">
+          <DiagramTableOfContents diagrams={diagrams} />
+        </aside>
       </div>
     </div>
   );
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  container: {
-    maxWidth: '1400px',
-    margin: '0 auto',
-    padding: '2rem',
-  },
   header: {
     marginBottom: '2rem',
   },

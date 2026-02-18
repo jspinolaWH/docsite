@@ -1,4 +1,5 @@
 import { HTMLDiagramViewer } from '../components/HTMLDiagramViewer';
+import { DiagramTableOfContents } from '../components/DiagramTableOfContents';
 
 const diagrams = [
   {
@@ -45,34 +46,38 @@ const diagrams = [
 
 export function FlowDiagramsPage() {
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h1 style={styles.title}>Flow & Activity Diagrams</h1>
-        <p style={styles.description}>
-          Interactive flowcharts showing how the pricing system processes customer orders
-          and calculates final prices through various decision points and conditions.
-        </p>
-      </div>
+    <div className="doc-page">
+      <div className="doc-layout">
+        <article className="doc-article">
+          <div style={styles.header}>
+            <h1 style={styles.title}>Flow & Activity Diagrams</h1>
+            <p style={styles.description}>
+              Interactive flowcharts showing how the pricing system processes customer orders
+              and calculates final prices through various decision points and conditions.
+            </p>
+          </div>
 
-      <div style={styles.content}>
-        {diagrams.map((diagram) => (
-          <HTMLDiagramViewer
-            key={diagram.id}
-            src={diagram.src}
-            title={diagram.title}
-          />
-        ))}
+          <div style={styles.content}>
+            {diagrams.map((diagram) => (
+              <div id={diagram.id} key={diagram.id}>
+                <HTMLDiagramViewer
+                  src={diagram.src}
+                  title={diagram.title}
+                />
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <aside className="doc-sidebar">
+          <DiagramTableOfContents diagrams={diagrams} />
+        </aside>
       </div>
     </div>
   );
 }
 
 const styles: Record<string, React.CSSProperties> = {
-  container: {
-    maxWidth: '1400px',
-    margin: '0 auto',
-    padding: '2rem',
-  },
   header: {
     marginBottom: '2rem',
   },
