@@ -65,6 +65,7 @@ export function loadDocs(): DocEntry[] {
       slug: (meta.slug as string) || filePath.split('/').pop()?.replace('.md', '') || '',
       title: (meta.title as string) || 'Untitled',
       category: (meta.category as string) || 'uncategorized',
+      subcategory: meta.subcategory as string | undefined,
       order: Number(meta.order) || 0,
       description: (meta.description as string) || '',
       related: (meta.related as string[]) || [],
