@@ -13,14 +13,14 @@ const diagrams = [
   },
 ];
 
-export function DiagramsPage() {
+export function EntityDiagramsPage() {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1 style={styles.title}>System Diagrams</h1>
+        <h1 style={styles.title}>Entity Relationship Diagrams</h1>
         <p style={styles.description}>
-          Interactive diagrams showing the product pricing architecture and entity relationships.
-          Scroll to zoom, drag to pan around the diagram.
+          Database schema and entity relationships for the product pricing system.
+          These diagrams show how different entities (Price Lists, Products, Zones, etc.) relate to each other.
         </p>
       </div>
 

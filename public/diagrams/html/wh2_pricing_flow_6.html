@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WH2.0 - Pricing Flow</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9fafb;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-top: 0;
+            color: #111827;
+        }
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        .mermaid {
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WasteHero 2.0 - Pricing Calculation Flow</h1>
+        <p class="subtitle">How the system calculates the final price for a service order</p>
+        
+        <div class="mermaid">
+graph TD
+    START([Customer Orders<br/>Mixed Waste Collection]) --> GET[Get Customer Attributes]
+    
+    GET --> A1[Customer Type:<br/>Business]
+    GET --> A2[Property Location:<br/>55.67, 12.54]
+    GET --> A3[Service Responsibility:<br/>Municipal]
+    GET --> A4[Product R/D Code:<br/>R1]
+    
+    A2 --> ZONE[PD-325: Zone Lookup<br/>Check coordinates]
+    ZONE --> ZRESULT[Zone Determined:<br/>Urban Zone]
+    
+    A1 & ZRESULT & A3 & A4 --> FIND[Find Price in Price List]
+    
+    FIND --> PL[Price List:<br/>Municipal 2026]
+    PL --> SEARCH[Search Product:<br/>Mixed Waste Collection]
+    
+    SEARCH --> ROWS[4 Price Rows Found]
+    
+    ROWS --> R1[Row 1<br/>Private+Urban+Municipal+R1<br/>€50/ton]
+    ROWS --> R2[Row 2<br/>Business+Urban+Municipal+R1<br/>€70/ton<br/>✓ MATCHES ALL 4]
+    ROWS --> R3[Row 3<br/>Any+Rural+Any+R1<br/>€85/ton]
+    ROWS --> R4[Row 4<br/>Any+Any+Any+Any<br/>€60/ton fallback]
+    
+    R2 --> MATCH[PD-330 Matching:<br/>Row 2 = Perfect Match<br/>All 4 conditions match]
+    
+    MATCH --> BASE[BASE PRICE<br/>€70/ton]
+    
+    BASE --> Q1{Service Level<br/>Selected?}
+    Q1 -->|Express 1 day| S1[PD-37, PD-324<br/>Service Speed<br/>+€40]
+    Q1 -->|Scheduled| S0[+€0]
+    
+    S1 --> Q2{Service Date<br/>Weekend/Holiday?}
+    S0 --> Q2
+    
+    Q2 -->|Saturday| T1[PD-323<br/>Weekend Surcharge<br/>+€10]
+    Q2 -->|Weekday| T0[+€0]
+    
+    T1 --> Q3{Additional<br/>Services?}
+    T0 --> Q3
+    
+    Q3 -->|Driver requests| AS1[PD-38<br/>Difficult Access<br/>Reverse up driveway<br/>+€10]
+    Q3 -->|None| AS0[+€0]
+    
+    AS1 --> CALC[Calculate Total]
+    AS0 --> CALC
+    
+    CALC --> SUM[€70 base<br/>+ €40 express<br/>+ €10 weekend<br/>+ €10 difficult access]
+    
+    SUM --> FINAL[FINAL PRICE<br/>€130/ton]
+    
+    FINAL --> LOCK[Price Locked<br/>on Ticket Creation]
+    
+    style BASE fill:#dbeafe
+    style FINAL fill:#dcfce7,stroke:#059669,stroke-width:3px
+    style MATCH fill:#fef3c7
+    style ZRESULT fill:#e0e7ff
+    style R2 fill:#d1fae5
+    style LOCK fill:#d1fae5
+        </div>
+        
+        <hr style="margin: 50px 0; border: none; border-top: 2px solid #e5e7eb;">
+        
+        <h2 style="color: #111827; margin-top: 40px;">Scenario 2: Fallback Pricing (No Perfect Match)</h2>
+        <p class="subtitle">When no exact match found, system uses row with MOST matching conditions (PD-330)</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 400px; gap: 30px; align-items: start;">
+            <div class="mermaid">
+graph TD
+    START2([Customer Orders<br/>Mixed Waste]) --> GET2[Customer: Industrial<br/>Location: Suburbs Zone<br/>Responsibility: Custom<br/>R/D: R3]
+    
+    GET2 --> SEARCH2[Search Price List]
+    
+    SEARCH2 --> ROWS2[Available Price Rows:]
+    
+    ROWS2 --> R2A[Row 1: Business+Urban+Municipal+R1<br/>Matches: 0 ❌]
+    ROWS2 --> R2B[Row 2: Any+Suburbs+Any+R1<br/>Matches: 1 Zone ⚠️<br/>Price: €75]
+    ROWS2 --> R2C[Row 3: Any+Any+Any+R3<br/>Matches: 1 R/D ⚠️<br/>Price: €78]
+    ROWS2 --> R2D[Row 4: Any+Any+Any+Any<br/>Fallback ✓]
+    
+    R2B --> BEST[PD-330: Tied at 1 match<br/>Pick lowest price = Row 2]
+    R2C -.Not selected<br/>Higher price.-> BEST
+    
+    BEST --> BASE2[Base: €75/ton]
+    BASE2 --> FINAL2[TOTAL: €75/ton]
+    
+    style BEST fill:#fef3c7
+    style FINAL2 fill:#dcfce7,stroke:#059669,stroke-width:3px
+            </div>
+            
+            <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; height: fit-content; position: sticky; top: 20px;">
+                <h3 style="margin-top: 0; color: #1e40af; font-size: 16px;">📘 PD-330: Matching Logic</h3>
+                
+                <div style="font-size: 13px; color: #1e40af; line-height: 1.7;">
+                    <strong>When retrieving a price:</strong><br><br>
+                    
+                    <strong>1.</strong> The system checks if there is a row where <strong>ALL the requested attributes match</strong><br><br>
+                    
+                    <strong>2.</strong> If an exact match is found, that row is selected<br><br>
+                    
+                    <strong>3.</strong> If NO exact match is found, the row with the <strong>HIGHEST NUMBER of matching attributes</strong> is selected
+                </div>
+                
+                <div style="background: #fef3c7; border: 1px solid #fcd34d; padding: 12px; border-radius: 8px; margin-top: 16px;">
+                    <div style="font-weight: 600; color: #92400e; font-size: 13px; margin-bottom: 8px;">⚠️ Tie-Breaking: Lowest Price Wins</div>
+                    <div style="font-size: 12px; color: #92400e; line-height: 1.6;">
+                        <strong>PD-330:</strong> "In case of a tie, additional logic may apply, such as 'select first' or <strong>'select lowest price'</strong>"<br><br>
+                        
+                        When multiple rows have the same number of matches, the system picks the one with the <strong>LOWEST PRICE</strong>.<br><br>
+                        
+                        This benefits customers - if multiple equally-good matches exist, they get the best deal!
+                    </div>
+                </div>
+                
+                <div style="background: #dcfce7; border: 1px solid #86efac; padding: 12px; border-radius: 8px; margin-top: 16px;">
+                    <div style="font-weight: 600; color: #065f46; font-size: 13px; margin-bottom: 8px;">✓ This Scenario:</div>
+                    <div style="font-size: 12px; color: #065f46; line-height: 1.6;">
+                        Row 2 (€75) and Row 3 (€78) tied at 1 match → Select lowest price → Row 2 (€75/ton)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <hr style="margin: 50px 0; border: none; border-top: 2px solid #e5e7eb;">
+        
+        <h2 style="color: #111827;">Scenario 3: Automatic Additional Service</h2>
+        <p class="subtitle">Driver marks access denied, system AUTOMATICALLY applies fee - no manual request (PD-38)</p>
+        
+        <div class="mermaid">
+graph LR
+    START3([Driver Arrives<br/>at Property]) --> CHECK3{Can Access<br/>Gate/Property?}
+    
+    CHECK3 -->|Gate Locked| MARK3[Driver Marks Ticket:<br/>Status = Access Denied<br/>────────<br/>No manual request needed]
+    CHECK3 -->|Yes| OK3[Complete Service<br/>Status = Completed]
+    
+    MARK3 --> RULE3[PD-38: Automatic Rule Triggers<br/>────────<br/>IF status = access_denied<br/>THEN add_cancellation_fee<br/>────────<br/>System checks predefined rules]
+    
+    RULE3 --> AUTO3[System AUTOMATICALLY<br/>Adds Service:<br/>────────<br/>Cancellation Fee €25<br/>No driver/office action needed]
+    
+    AUTO3 --> INV3[Invoice Generated:<br/>────────<br/>Collection: €0 not completed<br/>Cancellation Fee: €25 automatic<br/>────────<br/>TOTAL: €25]
+    
+    OK3 --> NORM3[Invoice:<br/>Collection: €50<br/>TOTAL: €50]
+    
+    style MARK3 fill:#dbeafe
+    style RULE3 fill:#fef3c7
+    style AUTO3 fill:#fee2e2
+    style INV3 fill:#dcfce7,stroke:#059669,stroke-width:3px
+    style NORM3 fill:#d1fae5
+        </div>
+        
+        <hr style="margin: 50px 0; border: none; border-top: 2px solid #e5e7eb;">
+        
+        <h2 style="color: #111827;">Scenario 4: Driver-Initiated Additional Service</h2>
+        <p class="subtitle">Driver detects need, creates request, office approves - different from automatic (PD-38)</p>
+        
+        <div class="mermaid">
+graph LR
+    START4([Driver at Property]) --> DETECT4[Driver Detects:<br/>Must reverse up<br/>long narrow driveway]
+    
+    DETECT4 --> REQ4[PD-38: Driver Creates Request<br/>via Mobile App<br/>────────<br/>Service: Difficult Access<br/>Reason: Narrow driveway<br/>Photo attached<br/>────────<br/>NOT automatic!]
+    
+    REQ4 --> OFFICE4[Request Sent to Office]
+    
+    OFFICE4 --> REV4{Office Reviews<br/>Request}
+    
+    REV4 -->|Approve| APP4[✓ Approved<br/>────────<br/>PD-38: Office approval required<br/>Difficult Access: €10]
+    REV4 -->|Reject| REJ4[✗ Rejected<br/>────────<br/>Reason: Standard access<br/>No charge]
+    
+    APP4 --> ADD4[Added to Invoice:<br/>────────<br/>Collection: €50<br/>Difficult Access: €10<br/>────────<br/>TOTAL: €60]
+    
+    REJ4 --> NORM4[Invoice:<br/>────────<br/>Collection: €50<br/>TOTAL: €50]
+    
+    style DETECT4 fill:#dbeafe
+    style REQ4 fill:#fef3c7
+    style REV4 fill:#e0e7ff
+    style APP4 fill:#d1fae5
+    style REJ4 fill:#fee2e2
+    style ADD4 fill:#dcfce7,stroke:#059669,stroke-width:3px
+        </div>
+        
+        <hr style="margin: 50px 0; border: none; border-top: 2px solid #e5e7eb;">
+        
+        <h2 style="color: #111827;">Scenario 5: Bulk Price Update</h2>
+        <p class="subtitle">Admin increases all rural prices by 10% (PD-331)</p>
+        
+        <div class="mermaid">
+graph LR
+    START4([Admin Opens<br/>Price List]) --> SELECT4[Select Rows:<br/>Zone = Rural<br/>────────<br/>15 rows selected]
+    
+    SELECT4 --> BULK4[PD-331: Bulk Edit<br/>Increase by 10%]
+    
+    BULK4 --> PREV4[Preview:<br/>€80 → €88<br/>€85 → €93.50]
+    
+    PREV4 --> APPLY4[Apply Changes]
+    
+    APPLY4 --> LOG4[PD-329: Log Entry<br/>Who: Admin<br/>What: +10%<br/>Why: Rural costs up]
+    
+    LOG4 --> DONE4[✓ 15 Prices Updated]
+    
+    style BULK4 fill:#fef3c7
+    style LOG4 fill:#e0e7ff
+    style DONE4 fill:#dcfce7,stroke:#059669,stroke-width:3px
+        </div>
+        
+        <hr style="margin: 50px 0; border: none; border-top: 2px solid #e5e7eb;">
+        
+        <h2 style="color: #111827;">Scenario 6: Scheduled Price Increase</h2>
+        <p class="subtitle">Municipality mandates 5% increase starting January 1st (PD-328)</p>
+        
+        <div class="mermaid">
+graph TD
+    START5([Dec 15: Plan Update]) --> SCHED5[PD-328: Schedule<br/>────────<br/>Products: All municipal<br/>Increase: 5%<br/>Effective: Jan 1, 2026]
+    
+    SCHED5 --> PEND5[Status: Pending<br/>Current: €50<br/>Future: €52.50]
+    
+    PEND5 --> DEC5{Order Date?}
+    
+    DEC5 -->|Dec 28, 2025| OLD5[Before Jan 1<br/>Use: €50]
+    DEC5 -->|Jan 5, 2026| NEW5[After Jan 1<br/>Use: €52.50]
+    
+    OLD5 --> INV5A[Invoice: €50]
+    NEW5 --> INV5B[Invoice: €52.50]
+    
+    style SCHED5 fill:#fef3c7
+    style PEND5 fill:#dbeafe
+    style OLD5 fill:#fee2e2
+    style NEW5 fill:#dcfce7,stroke:#059669,stroke-width:3px
+        </div>
+        
+        <hr style="margin: 50px 0; border: none; border-top: 2px solid #e5e7eb;">
+        
+        <h2 style="color: #111827;">Scenario 7: Multiple Surcharges Stack</h2>
+        <p class="subtitle">Emergency service on Christmas Day (PD-324 + PD-323)</p>
+        
+        <div class="mermaid">
+graph TD
+    START6([Emergency Request<br/>December 25]) --> BASE6[Base Price:<br/>€50/ton]
+    
+    BASE6 --> SPEED6[PD-324: Service Level<br/>Emergency same-day<br/>+€70]
+    
+    SPEED6 --> TIME6[PD-323: Holiday<br/>December 25 Christmas<br/>+€25]
+    
+    TIME6 --> CALC6[Calculate Total]
+    
+    CALC6 --> SUM6[€50 base<br/>+ €70 emergency<br/>+ €25 holiday<br/>────────<br/>€145/ton]
+    
+    SUM6 --> JUSTIFY[Customer Accepts:<br/>Urgent need justifies<br/>premium pricing]
+    
+    JUSTIFY --> FINAL6[INVOICE: €145/ton]
+    
+    style SPEED6 fill:#fee2e2
+    style TIME6 fill:#fef3c7
+    style FINAL6 fill:#dcfce7,stroke:#059669,stroke-width:3px
+        </div>
+        
+        <hr style="margin: 50px 0; border: none; border-top: 2px solid #e5e7eb;">
+        
+        <h2 style="color: #111827;">Scenario 8: Time-Based Pricing (Per Hour) - Edge Case</h2>
+<p class="subtitle">On-site inspection service charged per hour, runs overtime (PD-326)</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 380px; gap: 30px; align-items: start;">
+            <div class="mermaid">
+graph TD
+    START8([Customer Orders:<br/>On-site Waste Audit]) --> PROD8[Product:<br/>On-site Inspection Service]
+    
+    PROD8 --> UNIT8[PD-326: Pricing Unit<br/>────────<br/>€85 per hour<br/>────────<br/>NOT per ton/collection<br/>Time-based pricing]
+    
+    UNIT8 --> EST8[Estimated Time:<br/>2 hours]
+    
+    EST8 --> QUOTE8[Initial Quote:<br/>€85 × 2h = €170]
+    
+    QUOTE8 --> ACTUAL8{Actual Time<br/>Taken?}
+    
+    ACTUAL8 -->|Completed in 1.5h| UNDER8[Under Estimate<br/>────────<br/>Actual: 1.5h × €85<br/>= €127.50]
+    
+    ACTUAL8 -->|Took 3.5h| OVER8[Over Estimate<br/>────────<br/>Actual: 3.5h × €85<br/>= €297.50<br/>────────<br/>Edge case: Overtime!]
+    
+    UNDER8 --> INV8A[Invoice: €127.50<br/>Customer charged less]
+    
+    OVER8 --> WARN8[System Alert:<br/>Exceeded estimate by 75%<br/>Requires approval]
+    
+    WARN8 --> APP8[Office Approves<br/>Overtime justified]
+    
+    APP8 --> INV8B[Invoice: €297.50<br/>────────<br/>3.5 hours documented<br/>Reason: Complex site]
+    
+    style UNIT8 fill:#fef3c7
+    style OVER8 fill:#fee2e2
+    style WARN8 fill:#fef3c7
+    style INV8B fill:#dcfce7,stroke:#059669,stroke-width:3px
+    style INV8A fill:#d1fae5
+            </div>
+            
+            <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; height: fit-content; position: sticky; top: 20px;">
+                <h3 style="margin-top: 0; color: #1e40af; font-size: 16px;">📘 PD-326: Pricing Units</h3>
+                
+                <div style="font-size: 13px; color: #1e40af; line-height: 1.7;">
+                    <strong>6 Supported Unit Types:</strong><br><br>
+                    
+                    • <strong>€/piece</strong> - per collection, per service<br>
+                    • <strong>€/kg or €/ton</strong> - weight-based<br>
+                    • <strong>€/m³</strong> - volume-based (cubic)<br>
+                    • <strong>€/liter</strong> - volume-based (liquid)<br>
+                    • <strong>€/meter</strong> - distance-based<br>
+                    • <strong>€/hour</strong> - time-based ⭐<br><br>
+                    
+                    <strong>PD-326:</strong> "Pricing units ensure price corresponds to the nature of the product"
+                </div>
+                
+                <div style="background: #fef3c7; border: 1px solid #fcd34d; padding: 12px; border-radius: 8px; margin-top: 16px;">
+                    <div style="font-weight: 600; color: #92400e; font-size: 13px; margin-bottom: 8px;">⚠️ Edge Case: Overtime</div>
+                    <div style="font-size: 12px; color: #92400e; line-height: 1.6;">
+                        Time-based pricing can exceed estimates!<br><br>
+                        
+                        <strong>Best Practice:</strong><br>
+                        • Set approval threshold (e.g., >50% over estimate)<br>
+                        • Document actual time worked<br>
+                        • Provide justification for overtime
+                    </div>
+                </div>
+                
+                <div style="background: #dcfce7; border: 1px solid #86efac; padding: 12px; border-radius: 8px; margin-top: 16px;">
+                    <div style="font-weight: 600; color: #065f46; font-size: 13px; margin-bottom: 8px;">✓ This Scenario:</div>
+                    <div style="font-size: 12px; color: #065f46; line-height: 1.6;">
+                        Estimated 2h (€170) → Actual 3.5h (€297.50) → 75% over → Requires approval → Justified by complex site → Invoiced
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'default',
+            flowchart: { 
+                useMaxWidth: true,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>

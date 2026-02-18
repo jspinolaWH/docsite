@@ -21,7 +21,22 @@ export interface CategoryConfig {
   darkBorderColor: string;
 }
 
+export interface DiagramLink {
+  slug: string;
+  title: string;
+}
+
 export const CATEGORIES: Record<string, CategoryConfig> = {
+  diagrams: {
+    id: 'diagrams',
+    label: 'Diagrams',
+    color: '#0891b2',
+    bgColor: '#ecfeff',
+    borderColor: '#a5f3fc',
+    darkColor: '#67e8f9',
+    darkBgColor: '#083344',
+    darkBorderColor: '#0e7490',
+  },
   concepts: {
     id: 'concepts',
     label: 'Concepts & Reference',
@@ -43,3 +58,9 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     darkBorderColor: '#15803d',
   },
 };
+
+// Static diagram links (not loaded from markdown files)
+export const DIAGRAM_LINKS: DiagramLink[] = [
+  { slug: 'entity-diagrams', title: 'Entity Diagrams' },
+  { slug: 'flow-diagrams', title: 'Flow Diagrams' },
+];
