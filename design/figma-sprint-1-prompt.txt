@@ -1,0 +1,993 @@
+================================================================================
+FIGMA DESIGN PROMPT — WasteHero 2.0 Product & Pricing Admin
+Sprint 1 UI Spec (Release 1, March 2–13 2026)
+================================================================================
+
+PURPOSE
+-------
+This prompt defines the complete UI for Sprint 1 of the WasteHero 2.0 Product
+& Pricing admin module. The output is a set of Figma frames covering:
+  - All screens active in Sprint 1 (fully designed with real data)
+  - The global app shell with ALL future navigation items visible but locked
+  - The product detail tab shell with ALL future tabs visible but locked
+
+Active Sprint 1 features: Product Categories, Waste Fractions, Pricing Units,
+Zones (view-only hardcoded). Everything else shows a structured "coming soon"
+empty state — not a dead end, but a clear placeholder.
+
+================================================================================
+SECTION 1 — DESIGN TOKENS
+================================================================================
+
+COLORS
+------
+Primary blue:         #0052CC
+Primary blue hover:   #0747A6
+Primary blue light:   #DEEBFF   (info backgrounds, active nav, selected rows)
+
+Text high:            #172B4D   (headings, primary content)
+Text medium:          #42526E   (secondary labels, table body)
+Text low:             #6B778C   (hints, subtitles, placeholder labels)
+Text disabled:        #A5ADBA   (locked nav items, disabled controls)
+
+Background page:      #FFFFFF
+Background sidebar:   #F4F5F7
+Background surface:   #FAFBFC   (table header, card subtle areas)
+Background hover:     #F4F5F7   (row hover, nav item hover)
+Background selected:  #DEEBFF   (active nav item, selected table row)
+
+Border default:       #DFE1E6   (inputs, cards, table borders)
+Border focus:         #0052CC   (2px, inputs on focus)
+Border error:         #DE350B   (2px, invalid inputs)
+
+Success green:        #00875A
+Success green light:  #E3FCEF   (Active status badge background)
+Success green text:   #006644   (Active status badge text)
+
+Warning orange:       #FF8B00
+Warning orange light: #FFFAE6   (Warning banner background)
+Warning orange text:  #974F0C   (Warning banner text)
+
+Error red:            #DE350B
+Error red light:      #FFEBE6   (Error banner background)
+
+Teal (Suburban):      #006C8A   (text)
+Teal light:           #E6FCFF   (background)
+
+Top bar navy:         #1A2332
+Top bar text:         #FFFFFF
+
+Divider:              #F4F5F7   (between rows, sections)
+Overlay:              rgba(23, 43, 77, 0.5)
+
+TYPOGRAPHY
+----------
+Font family: Inter (all weights via Google Fonts)
+Fallback: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif
+
+Page title (h1):      24px / weight 700 / color #172B4D / line-height 32px
+Section title (h2):   18px / weight 600 / color #172B4D / line-height 24px
+Card title:           16px / weight 600 / color #172B4D / line-height 22px
+Body default:         14px / weight 400 / color #172B4D / line-height 20px
+Body medium:          14px / weight 500 / color #172B4D / line-height 20px
+Table header:         12px / weight 600 / color #6B778C / UPPERCASE / letter-spacing 0.06em
+Label (field):        12px / weight 600 / color #172B4D / letter-spacing 0.04em
+Hint / caption:       12px / weight 400 / color #6B778C / line-height 16px
+Sidebar nav item:     14px / weight 400 / color #172B4D
+Sidebar section:      11px / weight 700 / color #6B778C / UPPERCASE / letter-spacing 0.1em
+Monospace (EWC):      13px / weight 500 / font: "JetBrains Mono", monospace / color #172B4D
+Badge text:           12px / weight 600
+
+SPACING SCALE
+-------------
+4px / 8px / 12px / 16px / 20px / 24px / 32px / 40px / 48px / 64px
+Base unit = 8px. All spacing uses multiples.
+
+BORDER RADIUS
+-------------
+Buttons, inputs, badges:   4px
+Cards, modals, dropdowns:  8px
+Avatars, icon containers:  50% (full circle)
+Pills / status badges:     100px (fully rounded)
+
+SHADOWS
+-------
+Card default:   0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04)
+Modal:          0 8px 32px rgba(0,0,0,0.20), 0 2px 8px rgba(0,0,0,0.10)
+Dropdown:       0 4px 12px rgba(0,0,0,0.15)
+Top bar:        0 2px 4px rgba(0,0,0,0.15)
+
+================================================================================
+SECTION 2 — COMPONENT LIBRARY
+================================================================================
+
+BUTTONS
+-------
+Primary:
+  height 36px / padding 0 16px / bg #0052CC / text white / border-radius 4px
+  font 14px weight 500 / icon-left gap 8px if icon present
+  hover: bg #0747A6
+  active: bg #003D99
+  disabled: bg #DFE1E6 / text #A5ADBA / cursor not-allowed
+
+Secondary:
+  height 36px / padding 0 16px / bg white / border 1px solid #DFE1E6
+  text #172B4D / border-radius 4px / font 14px weight 400
+  hover: bg #F4F5F7 / border #C1C7D0
+
+Danger:
+  height 36px / padding 0 16px / bg #DE350B / text white / border-radius 4px
+  hover: bg #BF2600
+
+Text/Ghost:
+  height 36px / padding 0 8px / no bg / no border
+  text #0052CC / font 14px weight 400
+  hover: text #0747A6 / bg #DEEBFF with border-radius 4px
+
+Icon button:
+  32px × 32px / border-radius 4px / no bg
+  icon 16px #6B778C
+  hover: bg #F4F5F7 / icon #172B4D
+  danger hover: icon #DE350B
+
+INPUTS
+------
+Text input:
+  height 36px / width per context / padding 0 12px
+  border 1px solid #DFE1E6 / border-radius 4px / bg white
+  font 14px / color #172B4D
+  placeholder: color #A5ADBA
+  focus: border 2px solid #0052CC (border-box, no layout shift)
+  error: border 2px solid #DE350B
+  valid: border 1px solid #00875A / right icon checkmark (14px green)
+  disabled: bg #F4F5F7 / border #DFE1E6 / color #A5ADBA / cursor not-allowed
+
+Textarea:
+  min-height 80px / padding 8px 12px / same border rules
+  resize: vertical only
+
+Search input:
+  height 36px / width 280px / padding 0 12px 0 36px
+  left icon: magnifying glass 16px color #A5ADBA at x=12
+  same border rules as text input
+
+Dropdown / Select:
+  height 36px / padding 0 32px 0 12px / same border rules
+  right icon: chevron-down 16px #6B778C at right-12
+  open state: shadow dropdown / border focus state
+
+Toggle switch:
+  width 36px / height 20px / border-radius 10px
+  OFF: bg #DFE1E6 / circle white 16px at left-2
+  ON: bg #0052CC / circle white 16px at right-2
+  transition: 150ms ease
+
+BADGES / PILLS
+--------------
+Status Active:      bg #E3FCEF / text #006644 / border-radius 100px / padding 2px 10px / font 12px weight 600
+Status Inactive:    bg #F4F5F7 / text #6B778C / same padding
+Zone Urban:         bg #DEEBFF / text #0052CC / same padding
+Zone Suburban:      bg #E6FCFF / text #006C8A / same padding
+Zone Rural:         bg #FFFAE6 / text #974F0C / same padding
+Coming Soon pill:   bg #F4F5F7 / text #A5ADBA / italic / padding 1px 6px / font 10px weight 500
+Schema count:       bg #DEEBFF / text #0052CC / border-radius 100px / padding 2px 10px / font 12px weight 600
+EWC code:           bg #F4F5F7 / text #172B4D / font monospace 13px / border-radius 4px / padding 2px 8px / border 1px solid #DFE1E6
+
+CARDS
+-----
+Default card:
+  bg white / border 1px solid #DFE1E6 / border-radius 8px / shadow card default
+  padding 20px / width per grid
+
+Icon container (for unit cards):
+  40px × 40px / bg #F4F5F7 / border-radius 8px / icon 20px centered
+
+TABLES
+------
+Container:
+  width 100% / border 1px solid #DFE1E6 / border-radius 8px / overflow hidden
+
+Header row:
+  height 40px / bg #FAFBFC / border-bottom 1px solid #DFE1E6
+  cell padding 0 16px / font: table header style (12px 600 uppercase #6B778C)
+
+Body row:
+  height 48px / border-bottom 1px solid #F4F5F7 / bg white
+  cell padding 0 16px / font 14px #172B4D
+  hover: bg #F8F9FA (entire row)
+  last row: no border-bottom
+
+Selected row:
+  bg #DEEBFF / border-left 3px solid #0052CC / cell padding-left 13px
+
+Actions cell:
+  display flex / gap 4px / align-center / justify-end
+  icon buttons 28×28px / visible on row hover only (opacity 0 → 1)
+
+Footer row:
+  height 40px / padding 0 16px / bg white / border-top 1px solid #DFE1E6
+  font 12px #6B778C
+
+BANNERS
+-------
+Info banner:
+  bg #DEEBFF / border-left 4px solid #0052CC / border-radius 4px
+  padding 12px 16px / font 13px #172B4D
+  left icon: info-circle 16px #0052CC / gap 10px
+
+Warning banner:
+  bg #FFFAE6 / border-left 4px solid #FF8B00 / border-radius 4px
+  padding 12px 16px / font 13px #974F0C
+  left icon: alert-triangle 16px #FF8B00 / gap 10px
+
+MODALS
+------
+Overlay: rgba(23,43,77,0.5) / full viewport
+Modal container:
+  bg white / border-radius 8px / shadow modal / position centered
+  width per spec below / max-height 90vh / overflow-y auto
+
+Modal header:
+  height 56px / padding 0 24px / border-bottom 1px solid #DFE1E6
+  flex row / space-between / align-center
+  title: 18px weight 600 #172B4D
+  close button: X icon 20px #6B778C / hover #172B4D / 32px tap target
+
+Modal body:
+  padding 24px / display flex flex-col / gap 16px
+
+Modal footer:
+  height 64px / padding 0 24px / border-top 1px solid #DFE1E6
+  flex row / space-between / align-center
+  left: secondary Cancel button
+  right: primary action button
+
+FIELD GROUPS (in modals / forms)
+---------------------------------
+Field wrapper:
+  display flex / flex-col / gap 4px / margin-bottom 0 (parent gap handles it)
+
+Field label:
+  12px / weight 600 / color #172B4D / letter-spacing 0.04em / UPPERCASE
+  required asterisk: color #DE350B / margin-left 2px
+
+Error message:
+  12px / color #DE350B / margin-top 4px / flex row / gap 4px / icon 12px
+
+EMPTY STATES (for locked screens and tabs)
+------------------------------------------
+Container: flex col / align-center / justify-center / padding 64px 32px
+Icon wrapper: 56px × 56px / bg #F4F5F7 / border-radius 50% / icon 24px #A5ADBA centered
+Title: 16px weight 600 #172B4D / margin-top 20px / text-center
+Body: 13px #6B778C / margin-top 8px / max-width 380px / text-center / line-height 20px
+Release label: 12px weight 600 / bg #F4F5F7 / color #6B778C / border-radius 100px
+              padding 4px 12px / margin-top 16px / inline-flex
+
+LOADING SKELETON
+----------------
+Use for the Product Categories table (show one loading state frame):
+  Row skeleton: 48px height / 3 cells with rounded rects
+  Rect colors: bg #F4F5F7 / shimmer gradient left-to-right #F4F5F7 → #EBEBEB → #F4F5F7
+  Widths: col1 180px / col2 100% / col3 60px
+
+================================================================================
+SECTION 3 — GLOBAL LAYOUT
+================================================================================
+
+CANVAS FRAME SIZE: 1440 × 900px per screen
+
+TOP BAR
+-------
+Position: fixed / top 0 / left 0 / right 0
+Height: 56px
+Background: #1A2332
+Shadow: 0 2px 4px rgba(0,0,0,0.20)
+z-index: above sidebar and content
+
+Left area (x=20):
+  WH logo mark: 28×28px square / bg #0052CC / border-radius 6px
+                white "WH" text inside / 13px weight 700
+  App name:     "Product & Pricing" / 15px weight 600 / color white / margin-left 10px
+
+Right area (right-20):
+  flex row / gap 16px / align-center
+  Avatar circle: 32×32px / bg #0052CC / initials "AJ" / 14px weight 600 white
+  Name: "Alex Jensen" / 14px / color rgba(255,255,255,0.85)
+  Caret-down icon: 14px / color rgba(255,255,255,0.5)
+
+LEFT SIDEBAR
+------------
+Position: fixed / left 0 / top 56px / bottom 0
+Width: 240px
+Background: #F4F5F7
+Border-right: 1px solid #DFE1E6
+Overflow-y: auto
+z-index: below top bar, above content
+
+Internal padding: 8px (left and right for nav items with 8px margin each side)
+Top padding: 16px
+
+Section header format:
+  padding: 16px 16px 4px 16px
+  font: 11px weight 700 uppercase #6B778C letter-spacing 0.10em
+  First section: padding-top 8px
+
+Nav item format (active):
+  height 36px / margin 1px 8px / border-radius 4px
+  padding 0 12px / font 14px weight 500 #0052CC
+  bg #DEEBFF
+  left bar: 3px solid #0052CC / border-radius 2px on left side
+
+Nav item format (default):
+  height 36px / margin 1px 8px / border-radius 4px
+  padding 0 12px / font 14px weight 400 #172B4D
+  hover: bg #EBECF0
+
+Nav item format (disabled/locked):
+  height 36px / margin 1px 8px / border-radius 4px
+  padding 0 12px / font 14px weight 400 #A5ADBA
+  cursor: default / pointer-events: none
+  right side: "Coming Soon" pill (see badge spec) OR release label e.g. "R2"
+
+SIDEBAR NAV STRUCTURE — ALL ITEMS
+-----------------------------------
+
+Section: REFERENCE DATA
+  • Product Categories        [ACTIVE — highlighted]
+  • Waste Fractions           [default — Sprint 1]
+  • Pricing Units             [default — Sprint 1]
+  • Zones                     [default — Sprint 1]
+
+Section: PRODUCTS
+  • Products                  [disabled] + pill "Release 2"
+
+Section: PRICING
+  • Price Lists               [disabled] + pill "Release 2"
+  • Price Determination       [disabled] + pill "Release 2"
+  • Price Changes             [disabled] + pill "Release 3"
+  • Discounts                 [disabled] + pill "Release 3"
+  • Timing Pricing            [disabled] + pill "Release 3"
+  • Speed Pricing             [disabled] + pill "Release 3"
+
+Section: OPERATIONS
+  • Audit Logs                [disabled] + pill "Release 2"
+  • Bulk Editing              [disabled] + pill "Release 2"
+  • Default Weights           [disabled] + pill "Release 2"
+  • Scheduled Updates         [disabled] + pill "Release 2"
+
+MAIN CONTENT AREA
+-----------------
+Position: left 240px / top 56px / right 0 / bottom 0
+Background: #FFFFFF
+Padding: 32px
+Overflow-y: auto
+
+================================================================================
+SECTION 4 — SCREEN SPECIFICATIONS
+================================================================================
+
+---
+SCREEN A — PRODUCT CATEGORIES (LIST VIEW)
+Frame name: "S1-A — Categories List"
+---
+
+Sidebar: "Product Categories" nav item is ACTIVE (blue).
+
+Content area layout:
+
+[PAGE HEADER — 0 to 72px from content top]
+Row 1: Breadcrumb
+  "Reference Data" (12px #A5ADBA) > (12px #A5ADBA) "Product Categories" (12px #6B778C)
+  margin-bottom: 8px
+
+Row 2: h1 "Product Categories" — 24px weight 700 #172B4D
+Row 3: subtitle "Define the types of products and the fields each type will have."
+  — 14px #6B778C / margin-top 4px
+
+[TOOLBAR — margin-top 24px]
+Flex row / space-between / align-center / height 36px:
+  Left: Search input (width 280px) — placeholder "Search categories..."
+  Right: Primary button "+ New Category" with [plus icon 14px] left of text
+
+[TABLE — margin-top 16px]
+Full width / border 1px solid #DFE1E6 / border-radius 8px / overflow hidden
+
+Column widths (total fills 100% of content area minus 64px padding):
+  Name            — 220px / align left
+  Description     — flex (takes remaining) / align left
+  Schema Fields   — 130px / align center
+  Products        — 100px / align center
+  Created         — 130px / align left
+  Actions         — 80px / align right
+
+Header: bg #FAFBFC / height 40px
+  "NAME", "DESCRIPTION", "SCHEMA FIELDS", "PRODUCTS", "CREATED", "" (actions no label)
+  font: 12px 600 uppercase #6B778C letter-spacing 0.06em / padding 0 16px
+
+DATA ROWS (5 rows including a hover-state example):
+
+Row 1 (normal):
+  Name:           "Waste Collection Services" (14px 500 #172B4D)
+  Description:    "Recurring waste pickup and transport services" (14px #6B778C, truncated with ellipsis)
+  Schema Fields:  pill "4 fields" (bg #DEEBFF, text #0052CC, 12px 600, border-radius 100px, padding 2px 10px)
+  Products:       "12" (14px #172B4D)
+  Created:        "2 Mar 2026" (14px #6B778C)
+  Actions:        [pencil-edit icon 16px] [trash icon 16px] — opacity 0 (shown on hover)
+
+Row 2 (normal):
+  Name:           "Container Rental"
+  Description:    "Fixed or time-based container hire"
+  Schema Fields:  pill "3 fields"
+  Products:       "8"
+  Created:        "2 Mar 2026"
+
+Row 3 (HOVER STATE — show as hovered, bg #F8F9FA, action icons visible at full opacity):
+  Name:           "Hazardous Waste" (14px 500 #172B4D)
+  Description:    "Requires special handling and compliance documentation"
+  Schema Fields:  pill "6 fields"
+  Products:       "5"
+  Created:        "3 Mar 2026"
+  Actions:        [pencil icon #6B778C] [gap 4px] [trash icon #6B778C]
+                  — both icons visible, hover state pencil → #0052CC, trash → #DE350B
+
+Row 4 (normal):
+  Name:           "Recycling Services"
+  Description:    "Sorting, processing and recycling of materials"
+  Schema Fields:  pill "3 fields"
+  Products:       "9"
+  Created:        "3 Mar 2026"
+
+Table footer:
+  height 40px / padding 0 16px / border-top 1px solid #F4F5F7 / bg white
+  Text: "Showing 4 of 4 categories" — 12px #6B778C
+
+[LOADING SKELETON EXAMPLE — show as a separate sub-frame inset below or as annotation]
+  Same table structure but rows replaced with:
+  3 rows × height 48px
+  Col 1: rounded rect 160×14px bg #EBEBEB
+  Col 2: rounded rect 260×14px bg #EBEBEB
+  Col 3: rounded rect 60×14px centered bg #EBEBEB
+  All rects: border-radius 4px / shimmer animation placeholder (use gradient fill)
+
+
+---
+SCREEN B — NEW CATEGORY MODAL (overlay on categories list)
+Frame name: "S1-B — New Category Modal"
+---
+
+Background: Categories list (Screen A) visible and dimmed under overlay.
+Overlay: rgba(23,43,77,0.5) full viewport.
+
+Modal container:
+  width 640px / centered horizontally / top 72px from viewport top
+  bg white / border-radius 8px / shadow modal
+
+MODAL HEADER (height 56px):
+  Title: "New Product Category" — 18px weight 600 #172B4D
+  X close button: right side, icon 18px #6B778C
+
+MODAL BODY (padding 24px / flex-col / gap 16px):
+
+Field 1 — NAME *
+  Label: "NAME *" (12px 600 uppercase #172B4D)
+  Input: full width / height 36px / placeholder "e.g. Waste Collection Services"
+  Show in FILLED state: value "Hazardous Waste" typed in
+
+Field 2 — DESCRIPTION
+  Label: "DESCRIPTION"
+  Textarea: full width / height 80px / resize vertical
+  placeholder "Briefly describe what products in this category represent..."
+  Show in FILLED state: "Products requiring special handling, regulated disposal, and compliance documentation."
+
+Divider: 1px solid #DFE1E6 / margin: 8px 0
+
+SCHEMA FIELDS SECTION:
+  Title: "Schema Fields" — 16px weight 600 #172B4D
+  Subtitle: "These fields appear on every product form in this category. Drag to reorder."
+            — 13px #6B778C / margin-top 4px
+
+  Mini-table column headers (height 32px / padding 0 8px):
+    [drag 24px] [FIELD NAME flex] [TYPE 140px] [REQUIRED 80px] [delete 32px]
+    font: 11px 600 uppercase #6B778C
+
+  Schema row 1:
+    [⠿ drag handle 16px #C1C7D0] | Input value "container_size" | Dropdown "Number" ▾ | Toggle ON (#0052CC) | [× 14px #6B778C]
+    row height 44px / border-bottom 1px solid #F4F5F7
+
+  Schema row 2:
+    [⠿] | Input "waste_type" | Dropdown "Select" ▾ | Toggle ON | [×]
+
+  Schema row 3 (show focused / being edited):
+    [⠿] | Input "weight_limit_kg" (focused, border 2px solid #0052CC) | Dropdown "Number" ▾ | Toggle OFF (#DFE1E6 circle left) | [×]
+
+  Schema row 4 (empty, being typed):
+    [⠿] | Input with cursor "custom_field_" (14px, caret visible) | Dropdown "Text" ▾ | Toggle OFF | [×]
+
+  "+ Add Field" button: 14px weight 400 #0052CC / no border / no bg / margin-top 8px / + icon 14px left
+
+  Type dropdown options note (show as open dropdown on row 1):
+    Dropdown open on "Number" row:
+    Options list (width 140px / shadow dropdown / border-radius 8px):
+      • Text
+      • Number (selected, #0052CC bg #DEEBFF)
+      • Select
+      • Date
+      • Boolean
+
+MODAL FOOTER (height 64px):
+  Left: "Cancel" button (secondary)
+  Right: "Save Category" button (primary blue)
+
+
+---
+SCREEN C — EDIT CATEGORY — SCHEMA VIEW
+Frame name: "S1-C — Edit Category Schema"
+---
+
+Same modal as B but:
+  Title: "Edit Category — Waste Collection Services"
+  All fields pre-filled
+  Schema has 4 fields already set up (not in edit mode, read-state):
+    Row 1: container_size / Number / Required ON
+    Row 2: waste_type / Select / Required ON
+    Row 3: frequency_per_week / Number / Required OFF
+    Row 4: access_instructions / Text / Required OFF
+  Save button label: "Save Changes"
+
+
+---
+SCREEN D — WASTE FRACTIONS (LIST VIEW)
+Frame name: "S1-D — Waste Fractions List"
+---
+
+Sidebar: "Waste Fractions" active.
+
+[PAGE HEADER]
+Breadcrumb: Reference Data > Waste Fractions
+H1: "Waste Fractions"
+Subtitle: "Manage waste material classifications and their European Waste Catalogue (EWC) codes."
+
+[TOOLBAR]
+Left: Search (280px) placeholder "Search waste fractions..."
+Right: "+ New Waste Fraction" primary button
+
+[TABLE]
+Column widths:
+  Name           — 200px / left
+  EWC Code       — 120px / left
+  Category       — 140px / left
+  Description    — flex / left
+  Status         — 100px / center
+  Actions        — 80px / right
+
+Header: same style as previous tables.
+
+DATA ROWS:
+
+Row 1 (normal):
+  Name:        "Mixed Municipal Waste" (14px 500 #172B4D)
+  EWC Code:    "20 03 01" — monospace badge (bg #F4F5F7, border 1px solid #DFE1E6, border-radius 4px, padding 2px 8px, font JetBrains Mono 13px 500 #172B4D)
+  Category:    "General Waste" (14px #6B778C)
+  Description: "Unsorted household and commercial waste" (14px #6B778C, truncated)
+  Status:      "Active" pill (bg #E3FCEF, text #006644, border-radius 100px)
+
+Row 2:
+  "Paper & Cardboard" | "20 01 01" | "Recycling" | "Paper and cardboard for recycling" | Active
+
+Row 3 (HOVER):
+  "Glass" | "20 01 02" | "Recycling" | "Glass bottles, jars and containers" | Active
+  bg #F8F9FA / actions visible
+
+Row 4:
+  "Organic Waste" | "20 01 08" | "Organic" | "Kitchen scraps and garden waste" | Active
+
+Row 5:
+  "Hazardous Household" | "20 01 35" | "Hazardous" | "Electronic waste and chemical household items" | Active
+
+Table footer: "Showing 5 of 5 waste fractions"
+
+[INFO BANNER — below table / margin-top 16px]
+Info type (blue left border):
+Icon: info-circle 16px #0052CC
+Text: "EWC code validation checks for valid 6-digit format (XX XX XX, e.g. 20 03 01).
+       Full EU waste registry validation will be added in Sprint 2."
+Font: 13px #172B4D
+
+
+---
+SCREEN E — NEW WASTE FRACTION MODAL
+Frame name: "S1-E — New Waste Fraction Modal"
+---
+
+Modal width: 560px / same overlay background
+
+MODAL HEADER: "New Waste Fraction"
+
+MODAL BODY (padding 24px / gap 16px):
+
+Field 1 — NAME *
+  Filled: "Mixed Municipal Waste"
+
+Field 2 — EWC CODE *
+  Label: "EWC CODE *"
+  Input: filled with "20 03 01"
+  State: VALID — border 1px solid #00875A / right icon checkmark (14px #00875A) at right-12
+  Hint below input: "Format: two-digit pairs separated by spaces — e.g. 20 03 01"
+                    12px #6B778C / margin-top 4px
+
+  Also show INVALID STATE as annotation / sub-frame:
+    Input value: "200301" (no spaces)
+    Border: 2px solid #DE350B
+    Right icon: x-circle 14px #DE350B
+    Error text below: "Invalid format. Use 6 digits in pairs: XX XX XX"
+                      12px #DE350B / margin-top 4px / flex row gap 4px with x-circle 12px
+
+Field 3 — CATEGORY *
+  Label: "CATEGORY *"
+  Dropdown (height 36px): selected "General Waste"
+  Options: General Waste / Recycling / Organic / Hazardous / Other
+  Show dropdown OPEN state with General Waste highlighted #DEEBFF
+
+Field 4 — DESCRIPTION
+  Textarea (height 72px): "Unsorted household and commercial waste not separately collected."
+
+Field 5 — STATUS
+  Label: "STATUS"
+  Row: Toggle ON (#0052CC) + label "Active" (14px #172B4D) + gap 12px +
+       hint "Inactive fractions cannot be assigned to products." (12px #6B778C)
+
+MODAL FOOTER:
+  Left: "Cancel" (secondary)
+  Right: "Save Waste Fraction" (primary blue)
+
+
+---
+SCREEN F — PRICING UNITS (CARD GRID — VIEW ONLY)
+Frame name: "S1-F — Pricing Units"
+---
+
+Sidebar: "Pricing Units" active.
+
+[PAGE HEADER]
+Breadcrumb: Reference Data > Pricing Units
+H1: "Pricing Units"
+Subtitle: "System-defined unit types used across all product pricing, aligned with EU e-invoicing standard EN 16931."
+
+[INFO BANNER — margin-top 0, margin-bottom 24px]
+Info type:
+Text: "These unit types are system-defined and cannot be modified. Unit conversions (e.g. kg ↔ ton)
+       and EU e-invoicing compliance metadata will be configurable from Sprint 2."
+
+[CARD GRID — 3 columns / gap 16px / margin-top 0]
+
+CARD SPEC:
+  bg white / border 1px solid #DFE1E6 / border-radius 8px
+  shadow: 0 1px 3px rgba(0,0,0,0.08)
+  padding 20px / display flex flex-col / gap 0
+
+  Icon container: 40×40px / bg #F4F5F7 / border-radius 8px / icon 20px #6B778C centered
+  Unit label: 18px weight 700 #172B4D / margin-top 12px
+  Symbol row: flex / gap 6px / margin-top 4px
+    Symbol badge: bg #F4F5F7 / text #6B778C / 12px weight 600 / border-radius 4px / padding 2px 8px
+  Use case: 13px #6B778C / margin-top 8px / line-height 18px
+  Divider: 1px solid #F4F5F7 / margin 12px 0
+  EU row: flex row / space-between / align-center
+    Label: "EU INVOICE CODE" — 10px 600 uppercase #A5ADBA
+    Value: monospace 12px 500 #6B778C
+
+6 CARDS:
+
+Card 1 (col 1 row 1):
+  Icon: box/package (outline)
+  Unit: "€ / piece"
+  Symbol: "pc" badge
+  Use case: "Per collection event or per service unit"
+  EU: "C62"
+
+Card 2 (col 2 row 1):
+  Icon: scale / weight (outline)
+  Unit: "€ / kg · ton"
+  Symbol badges: "kg" + "TNE"
+  Use case: "Weight-based pricing for waste by mass"
+  EU: "KGM · TNE"
+
+Card 3 (col 3 row 1):
+  Icon: cube / box-3d (outline)
+  Unit: "€ / m³"
+  Symbol: "m³" badge
+  Use case: "Volume-based pricing for containers"
+  EU: "MTQ"
+
+Card 4 (col 1 row 2):
+  Icon: droplet (outline)
+  Unit: "€ / liter"
+  Symbol: "L" badge
+  Use case: "Liquid and semi-liquid waste streams"
+  EU: "LTR"
+
+Card 5 (col 2 row 2):
+  Icon: ruler / arrow-right-left (outline)
+  Unit: "€ / meter"
+  Symbol: "m" badge
+  Use case: "Distance-based transport or cable services"
+  EU: "MTR"
+
+Card 6 (col 3 row 2):
+  Icon: clock (outline)
+  Unit: "€ / hour"
+  Symbol: "h" badge
+  Use case: "Time-based services such as audits or inspections"
+  EU: "HUR"
+
+Card 4 should show a HOVER state: shadow slightly elevated (0 4px 12px rgba(0,0,0,0.12)) / bg #FAFBFC
+
+
+---
+SCREEN G — ZONES (LIST VIEW — VIEW ONLY / HARDCODED)
+Frame name: "S1-G — Zones List"
+---
+
+Sidebar: "Zones" active.
+
+[PAGE HEADER]
+Breadcrumb: Reference Data > Zones
+H1: "Zones"
+Subtitle: "Geographic pricing zones. A property's zone determines which pricing rules apply to its orders."
+
+[WARNING BANNER — margin-bottom 24px]
+Warning type (orange left border):
+Icon: alert-triangle 16px #FF8B00
+Text: "Zone management is view-only in Release 1. Interactive map-based zone drawing and automatic
+       zone detection via geospatial coordinates will be available in Release 2 (Sprint 3, March 30)."
+
+[TOOLBAR]
+Left: Search (280px) placeholder "Search zones..." — show as DISABLED (bg #F4F5F7, text #A5ADBA)
+Right: "+ New Zone" button — DISABLED state (bg #DFE1E6, text #A5ADBA, cursor not-allowed)
+       tooltip on hover: "Map-based zone creation available from Release 2 (Sprint 3)"
+
+[TABLE]
+Columns:
+  Zone Name      — 180px / left
+  Type           — 120px / left
+  Description    — flex / left
+  Products       — 140px / center
+  Status         — 100px / center
+  —              — 48px / center (lock icon column, no header label)
+
+Header: standard style. Lock column header: lock icon 14px #DFE1E6 (no label)
+
+DATA ROWS (3 hardcoded — no hover actions, lock icon in last col):
+
+Row 1:
+  Name:        "Urban" (14px 500 #172B4D)
+  Type:        "Urban" pill (bg #DEEBFF, text #0052CC, border-radius 100px)
+  Description: "High-density city districts and commercial town centres"
+  Products:    "8 products" (14px #6B778C)
+  Status:      "Active" (bg #E3FCEF, text #006644)
+  Lock:        lock icon 14px #DFE1E6
+
+Row 2:
+  Name:        "Suburban"
+  Type:        "Suburban" pill (bg #E6FCFF, text #006C8A)
+  Description: "Residential outskirts, commuter towns and semi-urban areas"
+  Products:    "5 products"
+  Status:      "Active"
+  Lock:        lock icon
+
+Row 3:
+  Name:        "Rural"
+  Type:        "Rural" pill (bg #FFFAE6, text #974F0C)
+  Description: "Low-density countryside, remote areas and agricultural zones"
+  Products:    "3 products"
+  Status:      "Active"
+  Lock:        lock icon
+
+Table footer: "3 zones — system-defined. Custom zone drawing available from Release 2."
+
+[NOTE CARD — below table, margin-top 16px]
+bg #FAFBFC / border 1px solid #DFE1E6 / border-radius 8px / padding 16px
+Row: info-circle icon 16px #6B778C + text:
+  "In Release 2, zones will be drawn as polygons on an interactive map. Given a property's GPS
+   coordinates, the system will automatically determine which zone it falls in and apply the
+   correct pricing rules — no manual assignment needed."
+  13px #6B778C / line-height 18px
+
+
+---
+SCREEN H — PRODUCTS (EMPTY STATE — SPRINT 1 PARTIAL)
+Frame name: "S1-H — Products (Coming R2)"
+---
+
+Sidebar: "Products" nav item shown as partially enabled (not full disabled, not active):
+  text #42526E (medium, not full grey) / no bullet / "Release 2" pill right
+
+Content area:
+  [TOOLBAR — greyed out, at top]
+  Search input (disabled) + filter button (disabled) + "+ New Product" (disabled)
+  All controls: bg #F4F5F7, text #A5ADBA, cursor not-allowed
+
+  [EMPTY STATE — centered, margin-top 80px]
+  Illustration:
+    Stack of 3 offset rectangles (product/box icon style)
+    Colors: #DFE1E6 (back) / #C1C7D0 (middle) / #F4F5F7 (front with dashed border 2px #DFE1E6)
+    Size: 96×96px
+
+  Title: "Products are coming in Release 2"
+         20px weight 600 #172B4D / text-center / margin-top 24px
+
+  Body: "Full product catalog management — including dynamic category forms, Bill of Materials
+         composition, service level configuration, and zone-based pricing — will be available
+         from Sprint 3, starting March 30, 2026."
+        14px #6B778C / max-width 440px / text-center / line-height 22px / margin-top 8px
+
+  Pill: "Sprint 3 · March 30, 2026"
+        bg #F4F5F7 / text #6B778C / 12px weight 500 / border-radius 100px
+        padding 6px 14px / margin-top 20px
+
+  Button: "+ New Product" — primary blue DISABLED (bg #DFE1E6, text #A5ADBA)
+          margin-top 16px
+
+
+---
+SCREEN I — PRODUCT DETAIL (TAB SHELL — BASE LAYOUT)
+Frame name: "S1-I — Product Detail Tab Shell"
+---
+
+This screen shows the full product detail page layout that will be complete by Sprint 4.
+The product "Mixed Waste Collection" is open.
+Tab "Overview" is active. All other tabs show lock icons.
+
+[PRODUCT HEADER BAND]
+Width: 100% / bg white / border-bottom 1px solid #DFE1E6 / padding 20px 32px
+Extends full content width (below sidebar, from content left edge)
+
+Row 1: breadcrumb
+  ← arrow icon 14px #6B778C + "Products" 13px #6B778C (link, hover underline)
+  > "Mixed Waste Collection" 13px #42526E (current, not a link)
+
+Row 2 (margin-top 8px): flex / space-between / align-center
+  Left:
+    H1: "Mixed Waste Collection" — 22px weight 700 #172B4D
+    margin-left 0 from left
+  Right:
+    "Active" badge (green) + gap 12px + "Edit" secondary button (36px)
+
+Row 3 (margin-top 4px):
+  "Waste Collection Services" — 13px #6B778C
+  separator dot ·
+  "Mixed Municipal Waste (20 03 01)" — 13px #6B778C
+
+[TAB BAR]
+Width: 100% / height 44px / border-bottom 2px solid #DFE1E6
+padding-left: 32px / bg white
+Tabs are inline-flex items
+
+Tab items (in order):
+
+1. "Overview"
+   ACTIVE: font 14px weight 500 #0052CC
+   Bottom border: 2px solid #0052CC (drawn on top of divider, 44px from top of tab bar)
+   No icon
+
+2. "Bill of Materials"
+   LOCKED: font 14px weight 400 #A5ADBA / cursor default
+   Right of label: lock icon 12px #C1C7D0 / margin-left 4px
+   Tooltip annotation: "Available from Sprint 2 (Release 1)"
+
+3. "Configuration"
+   LOCKED: same as above
+   Tooltip: "Available from Sprint 3 (Release 2)"
+
+4. "Service Responsibility"
+   LOCKED / tooltip "Available from Sprint 4 (Release 2)"
+
+5. "Additional Services"
+   LOCKED / tooltip "Available from Sprint 4 (Release 2)"
+
+6. "Service Levels"
+   LOCKED / tooltip "Available from Sprint 4 (Release 2)"
+
+7. "Price Components"
+   LOCKED / tooltip "Available from Sprint 4 (Release 2)"
+
+8. "Wastewater"
+   LOCKED / tooltip "Available from Sprint 4 (Release 2)"
+
+Tab padding: 0 20px / gap between tabs: 0 (padding handles spacing)
+Hover on locked tab: no change (pointer-events none)
+Hover on Overview: bg rgba(0,82,204,0.05) on the tab area
+
+[OVERVIEW TAB CONTENT — padding 24px 32px]
+Two-column layout / gap 20px
+Left column: 60% width
+Right column: 40% width
+
+LEFT COLUMN — "Product Details" card:
+  bg white / border 1px solid #DFE1E6 / border-radius 8px / padding 20px
+
+  Card title row (border-bottom 1px solid #F4F5F7 / padding-bottom 12px / margin-bottom 16px):
+    "Basic Information" — 14px weight 600 #172B4D
+
+  Field rows (each height 36px / border-bottom 1px solid #F4F5F7 / last no border):
+    Each row: flex / align-center
+    Label (width 160px): 12px weight 500 #6B778C / uppercase / letter-spacing 0.04em
+    Value: 14px #172B4D
+
+    • CATEGORY:        "Waste Collection Services"
+    • WASTE FRACTION:  "Mixed Municipal Waste" with EWC badge "20 03 01" (monospace, grey pill)
+    • PRICING UNIT:    "€/ton (TNE)"
+    • STATUS:          "Active" green badge
+    • CREATED:         "2 March 2026"
+    • LAST UPDATED:    "2 March 2026"
+
+RIGHT COLUMN — "Zones & Pricing" card:
+  same card style
+
+  Card title: "Zones & Pricing"
+
+  Field rows:
+    • PRIMARY ZONE:    "— not assigned" (14px #A5ADBA italic)
+    • PRICING MODE:    "— not configured" (14px #A5ADBA italic)
+
+  Info block (margin-top 16px / padding-top 16px / border-top 1px solid #F4F5F7):
+    info-circle 14px #A5ADBA + text "Pricing configuration available from Sprint 2."
+    13px #6B778C italic
+
+[LOCKED TAB CONTENT EXAMPLE — show for "Configuration" tab as separate sub-frame]
+Frame name: "S1-I-b — Product Config Tab (Locked)"
+
+Same page header and tab bar, but "Configuration" tab is selected with a grey underline
+(2px solid #DFE1E6, not blue) and font weight 500 #42526E.
+
+Empty state (centered in content area, margin-top 48px):
+  Icon wrapper: 56×56px / bg #F4F5F7 / border-radius 50% / lock icon 24px #A5ADBA
+  Title: "Configuration" — 16px weight 600 #172B4D / margin-top 20px
+  Body: "Category-specific product fields will appear here when Products CRUD is completed
+         in Sprint 3 (Release 2, March 30, 2026). Fields are defined by the category schema
+         configured in Product Categories."
+        13px #6B778C / max-width 360px / text-center / line-height 20px / margin-top 8px
+  Release pill: "Sprint 3 · Release 2" — same pill style as Screen H / margin-top 16px
+
+
+================================================================================
+SECTION 5 — FRAME CHECKLIST
+================================================================================
+
+Produce the following named Figma frames at 1440×900px:
+
+  S1-A   Product Categories — List View (4 rows, row 3 hovered)
+  S1-A-s Product Categories — List View (loading skeleton state)
+  S1-B   New Category Modal (open on categories list, row 3 being edited)
+  S1-C   Edit Category Modal (prefilled, 4 schema fields)
+  S1-D   Waste Fractions — List View (5 rows, row 3 hovered)
+  S1-E   New Waste Fraction Modal (valid EWC state + annotation of invalid state)
+  S1-F   Pricing Units — Card Grid (card 4 hovered)
+  S1-G   Zones — List View (view only, 3 hardcoded zones)
+  S1-H   Products — Empty State
+  S1-I   Product Detail — Overview tab active
+  S1-I-b Product Detail — Configuration tab locked (empty state)
+
+Arrange frames in a 3-column grid on the Figma canvas with 40px gap between frames.
+Add section labels above each group using Figma text layers (grey, 20px, uppercase):
+  "REFERENCE DATA" / "MODALS" / "EMPTY STATES & SHELLS"
+
+================================================================================
+SECTION 6 — ANNOTATIONS & SPRINT LABELS
+================================================================================
+
+Add the following annotation stickers to each frame using Figma's annotation layer:
+
+Green sticker "Sprint 1 ✓" — on S1-A, S1-B, S1-C, S1-D, S1-E, S1-F, S1-G
+Yellow sticker "Sprint 1 Partial" — on S1-H
+Blue sticker "Base Layout Shell" — on S1-I, S1-I-b
+
+On S1-I and S1-I-b, add inline sprint labels next to each locked tab:
+  Small tag: "S2", "S3", "S4" etc in grey (#A5ADBA) / font 10px / positioned
+  above the tab bar for clarity
+
+On S1-G (Zones), add a callout annotation pointing to the disabled "+ New Zone" button:
+  "This button unlocks in Sprint 3 when map-based polygon drawing is implemented"
+
+================================================================================
+END OF PROMPT
+================================================================================
