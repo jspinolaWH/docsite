@@ -22,6 +22,7 @@ body {
   display: flex; align-items: center; justify-content: space-between;
 }
 .page-title { font-size: 18px; font-weight: 700; color: #1a1a2e; }
+.header-right { display: flex; align-items: center; gap: 14px; }
 .header-user { display: flex; align-items: center; gap: 10px; }
 .avatar {
   width: 32px; height: 32px; background: #0052CC; border-radius: 50%;
@@ -29,6 +30,13 @@ body {
   font-size: 12px; font-weight: 700; color: white;
 }
 .user-name { font-size: 13px; color: #42526E; }
+.fullscreen-btn {
+  height: 30px; padding: 0 10px; border-radius: 5px;
+  border: 1px solid #DFE1E6; background: #fff; cursor: pointer;
+  font-size: 12px; color: #42526E; display: flex; align-items: center; gap: 5px;
+  font-family: inherit;
+}
+.fullscreen-btn:hover { background: #F4F5F7; color: #0052CC; border-color: #0052CC; }
 
 /* ─── HORIZONTAL TAB NAV ─── */
 .tab-nav {
@@ -45,12 +53,11 @@ body {
 .tab-nav-item:hover { color: #0052CC; }
 .tab-nav-item.active { color: #0052CC; font-weight: 600; border-bottom-color: #0052CC; }
 .tab-nav-item.disabled { color: #A5ADBA; cursor: default; pointer-events: none; }
-.tab-badge {
-  font-size: 10px; font-weight: 500; color: #6B778C; background: #F4F5F7;
-  border-radius: 100px; padding: 1px 6px; font-style: normal;
+.tab-sprint-pill {
+  font-size: 9px; font-weight: 500; color: #A5ADBA; background: #F4F5F7;
+  border-radius: 100px; padding: 1px 6px; font-style: italic;
 }
-.tab-nav-item.active .tab-badge { background: #DEEBFF; color: #0052CC; }
-.tab-nav-item.disabled .tab-badge { color: #A5ADBA; }
+.tab-nav-item.disabled .tab-sprint-pill { color: #C1C7D0; }
 
 /* ─── BODY LAYOUT ─── */
 .body-layout {
@@ -460,6 +467,22 @@ input[type=checkbox] {
 .sub-btn.active { background: #DEEBFF; color: #0052CC; border-color: #0052CC; }
 .sub-btn:hover:not(.active) { background: #F4F5F7; }
 
+/* ─── NO DATA STATE ─── */
+.no-data {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 80px 32px; text-align: center;
+}
+.no-data-icon {
+  width: 56px; height: 56px; background: #F4F5F7; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.no-data-title { font-size: 15px; font-weight: 600; color: #172B4D; margin-top: 18px; }
+.no-data-body { font-size: 13px; color: #6B778C; max-width: 360px; line-height: 1.6; margin-top: 6px; }
+.no-data-pill {
+  margin-top: 14px; background: #F4F5F7; color: #6B778C; font-size: 11px;
+  font-weight: 500; border-radius: 100px; padding: 4px 14px; display: inline-block;
+}
+
 /* ─── TOOLTIP ─── */
 [data-tip] { position: relative; }
 [data-tip]:hover::after {
@@ -478,35 +501,25 @@ input[type=checkbox] {
 <!-- PAGE HEADER -->
 <div class="page-header">
   <div class="page-title">Product Management — WasteHero 2.0</div>
-  <div class="header-user">
-    <div class="avatar">AJ</div>
-    <span class="user-name">Alex Jensen</span>
+  <div class="header-right">
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Full Screen</button>
+    <div class="header-user">
+      <div class="avatar">AJ</div>
+      <span class="user-name">Alex Jensen</span>
+    </div>
   </div>
 </div>
 
 <!-- HORIZONTAL TAB NAVIGATION -->
 <nav class="tab-nav">
-  <div class="tab-nav-item" id="tabnav-products" onclick="switchTab('products')">
-    Products <span class="tab-badge">PD-41</span>
-  </div>
-  <div class="tab-nav-item active" id="tabnav-categories" onclick="switchTab('categories')">
-    Product Categories <span class="tab-badge">PD-39</span>
-  </div>
-  <div class="tab-nav-item" id="tabnav-fractions" onclick="switchTab('fractions')">
-    Waste Fractions <span class="tab-badge">PD-39</span>
-  </div>
-  <div class="tab-nav-item" id="tabnav-units" onclick="switchTab('units')">
-    Pricing Units <span class="tab-badge">PD-326</span>
-  </div>
-  <div class="tab-nav-item" id="tabnav-zones" onclick="switchTab('zones')">
-    Zones <span class="tab-badge">PD-325</span>
-  </div>
-  <div class="tab-nav-item disabled">
-    Price Lists <span class="tab-badge">PD-330</span>
-  </div>
-  <div class="tab-nav-item disabled">
-    📋 PD Overview
-  </div>
+  <div class="tab-nav-item" id="tabnav-products" onclick="switchTab('products')">Products</div>
+  <div class="tab-nav-item active" id="tabnav-categories" onclick="switchTab('categories')">Product Categories</div>
+  <div class="tab-nav-item" id="tabnav-fractions" onclick="switchTab('fractions')">Waste Fractions</div>
+  <div class="tab-nav-item" id="tabnav-units" onclick="switchTab('units')">Pricing Units</div>
+  <div class="tab-nav-item" id="tabnav-zones" onclick="switchTab('zones')">Zones</div>
+  <div class="tab-nav-item disabled">Price Lists <span class="tab-sprint-pill">Sprint 2</span></div>
+  <div class="tab-nav-item disabled">Price Determination <span class="tab-sprint-pill">Sprint 2</span></div>
+  <div class="tab-nav-item disabled">Price Changes <span class="tab-sprint-pill">Sprint 3</span></div>
 </nav>
 
 <!-- BODY: FILTER PANEL + MAIN CONTENT -->
@@ -535,7 +548,7 @@ input[type=checkbox] {
           <div class="toolbar-left">
             <div class="search-wrap">
               <span class="search-icon">🔍</span>
-              <input placeholder="Search categories… (PD-39)" />
+              <input placeholder="Search categories…" />
             </div>
           </div>
           <div class="toolbar-right">
@@ -548,10 +561,10 @@ input[type=checkbox] {
             <thead>
               <tr>
                 <th style="width:36px"><input type="checkbox" /></th>
-                <th>Name <span class="col-ticket">PD-39</span></th>
+                <th>Name</th>
                 <th>Description</th>
-                <th class="center" style="width:140px">Schema Fields <span class="col-ticket">PD-39</span></th>
-                <th class="center" style="width:110px">Products <span class="col-ticket">PD-41</span></th>
+                <th class="center" style="width:140px">Schema Fields</th>
+                <th class="center" style="width:110px">Products</th>
                 <th style="width:120px">Created</th>
                 <th style="width:110px" class="right">Actions</th>
               </tr>
@@ -632,7 +645,7 @@ input[type=checkbox] {
       <div class="toolbar">
         <div class="search-wrap">
           <span class="search-icon">🔍</span>
-          <input placeholder="Search waste fractions… (PD-39)" />
+          <input placeholder="Search waste fractions…" />
         </div>
         <div class="toolbar-right">
           <button class="btn btn-secondary">⚙ Filters</button>
@@ -644,11 +657,11 @@ input[type=checkbox] {
           <thead>
             <tr>
               <th style="width:36px"><input type="checkbox" /></th>
-              <th style="width:200px">Name <span class="col-ticket">PD-39</span></th>
-              <th style="width:120px">EWC Code <span class="col-ticket">PD-39</span></th>
+              <th style="width:200px">Name</th>
+              <th style="width:120px">EWC Code</th>
               <th style="width:140px">Category</th>
               <th>Description</th>
-              <th class="center" style="width:100px">Status <span class="col-ticket">PD-39</span></th>
+              <th class="center" style="width:100px">Status</th>
               <th style="width:90px" class="right">Actions</th>
             </tr>
           </thead>
@@ -709,56 +722,14 @@ input[type=checkbox] {
     </div>
 
     <!-- ══════════════════════════════
-         PRICING UNITS (S1-F)
+         PRICING UNITS (no data — not in Sprint 1 scope)
     ══════════════════════════════ -->
     <div class="screen" id="screen-units">
-      <div class="banner banner-info" style="margin-bottom:18px">
-        <span>ℹ️</span>
-        <span>These unit types are system-defined and cannot be modified. Unit conversions (e.g. kg ↔ ton) and EU e-invoicing compliance metadata will be configurable from Sprint 2.</span>
-      </div>
-      <div class="card-grid">
-        <div class="unit-card">
-          <div class="unit-icon">📦</div>
-          <div class="unit-name">€ / piece</div>
-          <div class="unit-symbols"><span class="unit-sym">pc</span></div>
-          <div class="unit-desc">Per collection event or per service unit</div>
-          <div class="unit-eu-row"><span class="unit-eu-label">EU Invoice Code</span><span class="unit-eu-val">C62</span></div>
-        </div>
-        <div class="unit-card">
-          <div class="unit-icon">⚖️</div>
-          <div class="unit-name">€ / kg · ton</div>
-          <div class="unit-symbols"><span class="unit-sym">kg</span><span class="unit-sym">TNE</span></div>
-          <div class="unit-desc">Weight-based pricing for waste by mass</div>
-          <div class="unit-eu-row"><span class="unit-eu-label">EU Invoice Code</span><span class="unit-eu-val">KGM · TNE</span></div>
-        </div>
-        <div class="unit-card">
-          <div class="unit-icon">📐</div>
-          <div class="unit-name">€ / m³</div>
-          <div class="unit-symbols"><span class="unit-sym">m³</span></div>
-          <div class="unit-desc">Volume-based pricing for containers</div>
-          <div class="unit-eu-row"><span class="unit-eu-label">EU Invoice Code</span><span class="unit-eu-val">MTQ</span></div>
-        </div>
-        <div class="unit-card">
-          <div class="unit-icon">💧</div>
-          <div class="unit-name">€ / liter</div>
-          <div class="unit-symbols"><span class="unit-sym">L</span></div>
-          <div class="unit-desc">Liquid and semi-liquid waste streams</div>
-          <div class="unit-eu-row"><span class="unit-eu-label">EU Invoice Code</span><span class="unit-eu-val">LTR</span></div>
-        </div>
-        <div class="unit-card">
-          <div class="unit-icon">📏</div>
-          <div class="unit-name">€ / meter</div>
-          <div class="unit-symbols"><span class="unit-sym">m</span></div>
-          <div class="unit-desc">Distance-based transport or cable services</div>
-          <div class="unit-eu-row"><span class="unit-eu-label">EU Invoice Code</span><span class="unit-eu-val">MTR</span></div>
-        </div>
-        <div class="unit-card">
-          <div class="unit-icon">🕐</div>
-          <div class="unit-name">€ / hour</div>
-          <div class="unit-symbols"><span class="unit-sym">h</span></div>
-          <div class="unit-desc">Time-based services such as audits or inspections</div>
-          <div class="unit-eu-row"><span class="unit-eu-label">EU Invoice Code</span><span class="unit-eu-val">HUR</span></div>
-        </div>
+      <div class="no-data">
+        <div class="no-data-icon">📋</div>
+        <div class="no-data-title">No data for this sprint</div>
+        <p class="no-data-body">Pricing Units configuration is not part of Sprint 1. System-defined unit types and EU e-invoicing compliance metadata will be available from Sprint 2.</p>
+        <span class="no-data-pill">Available from Sprint 2</span>
       </div>
     </div>
 
@@ -781,11 +752,11 @@ input[type=checkbox] {
         <table>
           <thead>
             <tr>
-              <th style="width:180px">Zone Name <span class="col-ticket">PD-325</span></th>
+              <th style="width:180px">Zone Name</th>
               <th style="width:120px">Type</th>
               <th>Description</th>
               <th class="center" style="width:130px">Products</th>
-              <th class="center" style="width:100px">Status <span class="col-ticket">PD-325</span></th>
+              <th class="center" style="width:100px">Status</th>
               <th class="center" style="width:50px">🔒</th>
             </tr>
           </thead>
@@ -830,12 +801,12 @@ input[type=checkbox] {
     <div class="screen" id="screen-products">
       <div class="toolbar">
         <div class="toolbar-left">
-          <div class="search-wrap"><span class="search-icon">🔍</span><input placeholder="Search products… (PD-41)" /></div>
+          <div class="search-wrap"><span class="search-icon">🔍</span><input placeholder="Search products…" /></div>
           <button class="btn btn-secondary">⚙ Filters</button>
         </div>
         <div class="toolbar-right">
-          <button class="btn btn-outline" disabled>📥 Import (PD-39)</button>
-          <button class="btn btn-outline" disabled>📤 Export (PD-39)</button>
+          <button class="btn btn-outline" disabled>📥 Import</button>
+          <button class="btn btn-outline" disabled>📤 Export</button>
           <button class="btn btn-primary" onclick="openModal('m-product-coming')">+ New Product</button>
         </div>
       </div>
@@ -844,13 +815,13 @@ input[type=checkbox] {
           <thead>
             <tr>
               <th style="width:36px"><input type="checkbox" /></th>
-              <th>Product Name <span class="col-ticket">PD-41</span></th>
-              <th style="width:200px">Category <span class="col-ticket">PD-41</span></th>
-              <th style="width:160px">Type <span class="col-ticket">PD-39</span></th>
-              <th class="center" style="width:90px">Status <span class="col-ticket">PD-41</span></th>
-              <th class="center" style="width:110px">Price Lists <span class="col-ticket">PD-330</span></th>
-              <th class="center" style="width:110px">Components <span class="col-ticket">PD-40</span></th>
-              <th class="center" style="width:90px">Portal <span class="col-ticket">PD-41</span></th>
+              <th>Product Name</th>
+              <th style="width:200px">Category</th>
+              <th style="width:160px">Type</th>
+              <th class="center" style="width:90px">Status</th>
+              <th class="center" style="width:110px">Price Lists</th>
+              <th class="center" style="width:110px">Components</th>
+              <th class="center" style="width:90px">Portal</th>
               <th style="width:90px" class="right">Actions</th>
             </tr>
           </thead>
@@ -1186,7 +1157,7 @@ input[type=checkbox] {
 // Filter panel config per tab
 const filterPanels = {
   categories: {
-    label: 'Filter by Type (PD-39)',
+    label: 'Filter by Type',
     items: [
       { label: 'All Categories', count: 4, active: true },
       { label: 'Service', count: 2 },
@@ -1205,16 +1176,11 @@ const filterPanels = {
     ]
   },
   units: {
-    label: 'Filter by Type (PD-326)',
-    items: [
-      { label: 'All Units', count: 6, active: true },
-      { label: 'Weight', count: 2 },
-      { label: 'Volume', count: 2 },
-      { label: 'Time / Distance', count: 2 },
-    ]
+    label: 'Filter by Type',
+    items: []
   },
   zones: {
-    label: 'Filter by Type (PD-325)',
+    label: 'Filter by Type',
     items: [
       { label: 'All Zones', count: 3, active: true },
       { label: 'Urban', count: 1 },
@@ -1223,7 +1189,7 @@ const filterPanels = {
     ]
   },
   products: {
-    label: 'Filter by Type (PD-41)',
+    label: 'Filter by Type',
     items: [
       { label: 'All Products', count: 8, active: true },
       { label: 'Service Product', count: 4 },
@@ -1234,7 +1200,7 @@ const filterPanels = {
     ]
   },
   detail: {
-    label: 'Filter by Type (PD-41)',
+    label: 'Filter by Type',
     items: [
       { label: 'All Products', count: 8 },
       { label: 'Service Product', count: 4, active: true },
@@ -1330,6 +1296,20 @@ document.querySelectorAll('.modal-overlay').forEach(o => {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
 });
+
+function toggleFullscreen() {
+  // If embedded in an iframe, open in a new tab for true full screen
+  if (window.self !== window.top) {
+    window.open(location.href, '_blank');
+    return;
+  }
+  // If standalone, use native fullscreen API
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen();
+  }
+}
 
 // Init
 renderFilterPanel('categories');
