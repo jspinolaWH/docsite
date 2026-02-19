@@ -3,7 +3,7 @@ slug: sprint-5-overview
 title: Sprint 5 Overview
 category: sprint-planning
 order: 5
-description: Full upgrades of all Sprint 4 MVPs, plus scheduled updates, audit logs, bulk editing, and default weights (April 27 - May 8)
+description: Full upgrades of all R2 MVPs — pricing tabs, price lists, price determination algorithm, plus FULL audit logs, bulk editing, scheduled updates, and default weights (April 27 - May 8)
 related:
   - sprint-4-overview
   - sprint-6-overview
@@ -54,16 +54,18 @@ The core of the pricing engine:
 - **Partial match and fallback logic:** When no exact match exists, selects the row with the most matching attributes
 - **Rules engine UI:** Admins can configure and test matching rules
 
-### New Features (MVP scope)
+### FULL Upgrades from R2 Operations MVPs
 
-| Feature | Description |
-|---------|-------------|
-| **Scheduled Updates (PD-328)** | Schedule a price change to take effect on a specific future date |
-| **Audit Logs (PD-329)** | Track who changed what and when — basic change log |
-| **Bulk Editing (PD-331)** | Select multiple price rows, apply the same change to all at once |
-| **Default Weights (PD-34)** | Simplified default weight configuration per waste fraction |
+The four operations features shipped as MVPs in Release 2 (Sprints 3–4) are now brought to their full implementations:
 
-### Bulk Editing Detail (PD-331)
+| Feature | What's Added in Sprint 5 |
+|---------|--------------------------|
+| **Audit Logs (PD-329 FULL)** | Complete compliance tracking + reports + data export |
+| **Bulk Editing (PD-331 FULL)** | Excel import/export + preview changes before applying + validation |
+| **Scheduled Updates (PD-328 FULL)** | Automated scheduling + preview of upcoming changes + rollback capability |
+| **Default Weights (PD-34 FULL)** | Complete weight configuration system per waste fraction |
+
+### Bulk Editing Detail (PD-331 FULL)
 
 1. Admin selects a set of price rows (e.g. all Rural zone rows)
 2. Chooses an action: increase by 10%
@@ -103,10 +105,10 @@ Price is based on **service date**, not order date.
 | PD-353 FULL | Wastewater | 13–16h | Tank details + custom fields |
 | PD-330 FULL | Price Lists | 22–29h | Assignment logic + effective dates |
 | PD-322 FULL | Price Determination | 66–80h | Matching algorithm + rules engine UI |
-| PD-328 MVP | Scheduled Updates | 26–33h | Manual scheduling |
-| PD-329 MVP | Audit Logs | 22–29h | Basic change tracking |
-| PD-331 MVP | Bulk Editing | 29–37h | Basic bulk update |
-| PD-34 MVP | Default Weights | 29–37h | Simplified weight config |
+| PD-329 FULL | Audit Logs | 22–29h | Complete tracking + compliance reports + export |
+| PD-331 FULL | Bulk Editing | 29–37h | Excel import/export + preview + validation |
+| PD-328 FULL | Scheduled Updates | 26–33h | Automated scheduling + preview + rollback |
+| PD-34 FULL | Default Weights | 29–37h | Complete weight configuration system |
 
 **Sprint 5 total estimate:** ~307–387h (AI-assisted, shared across Sprint 5–6)
 

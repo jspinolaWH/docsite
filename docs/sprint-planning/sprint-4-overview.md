@@ -3,7 +3,7 @@ slug: sprint-4-overview
 title: Sprint 4 Overview
 category: sprint-planning
 order: 4
-description: All remaining product tabs as MVPs plus Price Lists and Price Determination foundation — completing Release 2 (April 13-24)
+description: All remaining product tabs as MVPs, Price Lists, Price Determination foundation, plus Default Weights and Scheduled Updates — completing Release 2 (April 13-24)
 related:
   - sprint-3-overview
   - sprint-5-overview
@@ -14,6 +14,8 @@ tags:
   - products
   - price-lists
   - price-determination
+  - default-weights
+  - scheduled-updates
   - mvp
   - release-2
 ---
@@ -45,6 +47,8 @@ All features below are **MVP scope** — functional and usable, but simplified. 
 | **Wastewater** | Sewer connection flag (checkbox only) |
 | **Price Lists** | Create / edit / delete price list entities |
 | **Price Determination** | Data model + schema foundation (no matching algorithm yet) |
+| **Default Weights** | Simplified default weight configuration per waste fraction |
+| **Scheduled Updates** | Manual scheduling for future price changes |
 
 ### Service Responsibility (PD-35 MVP)
 A simple dropdown assigning the legal/financial framework for the service: Municipal, TSV, or Market-based. Whether this drives pricing (Option B) or stays as metadata (Option A) is a decision still pending — see Open Questions.
@@ -58,6 +62,12 @@ Full CRUD for price list entities — create, edit, and delete price lists. Assi
 ### Price Determination (PD-322 MVP)
 The data model and schema for price determination rows are established. The actual matching algorithm and the rules engine UI are built in Sprint 5.
 
+### Default Weights (PD-34 MVP)
+Simplified weight defaults per waste fraction. The full configurable weight system is built in Sprint 5.
+
+### Scheduled Updates (PD-328 MVP)
+Admins can manually schedule a price change to take effect on a specific future date. Automated scheduling, preview, and rollback are Sprint 5 work.
+
 ---
 
 ## Timeline
@@ -65,7 +75,7 @@ The data model and schema for price determination rows are established. The actu
 | Week | Dates | Focus |
 |------|-------|-------|
 | Week 1 | April 13–17 | Service Responsibility, Additional Services, Service Levels, Price Components |
-| Week 2 | April 20–24 | Wastewater, Price Lists, Price Determination data model, integration + testing |
+| Week 2 | April 20–24 | Wastewater, Price Lists, Price Determination data model, Default Weights, Scheduled Updates, integration + testing |
 
 **Deploy Date:** April 24, 2026 🚀
 
@@ -82,8 +92,10 @@ The data model and schema for price determination rows are established. The actu
 | PD-353 MVP | Wastewater | 13–16h | Sewer connection flag only |
 | PD-330 MVP | Price Lists | 51–66h | CRUD only |
 | PD-322 MVP | Price Determination | 44–51h | Data model foundation |
+| PD-34 MVP | Default Weights | 29–37h | Simplified weight configuration |
+| PD-328 MVP | Scheduled Updates | 26–33h | Manual future-date scheduling |
 
-**Sprint 4 total estimate:** ~211–265h (AI-assisted) | **Capacity:** 240h
+**Sprint 4 total estimate:** ~266–335h (AI-assisted) | **Capacity:** 240h ⚠️ R2 combined (Sprints 3–4) runs 0–81h over, manageable with minor scope flex
 
 ---
 

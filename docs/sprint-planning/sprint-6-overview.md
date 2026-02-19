@@ -3,7 +3,7 @@ slug: sprint-6-overview
 title: Sprint 6 Overview
 category: sprint-planning
 order: 6
-description: Conditional pricing, discounts, timing and speed surcharges, WH 2.0 integration, and production readiness — final release (May 11-22)
+description: Conditional pricing engine, FULL price changes, discounts, timing and speed pricing, WH 2.0 integration, and production readiness — final release (May 11-22)
 related:
   - sprint-5-overview
   - delivery-plan-overview
@@ -48,14 +48,14 @@ The centrepiece of Release 3. One product can have multiple price rows, each wit
 
 When a Business customer in Urban zone places an order with Municipal responsibility, the system picks Row 2 → **€70/ton** automatically.
 
-### Pricing Modifiers (all MVP scope)
+### Advanced Pricing (all FULL scope)
 
-| Feature | Description |
-|---------|-------------|
-| **Price Changes (PD-320)** | Individual product price change management |
-| **Discounts (PD-321)** | Product-level discount configuration |
-| **Timing Pricing (PD-323)** | Weekend surcharges (e.g. +€10 on weekends) |
-| **Speed Pricing (PD-324)** | Scheduled vs On-Demand pricing — 2 speed tiers |
+| Feature | Full Implementation |
+|---------|---------------------|
+| **Price Changes (PD-320 FULL)** | History tracking + price comparison + rollback to previous values |
+| **Discounts (PD-321 FULL)** | Contract-based + volume + loyalty discount types |
+| **Timing Pricing (PD-323 FULL)** | Holiday calendar + custom schedules + exception handling |
+| **Speed Pricing (PD-324 FULL)** | Express + same-day + emergency pricing tiers |
 
 ### WH 2.0 Integration
 
@@ -91,10 +91,12 @@ End-to-end integration with the WasteHero 2.0 platform:
 
 | Ticket | Scope | Estimate | Description |
 |--------|-------|----------|-------------|
-| PD-320 MVP | Price Changes | 18–24h | Individual product price changes |
-| PD-321 MVP | Discounts | 17–23h | Product-level discounts |
-| PD-323 MVP | Timing Pricing | 16–20h | Weekend surcharges |
-| PD-324 MVP | Speed Pricing | 14–19h | Scheduled + On-Demand (2 tiers) |
+| PD-320 FULL | Price Changes | 36–48h | History tracking + comparison + rollback |
+| PD-321 FULL | Discounts | 34–46h | Contract-based + volume + loyalty discounts |
+| PD-323 FULL | Timing Pricing | 32–40h | Holiday calendar + custom schedules + exceptions |
+| PD-324 FULL | Speed Pricing | 28–38h | Express + same-day + emergency pricing |
+
+**Sprint 6 total estimate:** ~130–172h (ticket work) + integration and production hardening | **Capacity:** 240h
 
 ---
 
@@ -125,12 +127,10 @@ After Release 3 deploys on May 22:
 
 ## Deferred to Release 4+
 
-The following features were explicitly out of scope for Release 3:
+The following feature is explicitly out of scope for Release 3:
 
 | Feature | Note |
 |---------|------|
-| Product Bundles | Deferred entirely — significant complexity |
-| Bulk Excel import/export | Full version deferred; basic bulk editing ships in Sprint 5 |
-| Contract-level discounts | Beyond Release 3 scope |
-| Holiday pricing | Timing pricing MVP covers weekends only |
-| Emergency speed pricing | Standard + Express covered in Sprint 5 MVP |
+| Product Bundles | Deferred entirely — significant complexity, no business pressure for R3 |
+
+> **Note:** Features previously considered for deferral — bulk Excel import/export, contract-level discounts, holiday pricing, and emergency speed pricing — are all delivered as FULL implementations in Release 3 (Sprints 5–6).

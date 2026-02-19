@@ -3,7 +3,7 @@ slug: sprint-3-overview
 title: Sprint 3 Overview
 category: sprint-planning
 order: 3
-description: Products CRUD with dynamic forms, Bill of Materials tab, and full map-based geospatial zone drawing (March 30 - April 10)
+description: Products CRUD with dynamic forms, map-based geospatial zones, plus Audit Logs and Bulk Editing MVPs — opening Release 2 (March 30 - April 10)
 related:
   - sprint-2-overview
   - sprint-4-overview
@@ -15,6 +15,8 @@ tags:
   - zones
   - geospatial
   - bill-of-materials
+  - audit-logs
+  - bulk-editing
 ---
 
 # Sprint 3 Overview
@@ -51,6 +53,15 @@ Upgrade from 3 hardcoded zones to fully dynamic map-based zones:
 | **Automatic zone detection** | Given a property's coordinates, determine which zone it falls in |
 | **geospatial-data-service integration** | MongoDB-backed spatial queries via the existing service |
 
+### Operations MVPs
+
+Moving operations features to Release 2 enables early value delivery and gives Sprint 5's FULL upgrades a solid base to build on.
+
+| Feature | MVP Scope |
+|---------|-----------|
+| **Audit Logs (PD-329 MVP)** | Basic change tracking — who changed what, and when |
+| **Bulk Editing (PD-331 MVP)** | Select multiple products/prices, apply the same change to all |
+
 ---
 
 ## How Zone Detection Works
@@ -82,8 +93,10 @@ This enables the pricing model to automatically apply zone-specific prices (e.g.
 |--------|-------|----------|-------------|
 | PD-325 FULL | Zones Geospatial | 80–102h | Map interface, polygon drawing, automatic zone detection |
 | PD-41 FULL | Products Complete | 37–58h | Configuration form, Bill of Materials tab |
+| PD-329 MVP | Audit Logs | 22–29h | Basic change tracking (who, when, what) |
+| PD-331 MVP | Bulk Editing | 29–37h | Select multiple products, apply same change |
 
-**Sprint 3 total estimate:** ~117–160h | **Capacity:** 240h
+**Sprint 3 total estimate:** ~168–226h | **Capacity:** 240h
 
 ---
 
