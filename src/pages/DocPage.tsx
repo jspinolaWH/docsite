@@ -35,6 +35,17 @@ export function DocPage() {
         <article className="doc-article">
           <DocMeta doc={doc} />
           <DocRenderer content={doc.content} />
+          {doc.designPreview && (
+            <div className="design-preview-section">
+              <h2 className="design-preview-title">Design Preview</h2>
+              <p className="design-preview-subtitle">Interactive prototype — click nav items to switch screens, buttons to open modals.</p>
+              <iframe
+                src={doc.designPreview}
+                title="Design Preview"
+                className="design-preview-iframe"
+              />
+            </div>
+          )}
           {doc.related.length > 0 && <RelatedDocs slugs={doc.related} />}
         </article>
 

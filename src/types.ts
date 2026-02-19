@@ -9,6 +9,7 @@ export interface DocEntry {
   tags: string[];
   content: string;
   filePath: string;
+  designPreview?: string; // Optional path to an interactive HTML design preview
 }
 
 export interface CategoryConfig {

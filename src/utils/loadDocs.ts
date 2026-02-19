@@ -74,6 +74,7 @@ export function loadDocs(): DocEntry[] {
       tags: (meta.tags as string[]) || [],
       content,
       filePath,
+      designPreview: meta.designPreview as string | undefined,
     });
   }
 

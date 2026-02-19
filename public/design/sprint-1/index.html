@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sprint 1 — WasteHero 2.0 Design Prototype</title>
+<style>
+/* ─────────────────────────────────────────
+   DESIGN TOKENS
+───────────────────────────────────────── */
+:root {
+  --blue: #0052CC;
+  --blue-hover: #0747A6;
+  --blue-light: #DEEBFF;
+  --text-high: #172B4D;
+  --text-med: #42526E;
+  --text-low: #6B778C;
+  --text-disabled: #A5ADBA;
+  --bg-page: #FFFFFF;
+  --bg-sidebar: #F4F5F7;
+  --bg-surface: #FAFBFC;
+  --bg-hover: #F4F5F7;
+  --bg-selected: #DEEBFF;
+  --border: #DFE1E6;
+  --border-focus: #0052CC;
+  --border-error: #DE350B;
+  --green: #00875A;
+  --green-light: #E3FCEF;
+  --green-text: #006644;
+  --orange: #FF8B00;
+  --orange-light: #FFFAE6;
+  --orange-text: #974F0C;
+  --red: #DE350B;
+  --red-light: #FFEBE6;
+  --teal: #006C8A;
+  --teal-light: #E6FCFF;
+  --topbar: #1A2332;
+  --divider: #F4F5F7;
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+  --shadow-modal: 0 8px 32px rgba(0,0,0,0.20), 0 2px 8px rgba(0,0,0,0.10);
+  --shadow-dropdown: 0 4px 12px rgba(0,0,0,0.15);
+  --shadow-topbar: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  color: var(--text-high);
+  background: var(--bg-page);
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* ─────────────────────────────────────────
+   TOP BAR
+───────────────────────────────────────── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; height: 56px;
+  background: var(--topbar);
+  box-shadow: var(--shadow-topbar);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+  z-index: 100;
+}
+.topbar-left { display: flex; align-items: center; gap: 10px; }
+.wh-logo {
+  width: 28px; height: 28px; background: var(--blue); border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: white;
+}
+.topbar-name { font-size: 15px; font-weight: 600; color: white; }
+.topbar-right { display: flex; align-items: center; gap: 16px; }
+.avatar {
+  width: 32px; height: 32px; background: var(--blue); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600; color: white;
+}
+.topbar-user { font-size: 14px; color: rgba(255,255,255,0.85); }
+.topbar-caret { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+/* ─────────────────────────────────────────
+   SIDEBAR
+───────────────────────────────────────── */
+.sidebar {
+  position: fixed; left: 0; top: 56px; bottom: 0; width: 240px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  z-index: 50;
+  padding: 16px 0 16px 0;
+}
+.sidebar-section-label {
+  padding: 16px 16px 4px 16px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  color: var(--text-low); letter-spacing: 0.10em;
+}
+.sidebar-section-label:first-child { padding-top: 8px; }
+.nav-item {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 36px; margin: 1px 8px; border-radius: 4px;
+  padding: 0 12px; cursor: pointer;
+  font-size: 14px; font-weight: 400; color: var(--text-high);
+  transition: background 0.1s;
+  user-select: none;
+}
+.nav-item:hover { background: #EBECF0; }
+.nav-item.active {
+  background: var(--bg-selected);
+  color: var(--blue); font-weight: 500;
+  border-left: 3px solid var(--blue);
+  padding-left: 9px;
+}
+.nav-item.disabled {
+  color: var(--text-disabled); cursor: default; pointer-events: none;
+}
+.nav-item.disabled:hover { background: none; }
+.nav-pill {
+  font-size: 10px; font-weight: 500; color: var(--text-disabled);
+  background: var(--bg-sidebar); border-radius: 100px;
+  padding: 1px 6px; font-style: italic;
+}
+
+/* ─────────────────────────────────────────
+   CONTENT AREA
+───────────────────────────────────────── */
+.content {
+  position: fixed; left: 240px; top: 56px; right: 0; bottom: 0;
+  background: var(--bg-page);
+  overflow-y: auto;
+  padding: 32px;
+}
+
+/* ─────────────────────────────────────────
+   SCREENS (show/hide)
+───────────────────────────────────────── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ─────────────────────────────────────────
+   PAGE HEADER
+───────────────────────────────────────── */
+.breadcrumb {
+  font-size: 12px; color: var(--text-disabled); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 4px;
+}
+.breadcrumb-sep { color: var(--text-disabled); }
+.breadcrumb-current { color: var(--text-low); }
+.page-title { font-size: 24px; font-weight: 700; color: var(--text-high); line-height: 32px; }
+.page-subtitle { font-size: 14px; color: var(--text-low); margin-top: 4px; }
+
+/* ─────────────────────────────────────────
+   TOOLBAR
+───────────────────────────────────────── */
+.toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 24px; height: 36px;
+}
+
+/* ─────────────────────────────────────────
+   BUTTONS
+───────────────────────────────────────── */
+.btn {
+  height: 36px; padding: 0 16px; border-radius: 4px; border: none;
+  font-size: 14px; font-weight: 500; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: inherit; transition: background 0.15s;
+}
+.btn-primary { background: var(--blue); color: white; }
+.btn-primary:hover { background: var(--blue-hover); }
+.btn-primary:disabled { background: var(--border); color: var(--text-disabled); cursor: not-allowed; }
+.btn-secondary {
+  background: white; color: var(--text-high);
+  border: 1px solid var(--border); font-weight: 400;
+}
+.btn-secondary:hover { background: var(--bg-hover); border-color: #C1C7D0; }
+.btn-danger { background: var(--red); color: white; }
+.btn-danger:hover { background: #BF2600; }
+
+/* ─────────────────────────────────────────
+   INPUTS
+───────────────────────────────────────── */
+.input-wrap { position: relative; }
+.input {
+  height: 36px; padding: 0 12px; border: 1px solid var(--border);
+  border-radius: 4px; font-size: 14px; color: var(--text-high);
+  font-family: inherit; background: white; outline: none; width: 100%;
+}
+.input::placeholder { color: var(--text-disabled); }
+.input:focus { border: 2px solid var(--border-focus); }
+.input.valid { border-color: var(--green); }
+.input.error { border: 2px solid var(--border-error); }
+.input:disabled { background: var(--bg-hover); color: var(--text-disabled); cursor: not-allowed; }
+.input-search {
+  height: 36px; width: 280px; padding: 0 12px 0 36px;
+  border: 1px solid var(--border); border-radius: 4px;
+  font-size: 14px; font-family: inherit; outline: none;
+}
+.input-search:disabled { background: var(--bg-hover); color: var(--text-disabled); cursor: not-allowed; }
+.search-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-disabled); font-size: 14px; pointer-events: none;
+}
+.textarea {
+  min-height: 80px; padding: 8px 12px; border: 1px solid var(--border);
+  border-radius: 4px; font-size: 14px; font-family: inherit; resize: vertical;
+  width: 100%; outline: none;
+}
+.textarea:focus { border: 2px solid var(--border-focus); }
+.select {
+  height: 36px; padding: 0 32px 0 12px; border: 1px solid var(--border);
+  border-radius: 4px; font-size: 14px; font-family: inherit; background: white;
+  appearance: none; cursor: pointer; outline: none; width: 100%;
+}
+.select:focus { border: 2px solid var(--border-focus); }
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: "▾"; position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%); color: var(--text-low); pointer-events: none;
+}
+
+/* ─────────────────────────────────────────
+   TOGGLE
+───────────────────────────────────────── */
+.toggle-wrap { display: flex; align-items: center; gap: 12px; }
+.toggle {
+  width: 36px; height: 20px; border-radius: 10px; border: none;
+  cursor: pointer; position: relative; transition: background 0.15s;
+  flex-shrink: 0;
+}
+.toggle.on { background: var(--blue); }
+.toggle.off { background: var(--border); }
+.toggle::after {
+  content: ''; position: absolute; top: 2px;
+  width: 16px; height: 16px; border-radius: 50%; background: white;
+  transition: left 0.15s;
+}
+.toggle.on::after { left: 18px; }
+.toggle.off::after { left: 2px; }
+
+/* ─────────────────────────────────────────
+   BADGES / PILLS
+───────────────────────────────────────── */
+.badge {
+  border-radius: 100px; padding: 2px 10px;
+  font-size: 12px; font-weight: 600; display: inline-flex; align-items: center;
+}
+.badge-active { background: var(--green-light); color: var(--green-text); }
+.badge-inactive { background: var(--bg-hover); color: var(--text-low); }
+.badge-blue { background: var(--blue-light); color: var(--blue); }
+.badge-teal { background: var(--teal-light); color: var(--teal); }
+.badge-orange { background: var(--orange-light); color: var(--orange-text); }
+.badge-schema { background: var(--blue-light); color: var(--blue); }
+.ewc-code {
+  font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 500;
+  background: var(--bg-hover); border: 1px solid var(--border);
+  border-radius: 4px; padding: 2px 8px; color: var(--text-high);
+  display: inline-block;
+}
+
+/* ─────────────────────────────────────────
+   TABLE
+───────────────────────────────────────── */
+.table-wrap {
+  width: 100%; border: 1px solid var(--border); border-radius: 8px;
+  overflow: hidden; margin-top: 16px;
+}
+table { width: 100%; border-collapse: collapse; }
+thead tr {
+  height: 40px; background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+}
+thead th {
+  padding: 0 16px; font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-low);
+  text-align: left;
+}
+thead th.center { text-align: center; }
+thead th.right { text-align: right; }
+tbody tr {
+  height: 48px; border-bottom: 1px solid var(--divider);
+  background: white; cursor: default;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #F8F9FA; }
+tbody tr.row-hover { background: #F8F9FA; }
+tbody td {
+  padding: 0 16px; font-size: 14px; color: var(--text-high);
+}
+tbody td.center { text-align: center; }
+tbody td.right { text-align: right; }
+tbody td .truncate {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  max-width: 300px; display: block; color: var(--text-low);
+}
+.table-footer {
+  height: 40px; padding: 0 16px; background: white;
+  border-top: 1px solid var(--divider);
+  display: flex; align-items: center;
+  font-size: 12px; color: var(--text-low);
+}
+.row-actions {
+  display: flex; gap: 4px; align-items: center; justify-content: flex-end;
+}
+.icon-btn {
+  width: 28px; height: 28px; border-radius: 4px; border: none;
+  background: none; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; font-size: 14px; color: var(--text-low);
+  transition: background 0.1s, color 0.1s;
+}
+.icon-btn:hover { background: var(--bg-hover); }
+.icon-btn.edit:hover { color: var(--blue); }
+.icon-btn.delete:hover { color: var(--red); }
+.actions-hidden { opacity: 0; }
+tbody tr.row-hover .actions-hidden { opacity: 1; }
+.lock-icon { color: var(--border); font-size: 14px; }
+
+/* ─────────────────────────────────────────
+   BANNERS
+───────────────────────────────────────── */
+.banner {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 16px; border-radius: 4px; font-size: 13px;
+}
+.banner-info {
+  background: var(--blue-light); border-left: 4px solid var(--blue);
+  color: var(--text-high);
+}
+.banner-warning {
+  background: var(--orange-light); border-left: 4px solid var(--orange);
+  color: var(--orange-text);
+}
+.banner-icon { flex-shrink: 0; margin-top: 1px; }
+
+/* ─────────────────────────────────────────
+   CARDS
+───────────────────────────────────────── */
+.card {
+  background: white; border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: var(--shadow-card); padding: 20px;
+}
+
+/* ─────────────────────────────────────────
+   UNIT CARDS (Pricing Units grid)
+───────────────────────────────────────── */
+.card-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  margin-top: 0;
+}
+.unit-card {
+  background: white; border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08); padding: 20px;
+  display: flex; flex-direction: column; transition: box-shadow 0.15s, background 0.15s;
+}
+.unit-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12); background: var(--bg-surface);
+}
+.unit-card.hovered {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12); background: var(--bg-surface);
+}
+.unit-icon-wrap {
+  width: 40px; height: 40px; background: var(--bg-hover); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+}
+.unit-label { font-size: 18px; font-weight: 700; color: var(--text-high); margin-top: 12px; }
+.unit-symbols { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+.unit-symbol {
+  background: var(--bg-hover); color: var(--text-low); font-size: 12px;
+  font-weight: 600; border-radius: 4px; padding: 2px 8px;
+}
+.unit-use-case { font-size: 13px; color: var(--text-low); margin-top: 8px; line-height: 18px; }
+.unit-divider { height: 1px; background: var(--divider); margin: 12px 0; }
+.unit-eu-row { display: flex; justify-content: space-between; align-items: center; }
+.unit-eu-label { font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-disabled); }
+.unit-eu-value { font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 500; color: var(--text-low); }
+
+/* ─────────────────────────────────────────
+   MODAL
+───────────────────────────────────────── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(23,43,77,0.5); z-index: 200;
+  align-items: flex-start; justify-content: center;
+  padding-top: 72px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: white; border-radius: 8px; box-shadow: var(--shadow-modal);
+  width: 640px; max-height: calc(100vh - 120px); overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+.modal-sm { width: 560px; }
+.modal-header {
+  height: 56px; padding: 0 24px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.modal-title { font-size: 18px; font-weight: 600; color: var(--text-high); }
+.modal-close {
+  width: 32px; height: 32px; border: none; background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--text-low); border-radius: 4px;
+}
+.modal-close:hover { color: var(--text-high); background: var(--bg-hover); }
+.modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.modal-footer {
+  height: 64px; padding: 0 24px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.modal-divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+/* ─────────────────────────────────────────
+   FIELD GROUPS
+───────────────────────────────────────── */
+.field-group { display: flex; flex-direction: column; gap: 4px; }
+.field-label {
+  font-size: 12px; font-weight: 600; color: var(--text-high);
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.field-label .req { color: var(--red); margin-left: 2px; }
+.field-hint { font-size: 12px; color: var(--text-low); margin-top: 4px; }
+.field-error {
+  font-size: 12px; color: var(--red); margin-top: 4px;
+  display: flex; align-items: center; gap: 4px;
+}
+.input-valid-wrap { position: relative; }
+.input-valid-wrap .input { padding-right: 32px; }
+.valid-icon {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--green); font-size: 14px;
+}
+.error-icon {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--red); font-size: 14px;
+}
+
+/* ─────────────────────────────────────────
+   SCHEMA MINI TABLE
+───────────────────────────────────────── */
+.schema-table { width: 100%; }
+.schema-header {
+  display: grid;
+  grid-template-columns: 24px 1fr 140px 80px 32px;
+  gap: 8px; height: 32px; align-items: center; padding: 0 8px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  color: var(--text-low); letter-spacing: 0.06em;
+}
+.schema-row {
+  display: grid;
+  grid-template-columns: 24px 1fr 140px 80px 32px;
+  gap: 8px; height: 44px; align-items: center;
+  padding: 0 8px; border-bottom: 1px solid var(--divider);
+}
+.schema-row:last-child { border-bottom: none; }
+.drag-handle { color: #C1C7D0; font-size: 16px; cursor: grab; user-select: none; }
+.schema-delete {
+  width: 28px; height: 28px; border: none; background: none; cursor: pointer;
+  color: var(--text-low); font-size: 14px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+}
+.schema-delete:hover { color: var(--red); background: var(--red-light); }
+.add-field-btn {
+  background: none; border: none; cursor: pointer; color: var(--blue);
+  font-size: 14px; font-weight: 400; padding: 8px 8px 0 8px;
+  display: flex; align-items: center; gap: 6px; font-family: inherit;
+}
+.add-field-btn:hover { color: var(--blue-hover); }
+
+/* ─────────────────────────────────────────
+   EMPTY STATE
+───────────────────────────────────────── */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 80px 32px; text-align: center;
+}
+.empty-icon-wrap {
+  width: 56px; height: 56px; background: var(--bg-hover); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 24px;
+}
+.empty-title { font-size: 20px; font-weight: 600; color: var(--text-high); margin-top: 24px; }
+.empty-body { font-size: 14px; color: var(--text-low); max-width: 440px; line-height: 22px; margin-top: 8px; }
+.empty-pill {
+  background: var(--bg-hover); color: var(--text-low); font-size: 12px;
+  font-weight: 500; border-radius: 100px; padding: 6px 14px; margin-top: 20px;
+  display: inline-block;
+}
+
+/* ─────────────────────────────────────────
+   NOTE CARD (Zones)
+───────────────────────────────────────── */
+.note-card {
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 16px; margin-top: 16px;
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 13px; color: var(--text-low); line-height: 18px;
+}
+
+/* ─────────────────────────────────────────
+   PRODUCT DETAIL
+───────────────────────────────────────── */
+.product-header {
+  background: white; border-bottom: 1px solid var(--border);
+  padding: 20px 32px; margin: -32px -32px 0 -32px;
+}
+.back-link {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 13px; color: var(--text-low); cursor: pointer;
+  text-decoration: none;
+}
+.back-link:hover { color: var(--blue); }
+.product-title-row {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 8px;
+}
+.product-title { font-size: 22px; font-weight: 700; color: var(--text-high); }
+.product-meta { font-size: 13px; color: var(--text-low); margin-top: 4px; }
+.product-meta-sep { margin: 0 6px; }
+
+.tab-bar {
+  background: white; border-bottom: 2px solid var(--border);
+  padding-left: 32px; height: 44px;
+  display: flex; align-items: flex-end;
+  margin: 0 -32px;
+  overflow-x: auto;
+}
+.tab {
+  padding: 0 20px; height: 44px; display: flex; align-items: center;
+  gap: 6px; cursor: pointer; font-size: 14px; font-weight: 400;
+  color: var(--text-low); border-bottom: 2px solid transparent;
+  margin-bottom: -2px; white-space: nowrap; transition: color 0.1s;
+  user-select: none;
+}
+.tab.active { color: var(--blue); font-weight: 500; border-bottom-color: var(--blue); }
+.tab.locked { color: var(--text-disabled); cursor: default; pointer-events: none; }
+.tab.selected-locked { color: var(--text-med); font-weight: 500; border-bottom-color: var(--border); cursor: default; }
+.tab-lock { font-size: 11px; color: #C1C7D0; }
+.tab-sprint { font-size: 10px; color: var(--text-disabled); margin-left: 2px; }
+
+.overview-grid { display: grid; grid-template-columns: 60fr 40fr; gap: 20px; margin-top: 24px; }
+.detail-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+.detail-card-title {
+  font-size: 14px; font-weight: 600; color: var(--text-high);
+  padding-bottom: 12px; margin-bottom: 16px;
+  border-bottom: 1px solid var(--divider);
+}
+.detail-row {
+  display: flex; align-items: center; height: 36px;
+  border-bottom: 1px solid var(--divider);
+}
+.detail-row:last-child { border-bottom: none; }
+.detail-label {
+  width: 160px; flex-shrink: 0;
+  font-size: 12px; font-weight: 500; color: var(--text-low);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.detail-value { font-size: 14px; color: var(--text-high); display: flex; align-items: center; gap: 8px; }
+.detail-placeholder { font-size: 14px; color: var(--text-disabled); font-style: italic; }
+
+/* ─────────────────────────────────────────
+   LOCKED TAB EMPTY STATE
+───────────────────────────────────────── */
+.locked-empty {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 48px 32px; text-align: center;
+}
+.locked-icon-wrap {
+  width: 56px; height: 56px; background: var(--bg-hover); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 24px;
+}
+.locked-title { font-size: 16px; font-weight: 600; color: var(--text-high); margin-top: 20px; }
+.locked-body { font-size: 13px; color: var(--text-low); max-width: 360px; line-height: 20px; margin-top: 8px; }
+.locked-pill {
+  background: var(--bg-hover); color: var(--text-low); font-size: 12px;
+  font-weight: 500; border-radius: 100px; padding: 4px 12px; margin-top: 16px;
+  display: inline-block;
+}
+
+/* ─────────────────────────────────────────
+   SKELETON
+───────────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+.skeleton-rect {
+  border-radius: 4px; height: 14px;
+  background: linear-gradient(90deg, #F4F5F7 25%, #EBEBEB 50%, #F4F5F7 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.5s infinite linear;
+  display: inline-block;
+}
+.skeleton-row td { padding-top: 17px; padding-bottom: 17px; }
+
+/* ─────────────────────────────────────────
+   SCREEN SWITCHER (sub-screens)
+───────────────────────────────────────── */
+.sub-screen-bar {
+  display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.sub-screen-btn {
+  height: 28px; padding: 0 12px; border-radius: 4px;
+  border: 1px solid var(--border); background: white;
+  font-size: 12px; font-weight: 500; color: var(--text-low);
+  cursor: pointer; font-family: inherit;
+}
+.sub-screen-btn.active { background: var(--blue-light); color: var(--blue); border-color: var(--blue); }
+.sub-screen-btn:hover:not(.active) { background: var(--bg-hover); }
+
+/* Tooltip */
+[data-tooltip] { position: relative; }
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+  margin-bottom: 6px; background: var(--text-high); color: white;
+  font-size: 11px; padding: 4px 8px; border-radius: 4px; white-space: nowrap;
+  pointer-events: none; z-index: 300;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     TOP BAR
+═══════════════════════════════════════ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="wh-logo">WH</div>
+    <span class="topbar-name">Product &amp; Pricing</span>
+  </div>
+  <div class="topbar-right">
+    <div class="avatar">AJ</div>
+    <span class="topbar-user">Alex Jensen</span>
+    <span class="topbar-caret">▾</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SIDEBAR
+═══════════════════════════════════════ -->
+<nav class="sidebar">
+  <div class="sidebar-section-label">Reference Data</div>
+  <div class="nav-item active" id="nav-categories" onclick="showScreen('categories')">Product Categories</div>
+  <div class="nav-item" id="nav-fractions" onclick="showScreen('fractions')">Waste Fractions</div>
+  <div class="nav-item" id="nav-units" onclick="showScreen('units')">Pricing Units</div>
+  <div class="nav-item" id="nav-zones" onclick="showScreen('zones')">Zones</div>
+
+  <div class="sidebar-section-label">Products</div>
+  <div class="nav-item disabled" id="nav-products" onclick="showScreen('products')" style="pointer-events:auto;cursor:pointer;color:var(--text-med);">
+    Products <span class="nav-pill">Release 2</span>
+  </div>
+
+  <div class="sidebar-section-label">Pricing</div>
+  <div class="nav-item disabled">Price Lists <span class="nav-pill">Release 2</span></div>
+  <div class="nav-item disabled">Price Determination <span class="nav-pill">Release 2</span></div>
+  <div class="nav-item disabled">Price Changes <span class="nav-pill">Release 3</span></div>
+  <div class="nav-item disabled">Discounts <span class="nav-pill">Release 3</span></div>
+  <div class="nav-item disabled">Timing Pricing <span class="nav-pill">Release 3</span></div>
+  <div class="nav-item disabled">Speed Pricing <span class="nav-pill">Release 3</span></div>
+
+  <div class="sidebar-section-label">Operations</div>
+  <div class="nav-item disabled">Audit Logs <span class="nav-pill">Release 2</span></div>
+  <div class="nav-item disabled">Bulk Editing <span class="nav-pill">Release 2</span></div>
+  <div class="nav-item disabled">Default Weights <span class="nav-pill">Release 2</span></div>
+  <div class="nav-item disabled">Scheduled Updates <span class="nav-pill">Release 2</span></div>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     CONTENT AREA
+═══════════════════════════════════════ -->
+<main class="content">
+
+<!-- ─────────────────────────────────────
+     S1-A  PRODUCT CATEGORIES
+───────────────────────────────────────── -->
+<div class="screen active" id="screen-categories">
+  <div class="sub-screen-bar">
+    <button class="sub-screen-btn active" onclick="showSubScreen('categories','list',this)">List View</button>
+    <button class="sub-screen-btn" onclick="showSubScreen('categories','skeleton',this)">Loading Skeleton</button>
+  </div>
+
+  <!-- LIST VIEW -->
+  <div id="categories-list">
+    <div class="breadcrumb">
+      <span>Reference Data</span>
+      <span class="breadcrumb-sep">&rsaquo;</span>
+      <span class="breadcrumb-current">Product Categories</span>
+    </div>
+    <h1 class="page-title">Product Categories</h1>
+    <p class="page-subtitle">Define the types of products and the fields each type will have.</p>
+
+    <div class="toolbar">
+      <div class="input-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="input-search" placeholder="Search categories..." />
+      </div>
+      <button class="btn btn-primary" onclick="openModal('modal-new-category')">+ New Category</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:220px">Name</th>
+            <th>Description</th>
+            <th style="width:130px" class="center">Schema Fields</th>
+            <th style="width:100px" class="center">Products</th>
+            <th style="width:130px">Created</th>
+            <th style="width:80px" class="right"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Waste Collection Services</strong></td>
+            <td><span class="truncate">Recurring waste pickup and transport services</span></td>
+            <td class="center"><span class="badge badge-schema">4 fields</span></td>
+            <td class="center">12</td>
+            <td style="color:var(--text-low)">2 Mar 2026</td>
+            <td class="right"><div class="row-actions actions-hidden">
+              <button class="icon-btn edit" onclick="openModal('modal-edit-category')" title="Edit">✏️</button>
+              <button class="icon-btn delete" title="Delete">🗑️</button>
+            </div></td>
+          </tr>
+          <tr>
+            <td><strong>Container Rental</strong></td>
+            <td><span class="truncate">Fixed or time-based container hire</span></td>
+            <td class="center"><span class="badge badge-schema">3 fields</span></td>
+            <td class="center">8</td>
+            <td style="color:var(--text-low)">2 Mar 2026</td>
+            <td class="right"><div class="row-actions actions-hidden">
+              <button class="icon-btn edit" onclick="openModal('modal-edit-category')" title="Edit">✏️</button>
+              <button class="icon-btn delete" title="Delete">🗑️</button>
+            </div></td>
+          </tr>
+          <tr class="row-hover">
+            <td><strong>Hazardous Waste</strong></td>
+            <td><span class="truncate">Requires special handling and compliance documentation</span></td>
+            <td class="center"><span class="badge badge-schema">6 fields</span></td>
+            <td class="center">5</td>
+            <td style="color:var(--text-low)">3 Mar 2026</td>
+            <td class="right"><div class="row-actions">
+              <button class="icon-btn edit" onclick="openModal('modal-edit-category')" title="Edit">✏️</button>
+              <button class="icon-btn delete" title="Delete">🗑️</button>
+            </div></td>
+          </tr>
+          <tr>
+            <td><strong>Recycling Services</strong></td>
+            <td><span class="truncate">Sorting, processing and recycling of materials</span></td>
+            <td class="center"><span class="badge badge-schema">3 fields</span></td>
+            <td class="center">9</td>
+            <td style="color:var(--text-low)">3 Mar 2026</td>
+            <td class="right"><div class="row-actions actions-hidden">
+              <button class="icon-btn edit" onclick="openModal('modal-edit-category')" title="Edit">✏️</button>
+              <button class="icon-btn delete" title="Delete">🗑️</button>
+            </div></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-footer">Showing 4 of 4 categories</div>
+    </div>
+  </div>
+
+  <!-- SKELETON VIEW -->
+  <div id="categories-skeleton" style="display:none">
+    <div class="breadcrumb">
+      <span>Reference Data</span><span class="breadcrumb-sep">&rsaquo;</span>
+      <span class="breadcrumb-current">Product Categories</span>
+    </div>
+    <h1 class="page-title">Product Categories</h1>
+    <p class="page-subtitle">Define the types of products and the fields each type will have.</p>
+    <div class="toolbar">
+      <div class="input-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="input-search" placeholder="Search categories..." disabled />
+      </div>
+      <button class="btn btn-primary" disabled>+ New Category</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:220px">Name</th>
+            <th>Description</th>
+            <th style="width:130px" class="center">Schema Fields</th>
+            <th style="width:100px" class="center">Products</th>
+            <th style="width:130px">Created</th>
+            <th style="width:80px"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="skeleton-row">
+            <td><span class="skeleton-rect" style="width:160px"></span></td>
+            <td><span class="skeleton-rect" style="width:80%"></span></td>
+            <td class="center"><span class="skeleton-rect" style="width:60px"></span></td>
+            <td class="center"><span class="skeleton-rect" style="width:30px"></span></td>
+            <td><span class="skeleton-rect" style="width:80px"></span></td>
+            <td></td>
+          </tr>
+          <tr class="skeleton-row">
+            <td><span class="skeleton-rect" style="width:140px"></span></td>
+            <td><span class="skeleton-rect" style="width:65%"></span></td>
+            <td class="center"><span class="skeleton-rect" style="width:60px"></span></td>
+            <td class="center"><span class="skeleton-rect" style="width:30px"></span></td>
+            <td><span class="skeleton-rect" style="width:80px"></span></td>
+            <td></td>
+          </tr>
+          <tr class="skeleton-row">
+            <td><span class="skeleton-rect" style="width:180px"></span></td>
+            <td><span class="skeleton-rect" style="width:72%"></span></td>
+            <td class="center"><span class="skeleton-rect" style="width:60px"></span></td>
+            <td class="center"><span class="skeleton-rect" style="width:30px"></span></td>
+            <td><span class="skeleton-rect" style="width:80px"></span></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────
+     S1-D  WASTE FRACTIONS
+───────────────────────────────────────── -->
+<div class="screen" id="screen-fractions">
+  <div class="breadcrumb">
+    <span>Reference Data</span><span class="breadcrumb-sep">&rsaquo;</span>
+    <span class="breadcrumb-current">Waste Fractions</span>
+  </div>
+  <h1 class="page-title">Waste Fractions</h1>
+  <p class="page-subtitle">Manage waste material classifications and their European Waste Catalogue (EWC) codes.</p>
+
+  <div class="toolbar">
+    <div class="input-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="input-search" placeholder="Search waste fractions..." />
+    </div>
+    <button class="btn btn-primary" onclick="openModal('modal-new-fraction')">+ New Waste Fraction</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:200px">Name</th>
+          <th style="width:120px">EWC Code</th>
+          <th style="width:140px">Category</th>
+          <th>Description</th>
+          <th style="width:100px" class="center">Status</th>
+          <th style="width:80px" class="right"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Mixed Municipal Waste</strong></td>
+          <td><span class="ewc-code">20 03 01</span></td>
+          <td style="color:var(--text-low)">General Waste</td>
+          <td><span class="truncate">Unsorted household and commercial waste</span></td>
+          <td class="center"><span class="badge badge-active">Active</span></td>
+          <td class="right"><div class="row-actions actions-hidden">
+            <button class="icon-btn edit" title="Edit">✏️</button>
+            <button class="icon-btn delete" title="Delete">🗑️</button>
+          </div></td>
+        </tr>
+        <tr>
+          <td><strong>Paper &amp; Cardboard</strong></td>
+          <td><span class="ewc-code">20 01 01</span></td>
+          <td style="color:var(--text-low)">Recycling</td>
+          <td><span class="truncate">Paper and cardboard for recycling</span></td>
+          <td class="center"><span class="badge badge-active">Active</span></td>
+          <td class="right"><div class="row-actions actions-hidden">
+            <button class="icon-btn edit" title="Edit">✏️</button>
+            <button class="icon-btn delete" title="Delete">🗑️</button>
+          </div></td>
+        </tr>
+        <tr class="row-hover">
+          <td><strong>Glass</strong></td>
+          <td><span class="ewc-code">20 01 02</span></td>
+          <td style="color:var(--text-low)">Recycling</td>
+          <td><span class="truncate">Glass bottles, jars and containers</span></td>
+          <td class="center"><span class="badge badge-active">Active</span></td>
+          <td class="right"><div class="row-actions">
+            <button class="icon-btn edit" title="Edit">✏️</button>
+            <button class="icon-btn delete" title="Delete">🗑️</button>
+          </div></td>
+        </tr>
+        <tr>
+          <td><strong>Organic Waste</strong></td>
+          <td><span class="ewc-code">20 01 08</span></td>
+          <td style="color:var(--text-low)">Organic</td>
+          <td><span class="truncate">Kitchen scraps and garden waste</span></td>
+          <td class="center"><span class="badge badge-active">Active</span></td>
+          <td class="right"><div class="row-actions actions-hidden">
+            <button class="icon-btn edit" title="Edit">✏️</button>
+            <button class="icon-btn delete" title="Delete">🗑️</button>
+          </div></td>
+        </tr>
+        <tr>
+          <td><strong>Hazardous Household</strong></td>
+          <td><span class="ewc-code">20 01 35</span></td>
+          <td style="color:var(--text-low)">Hazardous</td>
+          <td><span class="truncate">Electronic waste and chemical household items</span></td>
+          <td class="center"><span class="badge badge-active">Active</span></td>
+          <td class="right"><div class="row-actions actions-hidden">
+            <button class="icon-btn edit" title="Edit">✏️</button>
+            <button class="icon-btn delete" title="Delete">🗑️</button>
+          </div></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table-footer">Showing 5 of 5 waste fractions</div>
+  </div>
+
+  <div class="banner banner-info" style="margin-top:16px">
+    <span class="banner-icon">ℹ️</span>
+    <span>EWC code validation checks for valid 6-digit format (XX XX XX, e.g. 20 03 01). Full EU waste registry validation will be added in Sprint 2.</span>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────
+     S1-F  PRICING UNITS
+───────────────────────────────────────── -->
+<div class="screen" id="screen-units">
+  <div class="breadcrumb">
+    <span>Reference Data</span><span class="breadcrumb-sep">&rsaquo;</span>
+    <span class="breadcrumb-current">Pricing Units</span>
+  </div>
+  <h1 class="page-title">Pricing Units</h1>
+  <p class="page-subtitle">System-defined unit types used across all product pricing, aligned with EU e-invoicing standard EN 16931.</p>
+
+  <div class="banner banner-info" style="margin-bottom:24px;margin-top:16px">
+    <span class="banner-icon">ℹ️</span>
+    <span>These unit types are system-defined and cannot be modified. Unit conversions (e.g. kg ↔ ton) and EU e-invoicing compliance metadata will be configurable from Sprint 2.</span>
+  </div>
+
+  <div class="card-grid">
+    <div class="unit-card">
+      <div class="unit-icon-wrap">📦</div>
+      <div class="unit-label">€ / piece</div>
+      <div class="unit-symbols"><span class="unit-symbol">pc</span></div>
+      <div class="unit-use-case">Per collection event or per service unit</div>
+      <div class="unit-divider"></div>
+      <div class="unit-eu-row">
+        <span class="unit-eu-label">EU Invoice Code</span>
+        <span class="unit-eu-value">C62</span>
+      </div>
+    </div>
+    <div class="unit-card">
+      <div class="unit-icon-wrap">⚖️</div>
+      <div class="unit-label">€ / kg · ton</div>
+      <div class="unit-symbols"><span class="unit-symbol">kg</span><span class="unit-symbol">TNE</span></div>
+      <div class="unit-use-case">Weight-based pricing for waste by mass</div>
+      <div class="unit-divider"></div>
+      <div class="unit-eu-row">
+        <span class="unit-eu-label">EU Invoice Code</span>
+        <span class="unit-eu-value">KGM · TNE</span>
+      </div>
+    </div>
+    <div class="unit-card">
+      <div class="unit-icon-wrap">📐</div>
+      <div class="unit-label">€ / m³</div>
+      <div class="unit-symbols"><span class="unit-symbol">m³</span></div>
+      <div class="unit-use-case">Volume-based pricing for containers</div>
+      <div class="unit-divider"></div>
+      <div class="unit-eu-row">
+        <span class="unit-eu-label">EU Invoice Code</span>
+        <span class="unit-eu-value">MTQ</span>
+      </div>
+    </div>
+    <div class="unit-card hovered">
+      <div class="unit-icon-wrap">💧</div>
+      <div class="unit-label">€ / liter</div>
+      <div class="unit-symbols"><span class="unit-symbol">L</span></div>
+      <div class="unit-use-case">Liquid and semi-liquid waste streams</div>
+      <div class="unit-divider"></div>
+      <div class="unit-eu-row">
+        <span class="unit-eu-label">EU Invoice Code</span>
+        <span class="unit-eu-value">LTR</span>
+      </div>
+    </div>
+    <div class="unit-card">
+      <div class="unit-icon-wrap">📏</div>
+      <div class="unit-label">€ / meter</div>
+      <div class="unit-symbols"><span class="unit-symbol">m</span></div>
+      <div class="unit-use-case">Distance-based transport or cable services</div>
+      <div class="unit-divider"></div>
+      <div class="unit-eu-row">
+        <span class="unit-eu-label">EU Invoice Code</span>
+        <span class="unit-eu-value">MTR</span>
+      </div>
+    </div>
+    <div class="unit-card">
+      <div class="unit-icon-wrap">🕐</div>
+      <div class="unit-label">€ / hour</div>
+      <div class="unit-symbols"><span class="unit-symbol">h</span></div>
+      <div class="unit-use-case">Time-based services such as audits or inspections</div>
+      <div class="unit-divider"></div>
+      <div class="unit-eu-row">
+        <span class="unit-eu-label">EU Invoice Code</span>
+        <span class="unit-eu-value">HUR</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────
+     S1-G  ZONES
+───────────────────────────────────────── -->
+<div class="screen" id="screen-zones">
+  <div class="breadcrumb">
+    <span>Reference Data</span><span class="breadcrumb-sep">&rsaquo;</span>
+    <span class="breadcrumb-current">Zones</span>
+  </div>
+  <h1 class="page-title">Zones</h1>
+  <p class="page-subtitle">Geographic pricing zones. A property's zone determines which pricing rules apply to its orders.</p>
+
+  <div class="banner banner-warning" style="margin-top:16px;margin-bottom:24px">
+    <span class="banner-icon">⚠️</span>
+    <span>Zone management is view-only in Release 1. Interactive map-based zone drawing and automatic zone detection via geospatial coordinates will be available in Release 2 (Sprint 3, March 30).</span>
+  </div>
+
+  <div class="toolbar">
+    <div class="input-wrap">
+      <span class="search-icon" style="color:var(--text-disabled)">🔍</span>
+      <input class="input-search" placeholder="Search zones..." disabled />
+    </div>
+    <button class="btn btn-primary" disabled
+      data-tooltip="Map-based zone creation available from Release 2 (Sprint 3)">
+      + New Zone
+    </button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:180px">Zone Name</th>
+          <th style="width:120px">Type</th>
+          <th>Description</th>
+          <th style="width:140px" class="center">Products</th>
+          <th style="width:100px" class="center">Status</th>
+          <th style="width:48px" class="center">🔒</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Urban</strong></td>
+          <td><span class="badge badge-blue">Urban</span></td>
+          <td style="color:var(--text-low)">High-density city districts and commercial town centres</td>
+          <td class="center" style="color:var(--text-low)">8 products</td>
+          <td class="center"><span class="badge badge-active">Active</span></td>
+          <td class="center"><span class="lock-icon">🔒</span></td>
+        </tr>
+        <tr>
+          <td><strong>Suburban</strong></td>
+          <td><span class="badge badge-teal">Suburban</span></td>
+          <td style="color:var(--text-low)">Residential outskirts, commuter towns and semi-urban areas</td>
+          <td class="center" style="color:var(--text-low)">5 products</td>
+          <td class="center"><span class="badge badge-active">Active</span></td>
+          <td class="center"><span class="lock-icon">🔒</span></td>
+        </tr>
+        <tr>
+          <td><strong>Rural</strong></td>
+          <td><span class="badge badge-orange">Rural</span></td>
+          <td style="color:var(--text-low)">Low-density countryside, remote areas and agricultural zones</td>
+          <td class="center" style="color:var(--text-low)">3 products</td>
+          <td class="center"><span class="badge badge-active">Active</span></td>
+          <td class="center"><span class="lock-icon">🔒</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="table-footer">3 zones — system-defined. Custom zone drawing available from Release 2.</div>
+  </div>
+
+  <div class="note-card">
+    <span>ℹ️</span>
+    <span>In Release 2, zones will be drawn as polygons on an interactive map. Given a property's GPS coordinates, the system will automatically determine which zone it falls in and apply the correct pricing rules — no manual assignment needed.</span>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────
+     S1-H  PRODUCTS EMPTY STATE
+───────────────────────────────────────── -->
+<div class="screen" id="screen-products">
+  <div class="toolbar" style="margin-top:0">
+    <div style="display:flex;gap:8px">
+      <div class="input-wrap">
+        <span class="search-icon" style="color:var(--text-disabled)">🔍</span>
+        <input class="input-search" placeholder="Search products..." disabled />
+      </div>
+      <button class="btn btn-secondary" disabled style="color:var(--text-disabled);cursor:not-allowed">⚙ Filters</button>
+    </div>
+    <button class="btn btn-primary" disabled>+ New Product</button>
+  </div>
+
+  <div class="empty-state">
+    <div style="display:flex;gap:6px;align-items:flex-end">
+      <div style="width:80px;height:80px;background:#DFE1E6;border-radius:8px;transform:rotate(-4deg) translateX(4px)"></div>
+      <div style="width:84px;height:84px;background:#C1C7D0;border-radius:8px;transform:rotate(-1deg)"></div>
+      <div style="width:80px;height:80px;background:#F4F5F7;border-radius:8px;border:2px dashed #DFE1E6;transform:rotate(3deg) translateX(-4px)"></div>
+    </div>
+    <div class="empty-title">Products are coming in Release 2</div>
+    <p class="empty-body">Full product catalog management — including dynamic category forms, Bill of Materials composition, service level configuration, and zone-based pricing — will be available from Sprint 3, starting March 30, 2026.</p>
+    <span class="empty-pill">Sprint 3 · March 30, 2026</span>
+    <button class="btn btn-primary" disabled style="margin-top:16px">+ New Product</button>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────
+     S1-I  PRODUCT DETAIL
+───────────────────────────────────────── -->
+<div class="screen" id="screen-product-detail">
+  <div class="sub-screen-bar">
+    <button class="sub-screen-btn active" onclick="showSubScreen('product-detail','overview',this)">Overview tab</button>
+    <button class="sub-screen-btn" onclick="showSubScreen('product-detail','config',this)">Configuration tab (locked)</button>
+  </div>
+
+  <div id="product-detail-overview">
+    <div class="product-header">
+      <div class="back-link" onclick="showScreen('products')">← Products</div>
+      <div class="product-title-row">
+        <h1 class="product-title">Mixed Waste Collection</h1>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="badge badge-active">Active</span>
+          <button class="btn btn-secondary">Edit</button>
+        </div>
+      </div>
+      <div class="product-meta">
+        Waste Collection Services
+        <span class="product-meta-sep">·</span>
+        Mixed Municipal Waste (20 03 01)
+      </div>
+    </div>
+
+    <div class="tab-bar" id="tab-bar-overview">
+      <div class="tab active">Overview</div>
+      <div class="tab locked">Bill of Materials <span class="tab-lock">🔒</span></div>
+      <div class="tab locked">Configuration <span class="tab-lock">🔒</span></div>
+      <div class="tab locked">Service Responsibility <span class="tab-lock">🔒</span></div>
+      <div class="tab locked">Additional Services <span class="tab-lock">🔒</span></div>
+      <div class="tab locked">Service Levels <span class="tab-lock">🔒</span></div>
+      <div class="tab locked">Price Components <span class="tab-lock">🔒</span></div>
+      <div class="tab locked">Wastewater <span class="tab-lock">🔒</span></div>
+    </div>
+
+    <div class="overview-grid">
+      <div class="detail-card">
+        <div class="detail-card-title">Basic Information</div>
+        <div class="detail-row">
+          <span class="detail-label">Category</span>
+          <span class="detail-value">Waste Collection Services</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Waste Fraction</span>
+          <span class="detail-value">Mixed Municipal Waste <span class="ewc-code">20 03 01</span></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Pricing Unit</span>
+          <span class="detail-value">€/ton (TNE)</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Status</span>
+          <span class="detail-value"><span class="badge badge-active">Active</span></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Created</span>
+          <span class="detail-value">2 March 2026</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Last Updated</span>
+          <span class="detail-value">2 March 2026</span>
+        </div>
+      </div>
+      <div class="detail-card">
+        <div class="detail-card-title">Zones &amp; Pricing</div>
+        <div class="detail-row">
+          <span class="detail-label">Primary Zone</span>
+          <span class="detail-placeholder">— not assigned</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Pricing Mode</span>
+          <span class="detail-placeholder">— not configured</span>
+        </div>
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--divider);display:flex;gap:8px;align-items:flex-start">
+          <span style="color:var(--text-disabled)">ℹ️</span>
+          <span style="font-size:13px;color:var(--text-low);font-style:italic">Pricing configuration available from Sprint 2.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="product-detail-config" style="display:none">
+    <div class="product-header">
+      <div class="back-link" onclick="showScreen('products')">← Products</div>
+      <div class="product-title-row">
+        <h1 class="product-title">Mixed Waste Collection</h1>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="badge badge-active">Active</span>
+          <button class="btn btn-secondary">Edit</button>
+        </div>
+      </div>
+      <div class="product-meta">
+        Waste Collection Services
+        <span class="product-meta-sep">·</span>
+        Mixed Municipal Waste (20 03 01)
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab" onclick="showSubScreen('product-detail','overview',null)">Overview</div>
+      <div class="tab locked">Bill of Materials <span class="tab-lock">🔒</span></div>
+      <div class="tab selected-locked">Configuration <span class="tab-lock">🔒</span></div>
+      <div class="tab locked">Service Responsibility <span class="tab-lock">🔒</span></div>
+      <div class="tab locked">Additional Services <span class="tab-lock">🔒</span></div>
+      <div class="tab locked">Service Levels <span class="tab-lock">🔒</span></div>
+      <div class="tab locked">Price Components <span class="tab-lock">🔒</span></div>
+      <div class="tab locked">Wastewater <span class="tab-lock">🔒</span></div>
+    </div>
+
+    <div class="locked-empty">
+      <div class="locked-icon-wrap">🔒</div>
+      <div class="locked-title">Configuration</div>
+      <p class="locked-body">Category-specific product fields will appear here when Products CRUD is completed in Sprint 3 (Release 2, March 30, 2026). Fields are defined by the category schema configured in Product Categories.</p>
+      <span class="locked-pill">Sprint 3 · Release 2</span>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ═══════════════════════════════════════
+     MODAL — NEW CATEGORY (S1-B)
+═══════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-new-category">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">New Product Category</span>
+      <button class="modal-close" onclick="closeModal('modal-new-category')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <label class="field-label">Name <span class="req">*</span></label>
+        <input class="input" value="Hazardous Waste" placeholder="e.g. Waste Collection Services" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Description</label>
+        <textarea class="textarea" placeholder="Briefly describe what products in this category represent...">Products requiring special handling, regulated disposal, and compliance documentation.</textarea>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div>
+        <div style="font-size:16px;font-weight:600;color:var(--text-high)">Schema Fields</div>
+        <div style="font-size:13px;color:var(--text-low);margin-top:4px">These fields appear on every product form in this category. Drag to reorder.</div>
+
+        <div class="schema-table" style="margin-top:12px">
+          <div class="schema-header">
+            <span></span>
+            <span>Field Name</span>
+            <span>Type</span>
+            <span>Required</span>
+            <span></span>
+          </div>
+          <div class="schema-row">
+            <span class="drag-handle">⠿</span>
+            <input class="input" value="container_size" style="height:32px;font-size:13px" />
+            <div class="select-wrap"><select class="select" style="height:32px;font-size:13px"><option selected>Number</option><option>Text</option><option>Select</option><option>Date</option><option>Boolean</option></select></div>
+            <div><button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
+            <button class="schema-delete">✕</button>
+          </div>
+          <div class="schema-row">
+            <span class="drag-handle">⠿</span>
+            <input class="input" value="waste_type" style="height:32px;font-size:13px" />
+            <div class="select-wrap"><select class="select" style="height:32px;font-size:13px"><option>Number</option><option>Text</option><option selected>Select</option><option>Date</option><option>Boolean</option></select></div>
+            <div><button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
+            <button class="schema-delete">✕</button>
+          </div>
+          <div class="schema-row">
+            <span class="drag-handle">⠿</span>
+            <input class="input" value="weight_limit_kg" style="height:32px;font-size:13px;border:2px solid var(--blue)" />
+            <div class="select-wrap"><select class="select" style="height:32px;font-size:13px"><option selected>Number</option><option>Text</option><option>Select</option><option>Date</option><option>Boolean</option></select></div>
+            <div><button class="toggle off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
+            <button class="schema-delete">✕</button>
+          </div>
+          <div class="schema-row">
+            <span class="drag-handle">⠿</span>
+            <input class="input" value="custom_field_" style="height:32px;font-size:13px" />
+            <div class="select-wrap"><select class="select" style="height:32px;font-size:13px"><option>Number</option><option selected>Text</option><option>Select</option><option>Date</option><option>Boolean</option></select></div>
+            <div><button class="toggle off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
+            <button class="schema-delete">✕</button>
+          </div>
+        </div>
+        <button class="add-field-btn">+ Add Field</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-new-category')">Cancel</button>
+      <button class="btn btn-primary">Save Category</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL — EDIT CATEGORY (S1-C)
+═══════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-edit-category">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Edit Category — Waste Collection Services</span>
+      <button class="modal-close" onclick="closeModal('modal-edit-category')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <label class="field-label">Name <span class="req">*</span></label>
+        <input class="input" value="Waste Collection Services" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Description</label>
+        <textarea class="textarea">Recurring waste pickup and transport services for residential and commercial clients.</textarea>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div>
+        <div style="font-size:16px;font-weight:600;color:var(--text-high)">Schema Fields</div>
+        <div style="font-size:13px;color:var(--text-low);margin-top:4px">These fields appear on every product form in this category. Drag to reorder.</div>
+        <div class="schema-table" style="margin-top:12px">
+          <div class="schema-header">
+            <span></span><span>Field Name</span><span>Type</span><span>Required</span><span></span>
+          </div>
+          <div class="schema-row">
+            <span class="drag-handle">⠿</span>
+            <input class="input" value="container_size" style="height:32px;font-size:13px" />
+            <div class="select-wrap"><select class="select" style="height:32px;font-size:13px"><option selected>Number</option><option>Text</option><option>Select</option><option>Date</option><option>Boolean</option></select></div>
+            <div><button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
+            <button class="schema-delete">✕</button>
+          </div>
+          <div class="schema-row">
+            <span class="drag-handle">⠿</span>
+            <input class="input" value="waste_type" style="height:32px;font-size:13px" />
+            <div class="select-wrap"><select class="select" style="height:32px;font-size:13px"><option>Number</option><option>Text</option><option selected>Select</option><option>Date</option><option>Boolean</option></select></div>
+            <div><button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
+            <button class="schema-delete">✕</button>
+          </div>
+          <div class="schema-row">
+            <span class="drag-handle">⠿</span>
+            <input class="input" value="frequency_per_week" style="height:32px;font-size:13px" />
+            <div class="select-wrap"><select class="select" style="height:32px;font-size:13px"><option selected>Number</option><option>Text</option><option>Select</option><option>Date</option><option>Boolean</option></select></div>
+            <div><button class="toggle off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
+            <button class="schema-delete">✕</button>
+          </div>
+          <div class="schema-row">
+            <span class="drag-handle">⠿</span>
+            <input class="input" value="access_instructions" style="height:32px;font-size:13px" />
+            <div class="select-wrap"><select class="select" style="height:32px;font-size:13px"><option>Number</option><option selected>Text</option><option>Select</option><option>Date</option><option>Boolean</option></select></div>
+            <div><button class="toggle off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button></div>
+            <button class="schema-delete">✕</button>
+          </div>
+        </div>
+        <button class="add-field-btn">+ Add Field</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-edit-category')">Cancel</button>
+      <button class="btn btn-primary">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL — NEW WASTE FRACTION (S1-E)
+═══════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-new-fraction">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <span class="modal-title">New Waste Fraction</span>
+      <button class="modal-close" onclick="closeModal('modal-new-fraction')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field-group">
+        <label class="field-label">Name <span class="req">*</span></label>
+        <input class="input" value="Mixed Municipal Waste" placeholder="e.g. Mixed Municipal Waste" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">EWC Code <span class="req">*</span></label>
+        <div class="input-valid-wrap">
+          <input class="input valid" value="20 03 01" />
+          <span class="valid-icon">✓</span>
+        </div>
+        <span class="field-hint">Format: two-digit pairs separated by spaces — e.g. 20 03 01</span>
+      </div>
+
+      <!-- Invalid state annotation -->
+      <div style="background:var(--bg-surface);border:1px dashed var(--border);border-radius:6px;padding:12px;margin-top:-8px">
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;color:var(--text-disabled);margin-bottom:8px;letter-spacing:0.06em">↳ Invalid state example</div>
+        <div class="field-group">
+          <label class="field-label">EWC Code <span class="req">*</span></label>
+          <div class="input-valid-wrap">
+            <input class="input error" value="200301" />
+            <span class="error-icon">✕</span>
+          </div>
+          <span class="field-error">✕ Invalid format. Use 6 digits in pairs: XX XX XX</span>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Category <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select class="select">
+            <option selected>General Waste</option>
+            <option>Recycling</option>
+            <option>Organic</option>
+            <option>Hazardous</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Description</label>
+        <textarea class="textarea" style="height:72px">Unsorted household and commercial waste not separately collected.</textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Status</label>
+        <div class="toggle-wrap">
+          <button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button>
+          <span style="font-size:14px;color:var(--text-high)">Active</span>
+          <span style="font-size:12px;color:var(--text-low)">Inactive fractions cannot be assigned to products.</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-new-fraction')">Cancel</button>
+      <button class="btn btn-primary">Save Waste Fraction</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════ -->
+<script>
+const navMap = {
+  categories: 'nav-categories',
+  fractions:  'nav-fractions',
+  units:      'nav-units',
+  zones:      'nav-zones',
+  products:   'nav-products',
+  'product-detail': null,
+};
+
+function showScreen(id) {
+  // Hide all screens
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  // Deactivate all nav items
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.remove('active');
+    if (n.id === 'nav-products') n.style.color = 'var(--text-med)';
+  });
+
+  // Show target screen
+  const screen = document.getElementById('screen-' + id);
+  if (screen) screen.classList.add('active');
+
+  // Activate nav item
+  const navId = navMap[id];
+  if (navId) {
+    const navEl = document.getElementById(navId);
+    if (navEl && !navEl.classList.contains('disabled')) {
+      navEl.classList.add('active');
+      navEl.style.color = '';
+    }
+  }
+}
+
+function showSubScreen(screenId, subId, btn) {
+  // Toggle sub-screen buttons
+  if (btn) {
+    const bar = btn.closest('.sub-screen-bar');
+    if (bar) bar.querySelectorAll('.sub-screen-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  if (screenId === 'categories') {
+    document.getElementById('categories-list').style.display = subId === 'list' ? '' : 'none';
+    document.getElementById('categories-skeleton').style.display = subId === 'skeleton' ? '' : 'none';
+  }
+  if (screenId === 'product-detail') {
+    document.getElementById('product-detail-overview').style.display = subId === 'overview' ? '' : 'none';
+    document.getElementById('product-detail-config').style.display = subId === 'config' ? '' : 'none';
+    if (subId === 'overview' && btn === null) {
+      // called from tab bar click — reset sub-screen bar
+      const bar = document.querySelector('#screen-product-detail .sub-screen-bar');
+      if (bar) {
+        bar.querySelectorAll('.sub-screen-btn').forEach(b => b.classList.remove('active'));
+        bar.querySelectorAll('.sub-screen-btn')[0].classList.add('active');
+      }
+    }
+  }
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+});
+
+// Keyboard ESC closes modals
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  }
+});
+</script>
+</body>
+</html>
