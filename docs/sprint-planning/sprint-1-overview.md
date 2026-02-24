@@ -79,12 +79,14 @@ All 6 unit types are ready:
 #### ERD Design
 **Assignee:** All engineers
 
-Design the full database schema covering all 3 releases. Commit ERD to `/docs/erd/` before coding starts. All engineers must review and sign off.
+Design the full database schema covering all 3 releases. All engineers must review and sign off before coding starts.
+
+**[View ERD on Miro →](https://miro.com/app/board/uXjVGeP98ns=/?moveToWidget=3458764660960725214&cot=14)**
 
 **Tasks:**
 - Design entity relationships for all R1 entities (categories, waste_fractions, pricing_units, zones)
 - Include foreign key references for R2/R3 entities (products, price_lists, price_rows)
-- Commit ERD diagram to repo
+- Review and sign off on the ERD in Miro before coding starts
 
 ---
 
@@ -323,7 +325,7 @@ Design the full database schema covering all 3 releases. Commit ERD to `/docs/er
 
 ## Definition of Done
 
-- [ ] ERD committed to repo, reviewed by all engineers
+- [ ] ERD reviewed and signed off by all engineers (see [Miro board](https://miro.com/app/board/uXjVGeP98ns=/?moveToWidget=3458764660960725214&cot=14))
 - [ ] All API contract docs committed before coding starts
 - [ ] All migrations run cleanly in dev and CI
 - [ ] All API endpoints documented in OpenAPI
