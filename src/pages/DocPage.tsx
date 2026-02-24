@@ -38,12 +38,22 @@ export function DocPage() {
           {doc.designPreview && (
             <div className="design-preview-section">
               <h2 className="design-preview-title">Design Preview</h2>
-              <p className="design-preview-subtitle">Interactive prototype — click nav items to switch screens, buttons to open modals.</p>
-              <iframe
-                src={doc.designPreview}
-                title="Design Preview"
-                className="design-preview-iframe"
-              />
+              <p className="design-preview-subtitle">Interactive prototype — click to open in Figma.</p>
+              <a
+                href={doc.designPreview}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="design-preview-link"
+              >
+                <span className="design-preview-link-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                  </svg>
+                </span>
+                Open design in Figma
+              </a>
             </div>
           )}
           {doc.related.length > 0 && <RelatedDocs slugs={doc.related} />}
