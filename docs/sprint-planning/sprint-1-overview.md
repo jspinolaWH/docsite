@@ -4,7 +4,6 @@ title: Sprint 1 Overview
 category: sprint-planning
 order: 1
 description: Foundation sprint — Product Categories, Waste Fractions, hardcoded Zones, and Pricing Units (March 2-13)
-designPreview: /docsite/design/sprint-1/index.html
 related:
   - sprint-2-overview
   - delivery-plan-overview
@@ -350,8 +349,3 @@ Design the full database schema covering all 3 releases. Commit ERD to `/docs/er
 
 Sprint 1 benefits significantly from the pre-sprint infrastructure setup. The new microservice, database, and CI/CD being ready on Day 1 adds an effective ~40h buffer and allows Categories to reach 100% completion this sprint rather than 70%.
 
----
-
-## Design
-
-Interactive prototype of all Sprint 1 screens. Use the sidebar to switch between screens and click buttons to open modals.
