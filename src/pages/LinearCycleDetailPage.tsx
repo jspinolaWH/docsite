@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
-import { useLinearCycleIssues, getCycleStatus } from '../hooks/useLinearCycles';
+import { useLinearCycleIssues, getCycleStatus, issuePoints, estimateCoverage } from '../hooks/useLinearCycles';
 import type { LinearCycle, LinearIssue, CycleStatus } from '../hooks/useLinearCycles';
 
 const STATUS_CONFIG: Record<CycleStatus, { label: string; color: string }> = {
@@ -26,10 +26,12 @@ function fmt(iso: string, short = true) {
 
 function IssueRow({ issue, idx }: { issue: LinearIssue; idx: number }) {
   const pri = PRIORITY[issue.priority] ?? PRIORITY[0];
+  const pts = issuePoints(issue);
+  const hasEst = issue.estimate != null;
   return (
     <div style={{
       display: 'grid',
-      gridTemplateColumns: '110px 1fr 150px 120px 140px',
+      gridTemplateColumns: '110px 1fr 150px 120px 120px 80px',
       gap: '0.75rem',
       alignItems: 'center',
       padding: '0.65rem 1rem',
@@ -66,6 +68,129 @@ function IssueRow({ issue, idx }: { issue: LinearIssue; idx: number }) {
       <span style={{ color: 'var(--color-text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
         {issue.assignee?.displayName ?? 'Unassigned'}
       </span>
+
+      <span style={{ color: hasEst ? 'var(--color-text-primary)' : 'var(--color-text-secondary)', whiteSpace: 'nowrap', fontSize: '0.8rem' }}>
+        {pts} pt{pts !== 1 ? 's' : ''}{!hasEst ? '*' : ''}
+      </span>
+    </div>
+  );
+}
+
+interface AssigneeGroup {
+  name: string;
+  issues: LinearIssue[];
+  totalPts: number;
+  donePts: number;
+  hasUnestimated: boolean;
+}
+
+function AssigneeView({ issues }: { issues: LinearIssue[] }) {
+  const groups = useMemo<AssigneeGroup[]>(() => {
+    const map = new Map<string, LinearIssue[]>();
+    for (const issue of issues) {
+      const name = issue.assignee?.displayName ?? 'Unassigned';
+      const arr = map.get(name) ?? [];
+      arr.push(issue);
+      map.set(name, arr);
+    }
+    return [...map.entries()]
+      .map(([name, issList]) => {
+        const totalPts = issList.reduce((s, i) => s + issuePoints(i), 0);
+        const donePts = issList
+          .filter(i => i.state.type === 'completed')
+          .reduce((s, i) => s + issuePoints(i), 0);
+        const hasUnestimated = issList.some(i => i.estimate == null);
+        return { name, issues: issList, totalPts, donePts, hasUnestimated };
+      })
+      .sort((a, b) => b.totalPts - a.totalPts);
+  }, [issues]);
+
+  if (groups.length === 0) {
+    return (
+      <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-text-secondary)', fontSize: '0.9rem' }}>
+        No issues to display.
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {groups.map((g) => {
+        const pct = g.totalPts > 0 ? Math.round((g.donePts / g.totalPts) * 100) : 0;
+        return (
+          <div key={g.name} style={{ borderBottom: '1px solid var(--color-border)' }}>
+            {/* Assignee header */}
+            <div style={{
+              padding: '0.875rem 1rem',
+              background: 'var(--color-bg-secondary)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+            }}>
+              <div style={{ fontWeight: 600, color: 'var(--color-text-primary)', minWidth: '140px', fontSize: '0.9rem' }}>
+                {g.name}
+              </div>
+
+              <div style={{ flex: 1, maxWidth: '220px' }}>
+                <div style={{ height: '6px', background: 'var(--color-border)', borderRadius: '3px', overflow: 'hidden', marginBottom: '0.25rem' }}>
+                  <div style={{ height: '100%', width: `${pct}%`, background: '#16a34a', borderRadius: '3px', transition: 'width 0.3s' }} />
+                </div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)' }}>
+                  {pct}% done
+                </div>
+              </div>
+
+              <div style={{ fontSize: '0.82rem', color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' }}>
+                <strong style={{ color: 'var(--color-text-primary)' }}>{g.totalPts}</strong> pts · {g.issues.length} issue{g.issues.length !== 1 ? 's' : ''}
+                {g.hasUnestimated && <span style={{ color: '#9ca3af', marginLeft: '0.4rem' }}>(*some estimated)</span>}
+              </div>
+            </div>
+
+            {/* Issues under this assignee */}
+            {g.issues.map((issue, idx) => {
+              const pts = issuePoints(issue);
+              const hasEst = issue.estimate != null;
+              const isDone = issue.state.type === 'completed';
+              return (
+                <div key={issue.id} style={{
+                  display: 'grid',
+                  gridTemplateColumns: '110px 1fr 150px 80px',
+                  gap: '0.75rem',
+                  alignItems: 'center',
+                  padding: '0.5rem 1rem 0.5rem 2.5rem',
+                  background: idx % 2 === 0 ? 'transparent' : 'var(--color-bg-secondary)',
+                  fontSize: '0.82rem',
+                  opacity: isDone ? 0.6 : 1,
+                }}>
+                  <a href={issue.url} target="_blank" rel="noopener noreferrer"
+                    style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontFamily: 'monospace', fontSize: '0.78rem' }}>
+                    {issue.identifier}
+                  </a>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', overflow: 'hidden' }}>
+                    <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: issue.state.color, flexShrink: 0 }} />
+                    <span style={{ color: 'var(--color-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {issue.title}
+                    </span>
+                  </div>
+
+                  <span style={{ color: 'var(--color-text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.78rem' }}>
+                    {issue.state.name}
+                  </span>
+
+                  <span style={{ color: hasEst ? 'var(--color-text-primary)' : '#9ca3af', whiteSpace: 'nowrap' }}>
+                    {pts} pt{pts !== 1 ? 's' : ''}{!hasEst ? '*' : ''}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+
+      <div style={{ padding: '0.5rem 1rem', fontSize: '0.75rem', color: 'var(--color-text-secondary)', background: 'var(--color-bg-secondary)', borderTop: '1px solid var(--color-border)' }}>
+        * Issues without estimates counted as 1 point
+      </div>
     </div>
   );
 }
@@ -77,6 +202,7 @@ export function LinearCycleDetailPage() {
 
   const { issues, loading, error } = useLinearCycleIssues(id!);
 
+  const [view, setView] = useState<'table' | 'people'>('table');
   const [search, setSearch] = useState('');
   const [stateFilter, setStateFilter] = useState('');
   const [assigneeFilter, setAssigneeFilter] = useState('');
@@ -107,6 +233,18 @@ export function LinearCycleDetailPage() {
     fontSize: '0.82rem',
     cursor: 'pointer',
   };
+
+  const tabBtn = (active: boolean): React.CSSProperties => ({
+    padding: '0.35rem 0.85rem',
+    border: '1px solid var(--color-border)',
+    borderRadius: '6px',
+    background: active ? color : 'var(--color-bg-secondary)',
+    color: active ? '#fff' : 'var(--color-text-secondary)',
+    fontSize: '0.82rem',
+    cursor: 'pointer',
+    fontWeight: active ? 600 : 400,
+    transition: 'background 0.15s, color 0.15s',
+  });
 
   return (
     <div className="doc-page">
@@ -143,8 +281,11 @@ export function LinearCycleDetailPage() {
                 <div style={{ height: '6px', background: 'var(--color-border)', borderRadius: '3px', overflow: 'hidden', marginBottom: '0.4rem' }}>
                   <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: '3px' }} />
                 </div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
-                  {pct}% complete{!loading && ` · ${issues.length} issues`}
+                <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <span>{pct}% complete{!loading && ` · ${issues.length} issues`}</span>
+                  {!loading && issues.length > 0 && (
+                    <span style={{ color: '#9ca3af' }}>{estimateCoverage(issues)}</span>
+                  )}
                 </div>
               </>
             )}
@@ -161,39 +302,56 @@ export function LinearCycleDetailPage() {
           {!loading && !error && (
             <div style={{ border: '1px solid var(--color-border)', borderRadius: '8px', overflow: 'hidden' }}>
 
-              {/* Filters */}
-              <div style={{ padding: '0.875rem 1rem', borderBottom: '1px solid var(--color-border)', display: 'flex', flexWrap: 'wrap', gap: '0.6rem', background: 'var(--color-bg-secondary)' }}>
-                <input type="text" placeholder="Search by title or ID…" value={search} onChange={e => setSearch(e.target.value)}
-                  style={{ ...sel, flex: '1 1 180px' }} />
-                <select value={stateFilter} onChange={e => setStateFilter(e.target.value)} style={sel}>
-                  <option value="">All states</option>
-                  {states.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
-                <select value={assigneeFilter} onChange={e => setAssigneeFilter(e.target.value)} style={sel}>
-                  <option value="">All assignees</option>
-                  {assignees.map(a => <option key={a} value={a}>{a}</option>)}
-                </select>
-                <select value={priorityFilter} onChange={e => setPriorityFilter(e.target.value)} style={sel}>
-                  <option value="">All priorities</option>
-                  {[1, 2, 3, 4, 0].map(p => <option key={p} value={String(p)}>{PRIORITY[p].label}</option>)}
-                </select>
+              {/* View toggle + filters */}
+              <div style={{ padding: '0.875rem 1rem', borderBottom: '1px solid var(--color-border)', display: 'flex', flexWrap: 'wrap', gap: '0.6rem', background: 'var(--color-bg-secondary)', alignItems: 'center' }}>
+                {/* View toggle */}
+                <div style={{ display: 'flex', gap: '0.4rem', marginRight: '0.5rem' }}>
+                  <button onClick={() => setView('table')} style={tabBtn(view === 'table')}>Table</button>
+                  <button onClick={() => setView('people')} style={tabBtn(view === 'people')}>By Person</button>
+                </div>
+
+                {view === 'table' && (
+                  <>
+                    <input type="text" placeholder="Search by title or ID…" value={search} onChange={e => setSearch(e.target.value)}
+                      style={{ ...sel, flex: '1 1 180px' }} />
+                    <select value={stateFilter} onChange={e => setStateFilter(e.target.value)} style={sel}>
+                      <option value="">All states</option>
+                      {states.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                    <select value={assigneeFilter} onChange={e => setAssigneeFilter(e.target.value)} style={sel}>
+                      <option value="">All assignees</option>
+                      {assignees.map(a => <option key={a} value={a}>{a}</option>)}
+                    </select>
+                    <select value={priorityFilter} onChange={e => setPriorityFilter(e.target.value)} style={sel}>
+                      <option value="">All priorities</option>
+                      {[1, 2, 3, 4, 0].map(p => <option key={p} value={String(p)}>{PRIORITY[p].label}</option>)}
+                    </select>
+                  </>
+                )}
               </div>
 
-              {/* Column headers */}
-              <div style={{ display: 'grid', gridTemplateColumns: '110px 1fr 150px 120px 140px', gap: '0.75rem', padding: '0.5rem 1rem', borderBottom: '1px solid var(--color-border)', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-text-secondary)', background: 'var(--color-bg-secondary)' }}>
-                <span>ID</span><span>Title</span><span>State</span><span>Priority</span><span>Assignee</span>
-              </div>
+              {view === 'table' ? (
+                <>
+                  {/* Column headers */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '110px 1fr 150px 120px 120px 80px', gap: '0.75rem', padding: '0.5rem 1rem', borderBottom: '1px solid var(--color-border)', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-text-secondary)', background: 'var(--color-bg-secondary)' }}>
+                    <span>ID</span><span>Title</span><span>State</span><span>Priority</span><span>Assignee</span><span>Points</span>
+                  </div>
 
-              {/* Rows */}
-              {filtered.length === 0
-                ? <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-text-secondary)', fontSize: '0.9rem' }}>No issues match your filters.</div>
-                : filtered.map((issue, idx) => <IssueRow key={issue.id} issue={issue} idx={idx} />)
-              }
+                  {/* Rows */}
+                  {filtered.length === 0
+                    ? <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-text-secondary)', fontSize: '0.9rem' }}>No issues match your filters.</div>
+                    : filtered.map((issue, idx) => <IssueRow key={issue.id} issue={issue} idx={idx} />)
+                  }
 
-              {/* Footer */}
-              <div style={{ padding: '0.65rem 1rem', borderTop: '1px solid var(--color-border)', fontSize: '0.78rem', color: 'var(--color-text-secondary)', background: 'var(--color-bg-secondary)' }}>
-                Showing {filtered.length} of {issues.length} issues
-              </div>
+                  {/* Footer */}
+                  <div style={{ padding: '0.65rem 1rem', borderTop: '1px solid var(--color-border)', fontSize: '0.78rem', color: 'var(--color-text-secondary)', background: 'var(--color-bg-secondary)' }}>
+                    Showing {filtered.length} of {issues.length} issues · * unestimated issues counted as 1 pt
+                  </div>
+                </>
+              ) : (
+                <AssigneeView issues={issues} />
+              )}
+
             </div>
           )}
 

@@ -7,8 +7,18 @@ export interface LinearIssue {
   priority: number;
   url: string;
   dueDate?: string;
+  estimate?: number;
   state: { name: string; color: string; type: string };
   assignee?: { displayName: string };
+}
+
+export function issuePoints(issue: LinearIssue): number {
+  return issue.estimate ?? 1;
+}
+
+export function estimateCoverage(issues: LinearIssue[]): string {
+  const withEst = issues.filter(i => i.estimate != null).length;
+  return `${withEst} of ${issues.length} estimated`;
 }
 
 export interface LinearCycle {
@@ -96,6 +106,7 @@ const CYCLE_ISSUES_QUERY = `
           priority
           url
           dueDate
+          estimate
           state { name color type }
           assignee { displayName }
         }
