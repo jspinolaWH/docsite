@@ -15,7 +15,8 @@ function CycleCard({ cycle }: { cycle: LinearCycle }) {
   const status = getCycleStatus(cycle);
   const { color } = STATUS_CONFIG[status];
   const pct = Math.round(cycle.progress * 100);
-  const completedCount = Math.round(cycle.progress * cycle.issues.totalCount);
+  const total = cycle.issues.nodes.length;
+  const completedCount = Math.round(cycle.progress * total);
 
   return (
     <div style={{
@@ -64,7 +65,7 @@ function CycleCard({ cycle }: { cycle: LinearCycle }) {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
         <span>{pct}% complete</span>
-        <span>{completedCount} / {cycle.issues.totalCount} issues</span>
+        <span>{completedCount} / {total} issues</span>
       </div>
     </div>
   );

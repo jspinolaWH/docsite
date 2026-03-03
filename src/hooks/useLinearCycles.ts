@@ -19,7 +19,7 @@ export interface LinearCycle {
   completedAt?: string;
   progress: number;
   team: { id: string; name: string };
-  issues: { totalCount: number; nodes: LinearIssue[] };
+  issues: { nodes: LinearIssue[] };
 }
 
 export type CycleStatus = 'active' | 'upcoming' | 'completed';
@@ -46,7 +46,6 @@ const QUERY = `
         progress
         team { id name }
         issues(first: 50) {
-          totalCount
           nodes {
             id
             title
