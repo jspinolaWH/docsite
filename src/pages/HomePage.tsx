@@ -15,6 +15,16 @@ export function HomePage() {
       </div>
 
       <div className="category-cards">
+        <div className="category-card" style={{ borderTopColor: '#5e6ad2' }}>
+          <h2 style={{ color: '#5e6ad2' }}>Linear Cycles</h2>
+          <p className="category-count">Live sprint cycle tracker</p>
+          <ul>
+            <li>
+              <Link to="/cycles">Cycles overview</Link>
+            </li>
+          </ul>
+        </div>
+
         {Object.entries(CATEGORIES).map(([catId, config]) => {
           const categoryColor =
             theme === 'dark' ? config.darkColor : config.color;

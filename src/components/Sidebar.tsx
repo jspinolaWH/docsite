@@ -19,6 +19,10 @@ export function Sidebar() {
           Home
         </NavLink>
 
+        <NavLink to="/cycles" className="sidebar-home">
+          Cycles
+        </NavLink>
+
         <a
           href="https://jspinolawh.github.io/ProductsPricing/Mockup.html"
           className="sidebar-home"
