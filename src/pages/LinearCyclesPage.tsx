@@ -1,4 +1,5 @@
-import { useLinearCycles, getCycleStatus, LinearCycle, CycleStatus } from '../hooks/useLinearCycles';
+import { useLinearCycles, getCycleStatus } from '../hooks/useLinearCycles';
+import type { LinearCycle, CycleStatus } from '../hooks/useLinearCycles';
 
 const STATUS_CONFIG: Record<CycleStatus, { label: string; color: string }> = {
   active:    { label: 'Active',    color: '#16a34a' },
