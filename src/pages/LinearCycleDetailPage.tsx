@@ -69,8 +69,10 @@ function IssueRow({ issue, idx }: { issue: LinearIssue; idx: number }) {
         {issue.assignee?.displayName ?? 'Unassigned'}
       </span>
 
-      <span style={{ color: hasEst ? 'var(--color-text-primary)' : 'var(--color-text-secondary)', whiteSpace: 'nowrap', fontSize: '0.8rem' }}>
-        {pts} pt{pts !== 1 ? 's' : ''}{!hasEst ? '*' : ''}
+      <span
+        title={hasEst ? `${pts} pts (estimated)` : 'No estimate — using default of 3 pts'}
+        style={{ color: hasEst ? 'var(--color-text-primary)' : '#9ca3af', whiteSpace: 'nowrap', fontSize: '0.8rem', fontStyle: hasEst ? 'normal' : 'italic' }}>
+        {hasEst ? `${pts} pts` : '~3 pts'}
       </span>
     </div>
   );
@@ -178,8 +180,10 @@ function AssigneeView({ issues }: { issues: LinearIssue[] }) {
                     {issue.state.name}
                   </span>
 
-                  <span style={{ color: hasEst ? 'var(--color-text-primary)' : '#9ca3af', whiteSpace: 'nowrap' }}>
-                    {pts} pt{pts !== 1 ? 's' : ''}{!hasEst ? '*' : ''}
+                  <span
+                    title={hasEst ? `${pts} pts (estimated)` : 'No estimate — using default of 3 pts'}
+                    style={{ color: hasEst ? 'var(--color-text-primary)' : '#9ca3af', whiteSpace: 'nowrap', fontStyle: hasEst ? 'normal' : 'italic' }}>
+                    {hasEst ? `${pts} pts` : '~3 pts'}
                   </span>
                 </div>
               );
@@ -189,7 +193,7 @@ function AssigneeView({ issues }: { issues: LinearIssue[] }) {
       })}
 
       <div style={{ padding: '0.5rem 1rem', fontSize: '0.75rem', color: 'var(--color-text-secondary)', background: 'var(--color-bg-secondary)', borderTop: '1px solid var(--color-border)' }}>
-        * Issues without estimates counted as 1 point
+        ~3 pts = no estimate set in Linear (using default of 3)
       </div>
     </div>
   );
@@ -345,7 +349,7 @@ export function LinearCycleDetailPage() {
 
                   {/* Footer */}
                   <div style={{ padding: '0.65rem 1rem', borderTop: '1px solid var(--color-border)', fontSize: '0.78rem', color: 'var(--color-text-secondary)', background: 'var(--color-bg-secondary)' }}>
-                    Showing {filtered.length} of {issues.length} issues · <strong>* unestimated issues counted as 3 pts</strong>
+                    Showing {filtered.length} of {issues.length} issues · <strong><em>~3 pts</em> = no estimate set (default)</strong>
                   </div>
                 </>
               ) : (
