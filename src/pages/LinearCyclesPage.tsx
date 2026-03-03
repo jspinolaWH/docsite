@@ -22,7 +22,7 @@ function CycleCard({ cycle }: { cycle: LinearCycle }) {
     <div
       onClick={() => navigate(`/cycles/${cycle.id}`, { state: { cycle } })}
       style={{
-        background: 'var(--color-surface)',
+        background: 'var(--color-bg-secondary)',
         border: '1px solid var(--color-border)',
         borderLeft: `4px solid ${color}`,
         borderRadius: '8px',
@@ -96,7 +96,7 @@ export function LinearCyclesPage() {
           )}
 
           {!loading && !error && cycles.length === 0 && (
-            <div style={{ padding: '1.5rem', background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '8px' }}>
+            <div style={{ padding: '1.5rem', background: 'var(--color-bg-secondary)', border: '1px solid var(--color-border)', borderRadius: '8px' }}>
               <p style={{ color: 'var(--color-text-secondary)', marginBottom: '0.5rem' }}>No cycle data available yet.</p>
               <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
                 Make sure <code>LINEAR_API_KEY</code> is set as a GitHub repository secret and the site has been redeployed.

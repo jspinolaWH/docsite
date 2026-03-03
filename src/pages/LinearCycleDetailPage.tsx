@@ -33,7 +33,7 @@ function IssueRow({ issue, idx }: { issue: LinearIssue; idx: number }) {
       gap: '0.75rem',
       alignItems: 'center',
       padding: '0.65rem 1rem',
-      background: idx % 2 !== 0 ? 'var(--color-surface)' : 'transparent',
+      background: idx % 2 !== 0 ? 'var(--color-bg-secondary)' : 'transparent',
       borderBottom: '1px solid var(--color-border)',
       fontSize: '0.85rem',
     }}>
@@ -102,7 +102,7 @@ export function LinearCycleDetailPage() {
     padding: '0.4rem 0.6rem',
     border: '1px solid var(--color-border)',
     borderRadius: '6px',
-    background: 'var(--color-surface)',
+    background: 'var(--color-bg-secondary)',
     color: 'var(--color-text-primary)',
     fontSize: '0.82rem',
     cursor: 'pointer',
@@ -162,7 +162,7 @@ export function LinearCycleDetailPage() {
             <div style={{ border: '1px solid var(--color-border)', borderRadius: '8px', overflow: 'hidden' }}>
 
               {/* Filters */}
-              <div style={{ padding: '0.875rem 1rem', borderBottom: '1px solid var(--color-border)', display: 'flex', flexWrap: 'wrap', gap: '0.6rem', background: 'var(--color-surface)' }}>
+              <div style={{ padding: '0.875rem 1rem', borderBottom: '1px solid var(--color-border)', display: 'flex', flexWrap: 'wrap', gap: '0.6rem', background: 'var(--color-bg-secondary)' }}>
                 <input type="text" placeholder="Search by title or ID…" value={search} onChange={e => setSearch(e.target.value)}
                   style={{ ...sel, flex: '1 1 180px' }} />
                 <select value={stateFilter} onChange={e => setStateFilter(e.target.value)} style={sel}>
@@ -180,7 +180,7 @@ export function LinearCycleDetailPage() {
               </div>
 
               {/* Column headers */}
-              <div style={{ display: 'grid', gridTemplateColumns: '110px 1fr 150px 120px 140px', gap: '0.75rem', padding: '0.5rem 1rem', borderBottom: '1px solid var(--color-border)', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-text-secondary)', background: 'var(--color-surface)' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '110px 1fr 150px 120px 140px', gap: '0.75rem', padding: '0.5rem 1rem', borderBottom: '1px solid var(--color-border)', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-text-secondary)', background: 'var(--color-bg-secondary)' }}>
                 <span>ID</span><span>Title</span><span>State</span><span>Priority</span><span>Assignee</span>
               </div>
 
@@ -191,7 +191,7 @@ export function LinearCycleDetailPage() {
               }
 
               {/* Footer */}
-              <div style={{ padding: '0.65rem 1rem', borderTop: '1px solid var(--color-border)', fontSize: '0.78rem', color: 'var(--color-text-secondary)', background: 'var(--color-surface)' }}>
+              <div style={{ padding: '0.65rem 1rem', borderTop: '1px solid var(--color-border)', fontSize: '0.78rem', color: 'var(--color-text-secondary)', background: 'var(--color-bg-secondary)' }}>
                 Showing {filtered.length} of {issues.length} issues
               </div>
             </div>
