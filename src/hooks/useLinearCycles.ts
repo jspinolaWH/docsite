@@ -13,7 +13,7 @@ export interface LinearIssue {
 }
 
 export function issuePoints(issue: LinearIssue): number {
-  return issue.estimate ?? 1;
+  return issue.estimate ?? 3;
 }
 
 export function estimateCoverage(issues: LinearIssue[]): string {
