@@ -6,6 +6,7 @@ export interface LinearIssue {
   identifier: string;
   priority: number;
   url: string;
+  dueDate?: string;
   state: { name: string; color: string; type: string };
   assignee?: { displayName: string };
 }
@@ -52,6 +53,7 @@ const QUERY = `
             identifier
             priority
             url
+            dueDate
             state { name color type }
             assignee { displayName }
           }
