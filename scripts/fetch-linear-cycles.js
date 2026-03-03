@@ -2,8 +2,11 @@
 // Fetches cycle data from Linear and writes it to public/linear-cycles.json
 // Runs during GitHub Actions deploy via LINEAR_API_KEY secret.
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const API_KEY = process.env.LINEAR_API_KEY;
 const OUT_PATH = path.join(__dirname, '..', 'public', 'linear-cycles.json');
