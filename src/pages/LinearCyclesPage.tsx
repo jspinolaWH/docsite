@@ -71,7 +71,7 @@ function CycleCard({ cycle }: { cycle: LinearCycle }) {
 }
 
 export function LinearCyclesPage() {
-  const { cycles, generatedAt, loading, error } = useLinearCycles();
+  const { cycles, loading, error } = useLinearCycles();
 
   const grouped: Record<CycleStatus, LinearCycle[]> = { active: [], upcoming: [], completed: [] };
   cycles.forEach((c) => grouped[getCycleStatus(c)].push(c));
@@ -87,11 +87,6 @@ export function LinearCyclesPage() {
             </h1>
             <p style={{ fontSize: '1.125rem', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
               Sprint cycle overview from Linear.
-              {generatedAt && (
-                <span style={{ marginLeft: '0.75rem', fontSize: '0.85rem', opacity: 0.75 }}>
-                  Updated {new Date(generatedAt).toLocaleString('en-GB')}
-                </span>
-              )}
             </p>
           </div>
 
@@ -111,8 +106,7 @@ export function LinearCyclesPage() {
                 No cycle data available yet.
               </p>
               <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
-                Data is generated during the GitHub Actions deploy. Make sure{' '}
-                <code>LINEAR_API_KEY</code> is set as a repository secret.
+                Make sure <code>LINEAR_API_KEY</code> is set as a GitHub repository secret and the site has been redeployed.
               </p>
             </div>
           )}

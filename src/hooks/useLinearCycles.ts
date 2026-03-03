@@ -33,26 +33,70 @@ export function getCycleStatus(cycle: LinearCycle): CycleStatus {
   return 'active';
 }
 
+const QUERY = `
+  query {
+    cycles(first: 50) {
+      nodes {
+        id
+        name
+        number
+        startsAt
+        endsAt
+        completedAt
+        progress
+        team { id name }
+        issues(first: 50) {
+          totalCount
+          nodes {
+            id
+            title
+            identifier
+            priority
+            url
+            state { name color type }
+            assignee { displayName }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export function useLinearCycles() {
   const [cycles, setCycles] = useState<LinearCycle[]>([]);
-  const [generatedAt, setGeneratedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}linear-cycles.json`)
+    const apiKey = import.meta.env.VITE_LINEAR_API_KEY as string | undefined;
+
+    if (!apiKey) {
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    fetch('https://api.linear.app/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: apiKey,
+      },
+      body: JSON.stringify({ query: QUERY }),
+    })
       .then((res) => {
-        if (res.status === 404) return { generatedAt: null, cycles: [] };
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
-      .then((data) => {
-        setCycles(data.cycles ?? []);
-        setGeneratedAt(data.generatedAt ?? null);
+      .then((json) => {
+        if (json.errors?.length) throw new Error(json.errors[0].message);
+        setCycles(json.data.cycles.nodes);
       })
       .catch((err: Error) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
 
-  return { cycles, generatedAt, loading, error };
+  return { cycles, loading, error };
 }
