@@ -9,6 +9,7 @@ import { SearchResultsPage } from './pages/SearchResultsPage';
 import { EntityDiagramsPage } from './pages/EntityDiagramsPage';
 import { FlowDiagramsPage } from './pages/FlowDiagramsPage';
 import { LinearCyclesPage } from './pages/LinearCyclesPage';
+import { LinearCycleDetailPage } from './pages/LinearCycleDetailPage';
 
 export default function App() {
   const docsCtx = useDocsProvider();
@@ -26,6 +27,7 @@ export default function App() {
               <Route path="/diagrams/entity-diagrams" element={<EntityDiagramsPage />} />
               <Route path="/diagrams/flow-diagrams" element={<FlowDiagramsPage />} />
               <Route path="/cycles" element={<LinearCyclesPage />} />
+              <Route path="/cycles/:id" element={<LinearCycleDetailPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
