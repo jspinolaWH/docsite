@@ -345,7 +345,7 @@ export function LinearCycleDetailPage() {
 
                   {/* Footer */}
                   <div style={{ padding: '0.65rem 1rem', borderTop: '1px solid var(--color-border)', fontSize: '0.78rem', color: 'var(--color-text-secondary)', background: 'var(--color-bg-secondary)' }}>
-                    Showing {filtered.length} of {issues.length} issues · * unestimated issues counted as 1 pt
+                    Showing {filtered.length} of {issues.length} issues · <strong>* unestimated issues counted as 3 pts</strong>
                   </div>
                 </>
               ) : (
