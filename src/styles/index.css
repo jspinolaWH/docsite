@@ -405,6 +405,36 @@ a:hover {
   border-bottom: 1px solid var(--color-border);
 }
 
+.doc-meta-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.download-btn:hover {
+  color: var(--color-accent);
+  background: var(--color-accent-bg);
+  border-color: var(--color-accent);
+}
+
 .doc-title {
   font-size: 2rem;
   font-weight: 800;
