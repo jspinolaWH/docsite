@@ -49,12 +49,30 @@ WasteHero 2.0 uses 5 product types. Each type represents a fundamentally differe
 - Can have frequency (weekly, monthly)
 - Can have speed options (scheduled, express)
 
-**Fields it needs:**
-- Waste Fraction (what type of waste)
-- EWC/LoW Code (compliance code)
-- R/D Code (processing method - R1 recycling, D1 disposal)
-- Direction (Incoming/Outgoing/Transfer)
-- Permitted Emptying Intervals (Weekly, Bi-weekly, Monthly)
+**Type-Specific Fields** *(PD-41, CT-3043)*:
+
+| Field | Data Type | Source | Notes |
+|-------|-----------|--------|-------|
+| `permitted_emptying_intervals` | Array | PD-41 | Weekly, Bi-weekly, Monthly — **explicitly excluded from Recurring Fee** |
+| `container_types` | Array | CT-3043 | Allowed container types for this service |
+| `property_category_restrictions` | Array | CT-3043 | Which property categories can order |
+| `load_inspection` | Boolean | CT-3043 | Whether load must be inspected |
+
+**Can Also Have** *(PD-39 — not type-restricted)*:
+
+| Field | Data Type | Source | Notes |
+|-------|-----------|--------|-------|
+| `waste_fraction` | Reference | PD-41 | Type of waste handled |
+| `ewc_low_codes` | String | PD-39 | EWC / LoW compliance codes |
+| `rd_codes` | String | PD-39 | R/D codes (e.g. R1 recycling, D1 disposal) |
+| `direction` | Enum | PD-39 | Incoming / Outgoing / Transfer |
+| `hazardous_waste_properties` | Boolean | PD-39 | Hazardous waste characteristics |
+| `origin_location` | String | PD-39 | Origin location |
+| `storage_location` | String | PD-39 | Storage location |
+| `waste_type` | String | PD-39 | Waste type classification |
+| `default_origin_process_ylva` | String | PD-39 | Default origin/process for YLVA reporting |
+
+> Plus all **Common Fields** shared by every product type (see Field Reference section below).
 
 **From PD-41:**
 > "Permitted emptying intervals are relevant for service products"
@@ -88,12 +106,22 @@ WasteHero 2.0 uses 5 product types. Each type represents a fundamentally differe
 - Can be rented or sold
 - Needs storage location
 
-**Fields it needs:**
-- Container Type (120L, 240L, 660L, 1100L)
-- Default Weight (kg - container's empty weight)
-- Waste Fraction (what type of waste it holds)
-- EWC/LoW Code (compliance code)
-- Storage Location
+**Type-Specific Fields** *(CT-3043, PD-34)*:
+
+| Field | Data Type | Source | Notes |
+|-------|-----------|--------|-------|
+| `default_weight` | Decimal | CT-3043, PD-34 | Empty container weight in kg |
+| `container_types` | Reference | CT-3043 | Size/type reference (120L, 240L, etc.) |
+| `ewc_low_codes` | String | CT-3043 | EWC / LoW compliance codes |
+| `rd_codes` | String | CT-3043 | R/D processing codes |
+| `direction` | Enum | CT-3043 | Incoming / Outgoing / Transfer |
+| `hazardous_waste_properties` | Boolean | CT-3043 | Hazardous waste characteristics |
+| `origin_location` | String | CT-3043 | Origin location |
+| `storage_location` | String | CT-3043 | Storage location |
+| `load_inspection` | Boolean | CT-3043 | Whether load must be inspected |
+| `waste_type` | String | CT-3043 | Waste type classification |
+
+> Plus all **Common Fields** shared by every product type (see Field Reference section below).
 
 **Pricing:**
 - Usually sold once or monthly rental
@@ -124,11 +152,17 @@ WasteHero 2.0 uses 5 product types. Each type represents a fundamentally differe
 - Applied during service execution
 - Has application method (Automatic/Manual/Driver-Initiated)
 
-**Fields it needs:**
-- Application Method (Automatic/Manual/Driver-Initiated)
-- Default Price
-- Automatic Rules (if automatic)
-- Office Approval Required (if driver-initiated)
+**Type-Specific Fields** *(PD-38)*:
+
+| Field | Data Type | Required | Notes |
+|-------|-----------|----------|-------|
+| `application_method` | Enum | **Required** | Automatic / Manual / Driver-Initiated |
+| `default_price` | Decimal | Optional | Default charge when applied |
+| `automatic_rules` | JSON | Conditional | Only when `application_method = Automatic` |
+| `office_approval_required` | Boolean | Conditional | Only when `application_method = Driver-Initiated` |
+| `confirmation_slip_link` | String | Conditional | Only when `application_method = Driver-Initiated` |
+
+> Plus all **Common Fields** shared by every product type (see Field Reference section below).
 
 **3 Application Methods:**
 
@@ -177,11 +211,13 @@ WasteHero 2.0 uses 5 product types. Each type represents a fundamentally differe
 - Often for initial setup or special requests
 - Simple pricing (flat fee)
 
-**Fields it needs:**
-- Product Code
-- Invoice Display Name
-- Default Price
-- Portal Visibility
+**Type-Specific Fields** *(CT-3043)*:
+
+| Field | Data Type | Source | Notes |
+|-------|-----------|--------|-------|
+| `charge_conditions` | JSON | CT-3043 | When / how the fee is applied |
+
+> Plus all **Common Fields** shared by every product type (see Field Reference section below).
 
 **Pricing:**
 - Flat fee (€50)
@@ -213,11 +249,15 @@ WasteHero 2.0 uses 5 product types. Each type represents a fundamentally differe
 - Often infrastructure/admin costs
 - Billed on schedule
 
-**Fields it needs:**
-- Billing Frequency (Monthly/Quarterly/Annually)
-- Default Price
-- Product Code
-- Invoice Display Name
+**Type-Specific Fields** *(CT-3043, PD-41)*:
+
+| Field | Data Type | Source | Notes |
+|-------|-----------|--------|-------|
+| `billing_frequency` | Enum | CT-3043 | Monthly / Quarterly / Annually |
+
+> ❌ **Cannot have** `permitted_emptying_intervals` — explicitly excluded in PD-41.
+
+> Plus all **Common Fields** shared by every product type (see Field Reference section below).
 
 **From PD-41:**
 > "Permitted emptying intervals are relevant for service products but NOT for recurring fee products"
@@ -230,6 +270,60 @@ WasteHero 2.0 uses 5 product types. Each type represents a fundamentally differe
 - Often part of Service Products (as component in Bill of Materials)
 - Example: Service includes "Base Fee €10/month" component
 - Can be standalone subscription
+
+---
+
+## Field Reference
+
+### Common Fields (All 5 Types)
+
+Every product type shares these fields regardless of category *(PD-39, PD-41)*:
+
+| Field | Data Type | Required | Notes |
+|-------|-----------|----------|-------|
+| `product_name` | String | **Required** | Display name |
+| `unique_codes` | String | Optional | Product codes (SKU, etc.) |
+| `descriptor` | String | Optional | Short product descriptor |
+| `invoice_display_name` | String | Optional | Name shown on invoices |
+| `is_active` | Boolean | Required | Can be deactivated / reactivated |
+| `transfer_document_obligation` | Boolean | Required | Whether a transfer document is needed |
+| `ylva_reportable` | Boolean | Required | Whether reportable to YLVA |
+| `product_group` | String | Optional | Group classification |
+| `customer_portal_visibility` | Boolean | Required | Visible in customer portal |
+| `weighbridge_assignment` | Boolean | Optional | Direct products to weighbridge |
+
+---
+
+### Complete Field Matrix
+
+Which fields apply to which type. ✅ = assigned, ✅* = conditional, ❌ = excluded, ❓ = not explicitly stated in requirements.
+
+| Field | Service | Container | Additional Service | One-off Fee | Recurring Fee |
+|-------|---------|-----------|-------------------|-------------|---------------|
+| **Common fields** (all 10 above) | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `permitted_emptying_intervals` | ✅ | ❓ | ❓ | ❓ | ❌ PD-41 |
+| `container_types` | ✅ | ✅ | ❌ | ❌ | ❌ |
+| `property_category_restrictions` | ✅ | ❌ | ❌ | ❌ | ❌ |
+| `load_inspection` | ✅ | ✅ | ❌ | ❌ | ❌ |
+| `waste_fraction` | ✅ | ❓ | ❌ | ❌ | ❌ |
+| `ewc_low_codes` | ✅* | ✅ | ❌ | ❌ | ❌ |
+| `rd_codes` | ✅* | ✅ | ❌ | ❌ | ❌ |
+| `direction` | ✅* | ✅ | ❌ | ❌ | ❌ |
+| `hazardous_waste_properties` | ✅* | ✅ | ❌ | ❌ | ❌ |
+| `origin_location` | ✅* | ✅ | ❌ | ❌ | ❌ |
+| `storage_location` | ✅* | ✅ | ❌ | ❌ | ❌ |
+| `waste_type` | ✅* | ✅ | ❌ | ❌ | ❌ |
+| `default_weight` | ❌ | ✅ | ❌ | ❌ | ❌ |
+| `default_origin_process_ylva` | ✅* | ❓ | ❌ | ❌ | ❌ |
+| `application_method` | ❌ | ❌ | ✅ Required | ❌ | ❌ |
+| `default_price` | ❌ | ❌ | ✅ | ❌ | ❌ |
+| `automatic_rules` | ❌ | ❌ | ✅* Automatic | ❌ | ❌ |
+| `office_approval_required` | ❌ | ❌ | ✅* Driver | ❌ | ❌ |
+| `confirmation_slip_link` | ❌ | ❌ | ✅* Driver | ❌ | ❌ |
+| `charge_conditions` | ❌ | ❌ | ❌ | ✅ | ❌ |
+| `billing_frequency` | ❌ | ❌ | ❌ | ❌ | ✅ |
+
+> **Source notes:** Explicit PD-39/PD-41 requirements are authoritative. CT-3043 (implementation epic) provides the most detailed type-to-field mapping but may contain implementation assumptions. ❓ = not explicitly stated in original requirements.
 
 ---
 
