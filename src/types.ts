@@ -69,6 +69,16 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     darkBgColor: '#052e16',
     darkBorderColor: '#15803d',
   },
+  'pm-signoff': {
+    id: 'pm-signoff',
+    label: 'PM Sign-off',
+    color: '#db2777',
+    bgColor: '#fdf2f8',
+    borderColor: '#fbcfe8',
+    darkColor: '#f9a8d4',
+    darkBgColor: '#500724',
+    darkBorderColor: '#9d174d',
+  },
 };
 
 // Static diagram links (not loaded from markdown files)
