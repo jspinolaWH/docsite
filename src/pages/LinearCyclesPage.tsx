@@ -17,7 +17,12 @@ function CycleCard({ cycle }: { cycle: LinearCycle }) {
   const navigate = useNavigate();
   const status = getCycleStatus(cycle);
   const { color } = STATUS_CONFIG[status];
-  const pct = Math.round(cycle.progress * 100);
+  const donePct = Math.round(cycle.progress * 100);
+
+  const totalIssues = cycle.issueCountHistory?.at(-1) ?? 0;
+  const inProgressCount = cycle.inProgressIssueCountHistory?.at(-1) ?? 0;
+  const inProgressPct = totalIssues > 0 ? Math.round((inProgressCount / totalIssues) * 100) : 0;
+  const combinedPct = Math.min(donePct + inProgressPct, 100);
 
   return (
     <div
@@ -59,12 +64,20 @@ function CycleCard({ cycle }: { cycle: LinearCycle }) {
         {fmt(cycle.startsAt)} → {fmt(cycle.endsAt)}
       </div>
 
-      <div style={{ height: '6px', background: 'var(--color-border)', borderRadius: '3px', overflow: 'hidden' }}>
-        <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: '3px' }} />
+      <div style={{ height: '6px', background: 'var(--color-border)', borderRadius: '3px', overflow: 'hidden', position: 'relative' }}>
+        {/* done (green) */}
+        <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${donePct}%`, background: color, borderRadius: '3px' }} />
+        {/* in-progress (yellow), starts after done */}
+        {inProgressPct > 0 && (
+          <div style={{ position: 'absolute', left: `${donePct}%`, top: 0, bottom: 0, width: `${inProgressPct}%`, background: '#f59e0b', borderRadius: '3px' }} />
+        )}
       </div>
 
-      <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
-        {pct}% complete
+      <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>
+        <span>{donePct}% done</span>
+        {inProgressPct > 0 && (
+          <span style={{ color: '#d97706' }}>{combinedPct}% incl. in progress</span>
+        )}
       </div>
     </div>
   );

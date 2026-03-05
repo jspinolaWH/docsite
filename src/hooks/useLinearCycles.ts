@@ -29,6 +29,8 @@ export interface LinearCycle {
   endsAt: string;
   completedAt?: string;
   progress: number;
+  inProgressIssueCountHistory: number[];
+  issueCountHistory: number[];
   team: { id: string; name: string };
 }
 
@@ -56,6 +58,8 @@ const CYCLES_QUERY = `
         endsAt
         completedAt
         progress
+        inProgressIssueCountHistory
+        issueCountHistory
         team { id name }
       }
     }
