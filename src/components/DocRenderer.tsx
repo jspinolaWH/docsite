@@ -86,6 +86,18 @@ export function DocRenderer({ content, highlight }: { content: string; highlight
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkLinkPdTasks]}
         rehypePlugins={[rehypeHighlight, rehypeSlug]}
+        components={{
+          a: ({ href, children, ...props }) => (
+            <a
+              href={href}
+              target={href?.startsWith('http') ? '_blank' : undefined}
+              rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+              {...props}
+            >
+              {children}
+            </a>
+          ),
+        }}
       >
         {content}
       </ReactMarkdown>
