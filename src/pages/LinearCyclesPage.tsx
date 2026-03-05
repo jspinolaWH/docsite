@@ -20,7 +20,7 @@ function CycleCard({ cycle }: { cycle: LinearCycle }) {
   const donePct = Math.round(cycle.progress * 100);
 
   const totalIssues = cycle.issueCountHistory?.at(-1) ?? 0;
-  const inProgressCount = cycle.inProgressIssueCountHistory?.at(-1) ?? 0;
+  const inProgressCount = cycle.inProgressScopeHistory?.at(-1) ?? 0;
   const inProgressPct = totalIssues > 0 ? Math.round((inProgressCount / totalIssues) * 100) : 0;
   const combinedPct = Math.min(donePct + inProgressPct, 100);
 
