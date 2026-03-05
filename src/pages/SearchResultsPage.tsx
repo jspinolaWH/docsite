@@ -24,7 +24,7 @@ export function SearchResultsPage() {
         {results.map((doc) => (
           <Link
             key={doc.slug}
-            to={`/doc/${doc.slug}`}
+            to={`/doc/${doc.slug}${searchQuery ? `?q=${encodeURIComponent(searchQuery)}` : ''}`}
             className="result-card"
           >
             <div className="result-header">

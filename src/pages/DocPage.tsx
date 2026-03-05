@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDocs } from '../hooks/useDocs';
 import { BreadCrumb } from '../components/BreadCrumb';
@@ -9,14 +9,16 @@ import { RelatedDocs } from '../components/RelatedDocs';
 
 export function DocPage() {
   const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
+  const highlight = searchParams.get('q') ?? undefined;
   const { getBySlug } = useDocs();
 
   const doc = slug ? getBySlug(slug) : undefined;
 
-  // Scroll to top when document changes
+  // Scroll to top only when there's no highlight target
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [slug]);
+    if (!highlight) window.scrollTo(0, 0);
+  }, [slug, highlight]);
 
   if (!doc) {
     return (
@@ -34,7 +36,7 @@ export function DocPage() {
       <div className="doc-layout">
         <article className="doc-article">
           <DocMeta doc={doc} />
-          <DocRenderer content={doc.content} />
+          <DocRenderer content={doc.content} highlight={highlight} />
           {doc.designPreview && (
             <div className="design-preview-section">
               <h2 className="design-preview-title">Design Preview</h2>
