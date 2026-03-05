@@ -83,6 +83,7 @@ interface AssigneeGroup {
   issues: LinearIssue[];
   totalPts: number;
   donePts: number;
+  inProgressPts: number;
   hasUnestimated: boolean;
 }
 
@@ -101,8 +102,11 @@ function AssigneeView({ issues }: { issues: LinearIssue[] }) {
         const donePts = issList
           .filter(i => i.state.type === 'completed')
           .reduce((s, i) => s + issuePoints(i), 0);
+        const inProgressPts = issList
+          .filter(i => i.state.type === 'started')
+          .reduce((s, i) => s + issuePoints(i), 0);
         const hasUnestimated = issList.some(i => i.estimate == null);
-        return { name, issues: issList, totalPts, donePts, hasUnestimated };
+        return { name, issues: issList, totalPts, donePts, inProgressPts, hasUnestimated };
       })
       .sort((a, b) => b.totalPts - a.totalPts);
   }, [issues]);
@@ -118,7 +122,9 @@ function AssigneeView({ issues }: { issues: LinearIssue[] }) {
   return (
     <div>
       {groups.map((g) => {
-        const pct = g.totalPts > 0 ? Math.round((g.donePts / g.totalPts) * 100) : 0;
+        const donePct = g.totalPts > 0 ? Math.round((g.donePts / g.totalPts) * 100) : 0;
+        const inProgPct = g.totalPts > 0 ? Math.round((g.inProgressPts / g.totalPts) * 100) : 0;
+        const combinedPct = Math.min(donePct + inProgPct, 100);
         return (
           <div key={g.name} style={{ borderBottom: '1px solid var(--color-border)' }}>
             {/* Assignee header */}
@@ -134,11 +140,15 @@ function AssigneeView({ issues }: { issues: LinearIssue[] }) {
               </div>
 
               <div style={{ flex: 1, maxWidth: '220px' }}>
-                <div style={{ height: '6px', background: 'var(--color-border)', borderRadius: '3px', overflow: 'hidden', marginBottom: '0.25rem' }}>
-                  <div style={{ height: '100%', width: `${pct}%`, background: '#16a34a', borderRadius: '3px', transition: 'width 0.3s' }} />
+                <div style={{ height: '6px', background: 'var(--color-border)', borderRadius: '3px', overflow: 'hidden', marginBottom: '0.25rem', position: 'relative' }}>
+                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${donePct}%`, background: '#16a34a', borderRadius: '3px', transition: 'width 0.3s' }} />
+                  {inProgPct > 0 && (
+                    <div style={{ position: 'absolute', left: `${donePct}%`, top: 0, bottom: 0, width: `${inProgPct}%`, background: '#f59e0b', borderRadius: '3px', transition: 'width 0.3s' }} />
+                  )}
                 </div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)' }}>
-                  {pct}% done
+                <div style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)', display: 'flex', gap: '0.5rem' }}>
+                  <span>{donePct}% done</span>
+                  {inProgPct > 0 && <span style={{ color: '#d97706' }}>{combinedPct}% incl. in progress</span>}
                 </div>
               </div>
 
@@ -214,7 +224,11 @@ export function LinearCycleDetailPage() {
 
   const status: CycleStatus | null = cycle ? getCycleStatus(cycle) : null;
   const color = status ? STATUS_CONFIG[status].color : '#6b7280';
-  const pct = cycle ? Math.round(cycle.progress * 100) : 0;
+  const donePct = cycle ? Math.round(cycle.progress * 100) : 0;
+  const totalIssues = cycle?.issueCountHistory?.at(-1) ?? 0;
+  const inProgressScope = cycle?.inProgressScopeHistory?.at(-1) ?? 0;
+  const inProgressPct = totalIssues > 0 ? Math.round((inProgressScope / totalIssues) * 100) : 0;
+  const combinedPct = Math.min(donePct + inProgressPct, 100);
 
   const states    = useMemo(() => [...new Set(issues.map(i => i.state.name))].sort(), [issues]);
   const assignees = useMemo(() => [...new Set(issues.map(i => i.assignee?.displayName ?? 'Unassigned'))].sort(), [issues]);
@@ -282,11 +296,14 @@ export function LinearCycleDetailPage() {
 
             {cycle && (
               <>
-                <div style={{ height: '6px', background: 'var(--color-border)', borderRadius: '3px', overflow: 'hidden', marginBottom: '0.4rem' }}>
-                  <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: '3px' }} />
+                <div style={{ height: '6px', background: 'var(--color-border)', borderRadius: '3px', overflow: 'hidden', marginBottom: '0.4rem', position: 'relative' }}>
+                  <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: `${donePct}%`, background: color, borderRadius: '3px' }} />
+                  {inProgressPct > 0 && (
+                    <div style={{ position: 'absolute', left: `${donePct}%`, top: 0, bottom: 0, width: `${inProgressPct}%`, background: '#f59e0b', borderRadius: '3px' }} />
+                  )}
                 </div>
                 <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <span>{pct}% complete{!loading && ` · ${issues.length} issues`}</span>
+                  <span>{donePct}% done{inProgressPct > 0 && <span style={{ color: '#d97706', marginLeft: '0.5rem' }}>{combinedPct}% incl. in progress</span>}{!loading && ` · ${issues.length} issues`}</span>
                   {!loading && issues.length > 0 && (
                     <span style={{ color: '#9ca3af' }}>{estimateCoverage(issues)}</span>
                   )}
