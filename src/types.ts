@@ -79,6 +79,16 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     darkBgColor: '#500724',
     darkBorderColor: '#9d174d',
   },
+  'oliver-docs': {
+    id: 'oliver-docs',
+    label: 'Oliver Docs',
+    color: '#0369a1',
+    bgColor: '#f0f9ff',
+    borderColor: '#bae6fd',
+    darkColor: '#38bdf8',
+    darkBgColor: '#082f49',
+    darkBorderColor: '#0369a1',
+  },
 };
 
 // Static diagram links (not loaded from markdown files)
