@@ -33,8 +33,8 @@ tags:
 | `portal_visibility` | Boolean | Visible in customer portal | PD-41 |
 | `self_service_ordering` | Boolean | Can customers order via self-service portal | PD-41 |
 | `show_price_in_portal` | Boolean | Display price in customer portal | PD-41 |
-| `unit` | Boolean | Display unit price (kg,time,collection)  | PD-41 |
-| `price` | Boolean | Display price   | PD-41 |
+| `unit` | Enum | Display unit price (kg,time,collection)  | PD-41 |
+| `price` | Decimal | Display price   | PD-41 |
 
 ---
 
