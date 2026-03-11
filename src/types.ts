@@ -89,6 +89,16 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     darkBgColor: '#082f49',
     darkBorderColor: '#0369a1',
   },
+  requirements: {
+    id: 'requirements',
+    label: 'All Requirements',
+    color: '#b45309',
+    bgColor: '#fffbeb',
+    borderColor: '#fcd34d',
+    darkColor: '#fbbf24',
+    darkBgColor: '#2d1a00',
+    darkBorderColor: '#92400e',
+  },
 };
 
 // Static diagram links (not loaded from markdown files)

@@ -1,6 +1,6 @@
 import type { DocEntry } from '../types';
 
-const rawDocs = import.meta.glob('../../docs/**/*.md', {
+const rawDocs = import.meta.glob(['../../docs/**/*.md', '../../allreq/**/*.md'], {
   eager: true,
   query: '?raw',
   import: 'default',
