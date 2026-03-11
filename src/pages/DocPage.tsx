@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDocs } from '../hooks/useDocs';
 import { BreadCrumb } from '../components/BreadCrumb';
@@ -10,15 +10,27 @@ import { RelatedDocs } from '../components/RelatedDocs';
 export function DocPage() {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
+  const { hash } = useLocation();
   const highlight = searchParams.get('q') ?? undefined;
   const { getBySlug } = useDocs();
 
   const doc = slug ? getBySlug(slug) : undefined;
 
-  // Scroll to top only when there's no highlight target
   useEffect(() => {
-    if (!highlight) window.scrollTo(0, 0);
-  }, [slug, highlight]);
+    if (highlight) return;
+    if (hash) {
+      const id = hash.slice(1);
+      const timer = setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          const offsetPosition = el.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+    window.scrollTo(0, 0);
+  }, [slug, highlight, hash]);
 
   if (!doc) {
     return (

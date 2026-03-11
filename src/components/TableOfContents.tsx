@@ -11,8 +11,8 @@ export function TableOfContents({ content }: { content: string }) {
   const headings = useMemo(() => {
     const items: TocItem[] = [];
     const slugger = new GithubSlugger();
-    // Only match H2 (##) headings for cleaner TOC
-    const regex = /^(#{2})\s+(.+)$/gm;
+    // Match H2 (##) and H3 (###) headings
+    const regex = /^(#{2,3})\s+(.+)$/gm;
     let match;
     while ((match = regex.exec(content)) !== null) {
       const text = match[2].replace(/[*`]/g, '').trim();
@@ -25,14 +25,10 @@ export function TableOfContents({ content }: { content: string }) {
   const scrollToHeading = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      const headerOffset = 80; // Header height + padding
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+      const headerOffset = 80;
+      const offsetPosition = element.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+      window.history.pushState(null, '', `#${id}`);
     }
   };
 
