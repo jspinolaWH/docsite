@@ -25,6 +25,9 @@ export function DocPage() {
         if (el) {
           const offsetPosition = el.getBoundingClientRect().top + window.pageYOffset - 80;
           window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+          el.style.transition = 'background-color 0.4s ease';
+          el.style.backgroundColor = 'rgba(245, 158, 11, 0.25)';
+          setTimeout(() => { el.style.backgroundColor = ''; }, 2500);
         }
       }, 100);
       return () => clearTimeout(timer);

@@ -29,6 +29,9 @@ export function TableOfContents({ content }: { content: string }) {
       const offsetPosition = element.getBoundingClientRect().top + window.pageYOffset - headerOffset;
       window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
       window.history.pushState(null, '', `#${id}`);
+      element.style.transition = 'background-color 0.4s ease';
+      element.style.backgroundColor = 'rgba(245, 158, 11, 0.25)';
+      setTimeout(() => { element.style.backgroundColor = ''; }, 2500);
     }
   };
 
