@@ -99,6 +99,16 @@ export const CATEGORIES: Record<string, CategoryConfig> = {
     darkBgColor: '#2d1a00',
     darkBorderColor: '#92400e',
   },
+  releases: {
+    id: 'releases',
+    label: 'Releases',
+    color: '#0f766e',
+    bgColor: '#f0fdfa',
+    borderColor: '#99f6e4',
+    darkColor: '#2dd4bf',
+    darkBgColor: '#042f2e',
+    darkBorderColor: '#0f766e',
+  },
 };
 
 // Static diagram links (not loaded from markdown files)
