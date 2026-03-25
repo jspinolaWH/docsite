@@ -1,0 +1,494 @@
+PJH ERP: building the product catalogue and reviewing the prepared Excel
+Wed, Mar 4, 2026
+
+0:02 - Amir Hassan
+Good morning, Sanna.
+
+0:04 - Amir Hassan
+Good morning, Miska.
+
+0:05 - Miska Sulander
+Good morning.
+
+0:07 - Amir Hassan
+Hey, a couple of things regarding this product catalogue mockup.
+
+0:12 - Amir Hassan
+I'll go through them this morning, because they relate to requirements. There may be questions we can't answer right now. We could arrange a follow-up meeting next week. Let's go through things from the beginning now, and if more questions come up, we'll cover those next week.
+
+0:38 - Sanna Ruosaari
+Was this agreed? We were supposed to go through the Excel today.
+
+0:44 - Sanna Ruosaari
+Right, I'm talking about the next one.
+
+0:46 - Miska Sulander
+OK. Yes, this was just a heads up for the daily and the ten o'clock meeting.
+
+0:53 - Sanna Ruosaari
+Yes, so if there are any other observations in the meeting starting at ten, we'll set up a new meeting to go through them. Yes, yes. We can still get started on this. We'll handle it shortly, once we get the rest of the PJH group on the line.
+
+1:13 - Amir Hassan
+Then, once everyone has joined, we'll explain how this product-pricelist product catalogue will be implemented as part of the release.
+
+1:26 - Unidentified Speaker
+Yes.
+
+1:26 - Amir Hassan
+It really is a genuinely sunny day here in Lappeenranta. Is it just as sunny in Tampere?
+
+1:36 - Sanna Ruosaari
+No more snow. Yes, the sun is shining.
+
+1:41 - Unidentified Speaker
+Yes.
+
+1:41 - Unidentified Speaker
+Oh.
+
+1:42 - Amir Hassan
+Even the sun is shining here.
+
+1:45 - Miska Sulander
+Maybe it's because Naantali is practically next door here.
+
+1:53 - Miia Saviahde
+The sun shines even on a pile of sticks sometimes.
+
+1:57 - Amir Hassan
+Indeed.
+
+1:59 - Miska Sulander
+Maybe I'm adding a bit too much fuel to this Turku-Tampere discussion as a Turku person myself. Right, right.
+
+2:08 - Unidentified Speaker
+That's why you can quip back.
+
+2:11 - Unidentified Speaker
+The microphone has been going.
+
+2:13 - Unidentified Speaker
+Yes, the amount is completely absurd, the way someone does it.
+
+2:22 - Amir Hassan
+Good morning, Miia. Good morning, Päivi.
+
+2:24 - Unidentified Speaker
+I didn't get a chance to say it.
+
+2:26 - Conference Room (Päivi Kaarne) - Speaker 3
+Good morning. I still need to adjust the audio a bit. We're here in the meeting room. This isn't coming through quite as it should.
+
+2:38 - Unidentified Speaker
+Just a moment.
+
+2:39 - Amir Hassan
+This is an entirely on-topic comment.
+
+2:42 - Amir Hassan
+I found out there's a social platform called Malt Book. This is quite something. Multbook is a social platform where AI agents have conversations with each other.
+
+3:02 - Unidentified Speaker
+Really.
+
+3:02 - Amir Hassan
+People can be followers there, they can't comment, but AI agents discuss everything from optimisation to consciousness and religion. I don't know whether they're being guided — whether a person gives them prompts telling them to discuss this topic — or whether they're genuinely talking to each other. It's a bit like...
+
+3:35 - Miska Sulander
+Now that I've opened the front page, I'm doing exactly the same thing, it looks pretty dim.
+
+3:43 - Miska Sulander
+Gives underneath.
+
+3:44 - Miska Sulander
+Yes, let's get down to business.
+
+3:46 - Sanna Ruosaari
+The sound team voted. We can hear you fine on our end.
+
+3:50 - Conference Room (Päivi Kaarne) - Speaker 3
+Can you hear us on your end? At least your voice comes through.
+
+3:54 - Sanna Ruosaari
+Can someone at the end of the table take a central position? We're here. Can hear. Just to let Kalle and Mirja know, I've also got the flu and I've isolated the problem. I didn't go into the office to infect the rest of the team. Normally we're all in the office on Wednesdays. You did sound a bit flu-like at the start of the week, Sanna. Yes, I haven't sounded any better, I don't think, even now.
+
+4:22 - Amir Hassan
+But this is what we have.
+
+4:24 - Sanna Ruosaari
+Thanks, we'll manage. Hey, our topic today is this product catalogue Excel of ours. It was already noted that at ten o'clock we'll wonder at the mockup, but right now we need to clarify this product catalogue Excel. We've done some work, and now we'd need WasteHero's feedback on our structure — whether it's going in the right direction. And before I hand over the floor, let me note that discussions have been held internally between Miska and Rami, and feedback was received and gaps were identified. The problem is that Rami is away for a while now, and that conversation was held internally, which means our product team has been left out of the loop — and we want to avoid that going forward. That's why we're all here now. What is your view of what we've put together?
+
+5:14 - Miska Sulander
+I've looked through this, but I'd first like to hear — since I did go through this with Rami, it wasn't nearly as extensive at that point when we went through it, that was about two weeks ago or so — whether you want to quickly walk through what has been done here, from your perspective, before I start giving feedback or going through it. So a quick check-in first from your side, what's the current situation and the understanding, especially now that Rami has stepped away from this. That way we'll all know what we're talking about going forward.
+
+6:22 - Sanna Ruosaari
+We went through this same question internally last week. I'm hoping someone from the products team takes the floor now and walks Miska through the situation again. I can serve as the moderator.
+
+6:38 - Conference Room (Päivi Kaarne) - Speaker 1
+Go ahead and say it from there.
+
+6:40 - Unidentified Speaker
+I'll start, then you can fill in.
+
+6:42 - Conference Room (Päivi Kaarne) - Speaker 1
+We have tried to bring in different types of products that we currently use. That column is now built from selecting a waste fraction and a container type, and then a container size — that makes up the product column, so you can see both the emptying of a remote container, for example in the first row, and it includes the container size, so in the product you can see what fraction and what size is being emptied. And in the first columns there's also the service type — so there are different types: transport service, additional service, credits, and all of those have been looked at to understand what kinds of types we have in use. Then of course either the waste fraction, or if you scroll further down, you also see things like sludge and sharp waste and fibre waste — these various types that we've tried to include. Then there are these container types — sludge tanks have also been added there, so there are price containers, sludge tanks, waste bags, for example that kind of additional service for bags, but right now it's just examples of the basic types that are in use. Then there are container sizes — so those are defined, and if you click on the container size field, you can select from a dropdown, a small triangle appears — that's why we've tried to set it up so you can select from the list of what we have in use. Then in that list you can see one item, two items, three items — those are for example the skip collections we have defined, and there are underground container collectors and so on. Then as you continue down that list, physically down the list, you get past the sludge entries — those don't have a container size, because they come from wherever they come from, since the driver records the amount of sludge emptied, so you can't really enter anything other than the default size of the tank. But what gets billed to the customer is what the driver records. In the service responsibility field we've tried to look at whether it's a municipal responsibility, secondary responsibility, or something else. So that column is there. Contract area. That's now shown there, we've looked at that. Those 0.1 is weight 0.6, whatever these are per municipality. But whether it should be something else, I don't know. And correspondingly the next column is the municipality data. That's fairly clear. Then comes zone. We didn't really know what the zone is here — is it the zones we have for example in sludge, where there is a specific zone, but that's also municipality-limited, and we haven't put anything in for these. Product code. Yes, there's a checkbox there. If we need some product code, but even how that is formed — we don't have that information in this model. Then processing method. There's been an attempt to think about how mixed waste for example goes to Tammervoima, and sludge goes to a wastewater treatment plant. And then what pre-processing would look like, for example in the case of a simple collection service. And the reception point: Tarastejärvi, or then Tammervoima — if you scroll down, the legend shows which wastewater treatment plant accepts what. And similarly the sharp and fibre waste probably also go somewhere. We've tried to show examples of those. Then towards the end, I probably can't speak to all of it — if Miia could help from the info columns, she can maybe give more answers on the other parts. Yes.
+
+12:43 - Miia Saviahde
+So in practice, attributes have been identified here — the ones Miska put as examples and described — and then the list continues further. It includes processing products and hazardous waste products, and I believe transport attributes were also identified towards the end. So Rami has started to compile all the various attributes that sit behind our products. They're all in this table.
+
+13:16 - Conference Room (Päivi Kaarne) - Speaker 2
+We do have products where the reception point can be defined there. But for most products, the reception point comes from route management. So there are multiple reception points for plastic, cardboard, sludge. It's not necessarily tied to which municipality it's collected from — it comes from the driver's confirmation and route management, where it gets received.
+
+13:51 - Conference Room (Päivi Kaarne) - Speaker 1
+Since we don't know how this gets implemented on the product side and the WasteHero side — for example, the sludge services are defined here — is sludge emptying a single service, or is it a service bundle? So if you go a bit to the left and down, where a few sludge examples were shown, and even further left towards the beginning of the list — there's a point where I've added a comment that mentions sealed tank and absorption tank. We don't know whether that's a specific product or a service bundle. That's why there's one entry here, sludge emptying service, which includes both the sludge emptying and the processing. But how that actually floats through the product catalogue — we didn't have more detailed information on that.
+
+15:04 - Conference Room (Päivi Kaarne) - Speaker 2
+And in the sludge emptying service, it includes the sludge itself and then the transport fee types — there are several, depending on whether it's transport fee type 1 through 6. Yes, it's made up of so many components.
+
+15:22 - Conference Room (Päivi Kaarne) - Speaker 1
+Right, it's probably scheduled emptying, regular precise emptying, and those also affect things.
+
+15:28 - Conference Room (Päivi Kaarne) - Speaker 2
+and those products — specifically the transport fee types and the sludge types — those are the products, but they're included if that sludge emptying service is a kind of bundle, they're included in it, and then there are still those various...
+
+15:46 - Conference Room (Päivi Kaarne) - Speaker 1
+The goal here was to surface a few different types — what kinds of things we can have — and this really isn't any kind of comprehensive list yet, but the aim was to get a variety of different types represented.
+
+16:04 - Miska Sulander
+Yes, and I think it's good for us too at this stage that there are many different examples here — not just container types but genuinely everything else as well. Miia, would you add anything before I start my monologue? Yes, I was going to add: when you asked what we've done, this is now the result of that.
+
+16:40 - Miia Saviahde
+And then down at the bottom, when there are tabs — going a bit to the left, the ones in green — like VHL, VH are models of what WasteHero currently is — Rami has been trying to see how we could map this upward. How we could fit our products into this model. And then there are these questions that you went through in your meeting. That's what Rami has been working on — we've gone through the collection side and the processing side, what attributes we have and what we need. To get this working in your model, but for example the components were unclear to us at the time, which got answered in your meeting, and that's why it's still just at the list level — because the structure is still very unclear.
+
+17:36 - Miska Sulander
+Yes, and being at the list level is completely fine at this point. Let me grab — I have the same Excel open here — let me grab my screen share so it's easier to talk and guide at the same time. Put Teams on the other screen so I can see your faces too, otherwise I'm talking to ghosts. That happens enough already. There. In my view this is still — as I told Rami when we went through it — the direction was right then, and the direction is still right. The next question might be this. There's actually a comment here. What does this mean? "Does not affect the price." But what doesn't affect the price? That would have been my next question — whether the next step could be to iterate from here. Specifically, which are the things that actually affect the price of this product. The goal would be to separate the things relating to the product from the things relating to and affecting the product's price.
+
+19:35 - Unidentified Speaker
+Do you follow?
+
+19:36 - Sanna Ruosaari
+I think it's noted in there, isn't it?
+
+19:40 - Miska Sulander
+Yes, I have a star here, but then I'd want to...
+
+19:45 - Sanna Ruosaari
+Product code, which does not affect the price.
+
+19:48 - Miska Sulander
+Right, and that's something I'd like to challenge — is that the only thing that doesn't affect the price? That's not correct. Right. That's what I was thinking, because for example I could imagine that a transfer document doesn't necessarily affect the product's price. Or a bookkeeping account. It's not a so-called price component. We can use the term price component. Or price variable. One or the other. Because what's the logic here? How is this thought about? I've hopefully tried to explain or go through this somewhere. We have a product. Let's say it's the emptying of a mixed waste container — that's the product. The price is affected by the waste fraction, the container type, the size of the container, the service responsibility, where the container is emptied, and so on. In the simplest terms, the product — or the waste fraction — might perhaps be with the customer, because other things will certainly come through the waste fraction. But if we think of the emptying of a mixed waste container as one product, then we can have different prices for that product depending on the container size, service responsibility, etc. So some things are under the product, but some are then price variables for that product in the price list. This is hard to explain in words. Maybe the mockup that we'll go through at ten will open it up a bit. It's of course still not a perfect or finished piece of work. But there is a difference from our perspective: which things are on the product, and which are on the price or even in the price list. So that the product catalogue doesn't end up with thousands of product rows where the only difference is for example waste fraction and size, but instead there are many emptying products for mixed waste. This model makes it easier to manage price lists and prices. Because those are perhaps the more dynamic, annually changing element, whereas products are perhaps the ones that stay somewhat static from year to year. New ones come along or there are new ones, but then the prices — as I understand it for waste management — well, I've heard a bit about how updating them is a huge job every autumn, so that we could get away from that kind of thing. The next step, I think, would be to clearly mark in this spreadsheet the product components — in this context, the product's components — that affect the price. This way of marking things is entirely correct and good, but that would be the next step. Then we can separate the product's components from the product's price components that affect the price.
+
+24:21 - Conference Room (Päivi Kaarne) - Speaker 3
+I've probably already fallen off the wagon here, but when Rami explained this — he was trying to explain to us that the emptying of a mixed waste container is already a product in a way, but that product includes — at minimum three things: the transport, the processing portion, and then the base fee portion. Sort of the price list elements, but now I'm getting a bit confused myself about the price-affecting factors, because this table doesn't really have those product levels in that much detail...
+
+25:03 - Miska Sulander
+Do those product levels matter? Or does it even matter — you can probably challenge me on that too — it may not even matter, because under that product there can be a transport fee, a base fee, a processing fee. Those could also theoretically depend on those price elements. You can also think of them as separate products that are then assembled into the actual product. If there's a need to break them out and if there's a need to break out their prices at that more granular level. If we now think about a mixed waste emptying for a 140-litre container at location X, we have a price for it that consists of a base fee, a processing fee, and a transport fee. Then when we go from Tampere to Parkano — does the base fee change, does the processing fee change, does the transport fee change?
+
+26:37 - Conference Room (Päivi Kaarne) - Speaker 3
+The transport fee changes, yes, exactly that principle.
+
+26:43 - Miska Sulander
+So the base fee stays the same and the processing fee stays the same. In other words, in theory we could have a product such that for mixed waste — for a mixed waste container emptying — we have a base fee product that has no price component determining what it costs in each municipality, since it stays the same. But then we have a transport fee product linked to that same mixed waste container emptying. It has a price component, which is the location. Whether that's a municipality code or a geographically bounded area doesn't matter, but the physical location is the easy example here. Then we can have different prices for that part of the product by location. And then when a mixed waste container is emptied in Parkano, we know the contract has this price, and if it's emptied in Tampere, we know it has this price. So here again, in order to continue this dialogue, we could even open some of these up here — or I know maybe it's easier — is there anything here? There's nothing here, but maybe even create a new tab. Into which. Then break things down. Just to have some examples from this — a few examples. We're only talking about emptying services now, but break down things like... Well, I'll use the term product bundle now, or service, service-product package — I'm not sure what the right term is — but break this down: take a row from there, put the transport fee under it, the base fee, and then the processing fee, and then open it up a bit — which factors affect their price, and then which factors affect the total price. I'm not sure if this is getting too complicated now. It might be. Are you perhaps overthinking this yourself too?
+
+29:54 - Conference Room (Päivi Kaarne) - Speaker 3
+It does consist of components though. But still.
+
+29:59 - Conference Room (Päivi Kaarne) - Speaker 2
+Was there an intention — the last I heard about the contractor price list — that it would be its own price list? There's a contract area attribute there. But for example in Tampere, a 247 mixed waste container has many different contract areas with different transport prices, so are we thinking...
+
+30:28 - Miska Sulander
+Yes, that's how it's thought of — the contractor price list. I think of this a bit like a two-sided thing, where the product is in the middle, then on one side there's the customer price list, and on the other side the contractor price list. And we can link many customer prices and many contractor prices to that same product, and then those live their own lives in their contract areas. So if the contract area doesn't affect the customer price, then we don't need the contract area component in the customer price.
+
+31:18 - Conference Room (Päivi Kaarne) - Speaker 2
+Yes, that's what I was thinking — it probably doesn't need to be here, because it's its own piece, since it doesn't affect this.
+
+31:29 - Miska Sulander
+But the contractor price list — to take a brief detour into that — can be thought of in much the same way.
+
+31:38 - Unidentified Speaker
+Yes, indeed.
+
+31:40 - Miska Sulander
+The same kind of set of attributes. Those attributes may be different attributes from these. And partly they probably are. Quite different, actually.
+
+31:51 - Conference Room (Päivi Kaarne) - Speaker 2
+And it has far fewer — it's much simpler. Essentially the only attribute there is the contract area. And all the same products just in different contract areas.
+
+32:02 - Miska Sulander
+Right, exactly. Then we can link the contract area prices to those products, so we know which contract area the emptying was done in, which contract area that emptying belongs to. Then we get the correct contractor price. We know what you pay. We know what the customer pays. Or rather, you know. Then we also know what's left in between. That's the idea in the most simplified and straightforward terms. And I don't think you can really do it any other way sensibly. Feel free to challenge that, but that's my view. Then it becomes flexible enough and the kind of thing that should fit a wide range of situations, and even within a procurement consortium — so to speak, everything for everyone. I think the next most important step here is to identify the things that actually affect the price. Then we can ultimately make the final division of what is a product attribute and what is either an individual price's or an entire price list's attribute. Everything contributes to what price should come for a customer's contract, or what should be proposed for it, or what it should be. For a service contract.
+
+33:59 - Unidentified Speaker
+Sanna.
+
+34:00 - Unidentified Speaker
+A question.
+
+34:02 - Sanna Ruosaari
+We discussed workflows internally at our weekly meeting a moment ago — the workflows we were tasked a few weeks ago with defining for different products.
+
+34:17 - Miska Sulander
+How do we take workflows into account? Is this something you could open up in this format?
+
+34:33 - Sanna Ruosaari
+I can show you shortly how the task was given. Let me note down that we need to separate things.
+
+34:44 - Miska Sulander
+Just quickly, while Sanna is writing over there. My understanding is that there's also a price here in a way. It's completely OK that prices are on the rows here, on the same rows. And this approach may be the right one when we create products in bulk — it may be the right way to ultimately bring things in, even if each one here is on its own row. It may be the right way to import them programmatically. It's fine that these are here, but the thing is — I think we need to remember and recognise here that OK, these are prices or price changes, or then there are... Right. In the sense that these are not really attributes as such. These remaining non-bolded entries here — they don't affect the price or anything — they appear to be the kind of thing where different prices get stored.
+
+36:13 - Conference Room (Päivi Kaarne) - Speaker 3
+Yes, because this was originally the cost price or the calculation included here. Those probably aren't the components related to it, but they're probably there in that way, as stated. Still.
+
+36:44 - Unidentified Speaker
+Yes.
+
+36:46 - Miska Sulander
+OK Sanna, you have the next turn to speak and present.
+
+37:00 - Sanna Ruosaari
+Yes. We were recently given a task. Document, for those products where specific workflows are required, what those workflows look like by product and product type. What format did you have in mind for how we document these workflows? What did you expect?
+
+37:29 - Miska Sulander
+I no longer remember what I expected or what I had in mind at the time. But I'd see that maybe some kind of written explanation plus some kind of graphical presentation might be the easiest approach. I was giving the task briefing now on our end.
+
+37:52 - Sanna Ruosaari
+This is the same for all four identified cases. As an example, this is now the workflow definition for hazardous waste. I should define what those workflows look like, and the desired output is also a graphical presentation of the workflow. I've asked for a description of the current state here below. For hazardous waste that's been done on the back of a cigarette packet, but then I've asked for a description of the future target state for the order-to-delivery process for hazardous waste. This workflow should describe the purpose of the process and what is different about hazardous waste compared to other order-to-delivery processes. The work steps and their sequence. End points and exceptions. By this I mean that a task goes from the order to route management. I want the data flow in between, and then it ends up in route management. From route management the data flow goes and it ends up in billing. The content and data flows need to be described there. We already have Janni — who's in the project team — she has drawn up a target state for these lava services and skip collections, and I've shared it as an example of this kind of box diagram that I'd like — but does WasteHero want this kind of thing too?
+
+39:21 - Miska Sulander
+Yes, absolutely it does. And preferably in a format that isn't a screenshot — it would be a PowerPoint or something that I can edit, so I can also translate it into English. So I don't have to start drawing the whole image myself from scratch. If it's at all possible to deliver it that way, that's one fewer step. This looks good. Good and descriptive.
+
+39:53 - Sanna Ruosaari
+We'll save it to our logistics stream. PowerPoint or Word is probably easiest.
+
+40:00 - Miska Sulander
+The tool doesn't really matter here beyond that. No, no, as long as the image itself can be edited. Yes. So that others beyond our Finnish colleagues can also read it.
+
+40:18 - Sanna Ruosaari
+Then a question: so this task assignment was OK. Then question number two. We identified what all we need to document these workflows for. I was thinking only for those that deviate in some way from our standard. Our standard and basic bulk work is that we empty bins and handle waste management. Would we really start documenting workflows for those?
+
+40:48 - Miska Sulander
+No, we don't need to document those. But where there's something genuinely special about a product group, or a waste fraction, or something else — genuinely special. Here we have sludge emptying, skip collections, hazardous waste. That direction is right. But if we're talking about bio-waste container emptying or mixed waste container emptying, that's largely standard bulk work. Yes.
+
+41:28 - Sanna Ruosaari
+And now when we just had that conversation, things were brought up at quite a rapid pace, and my fingers couldn't keep up at all, so could someone now describe what came up — there were exceptions like container swap and others. When we were thinking about what makes it special, even though they still go onto the run list — but if the order type or some other recording method is different, does that make it special, or what does?
+
+42:11 - Miska Sulander
+What needs to be brought in?
+
+42:13 - Miska Sulander
+Container swap, for example. I'd imagine it's tricky to swap a half-full or full container. So if a container swap order is placed, does it also first generate a container emptying event before the container can be swapped?
+
+42:37 - Conference Room (Päivi Kaarne) - Speaker 2
+It's the container emptier who does the swap. Who empties it? They're taken by van and the containers are swapped — you can't put the container onto a refuse truck.
+
+42:52 - Miska Sulander
+No, but specifically — is there something that ensures that when the container-swapping van with personnel arrives to swap the container, the container isn't full?
+
+43:07 - Conference Room (Päivi Kaarne) - Speaker 2
+No, they're picked up full too, but swapped, not emptied.
+
+43:12 - Miska Sulander
+Of course it's possible to add the next emptying date or week to a swap order, at day level — since hopefully it's been proposed that having them very full isn't ideal — so we have this... We put into the section...
+
+43:26 - Conference Room (Päivi Kaarne) - Speaker 4
+Right, in fact you add the link, and then effectively the swap — from that you can see what the situation is.
+
+43:35 - Miska Sulander
+No, no, it can be empty, half-full, half-empty.
+
+43:42 - Miska Sulander
+Yes, but in a sense — is the workflow in that case, for example, that the swap is scheduled as close as possible to the previous emptying? Or does it automatically generate some kind of extra emptying? That was just an example. No. The point wasn't whether it does or doesn't, but whether there's something special about it. These are the kinds of cases I'd want to capture. And there are four such cases here, where there's something in some way — either a genuinely different workflow, or specifically that the data needs to move in some different way. This is different to the extent that these aren't regular scheduled events.
+
+44:40 - Conference Room (Päivi Kaarne) - Speaker 2
+And they're always done as orders, they're printed onto the current day's list, which then keeps rolling unfinished tasks forward into the future. We might have someone's container swap scheduled six months away — go in June to do the swap — and it's already put on the list, and the unfinished task just keeps rolling forward. That's how much it differs, and it also differs in that there will probably be some kind of linkage here to the container inventory — so that it reduces or increases the stock balance — I don't know exactly how, but these containers are also linked to the container inventory, what's being swapped, how many new containers are coming in, how many are leaving, and...
+
+45:24 - Sanna Ruosaari
+So just to confirm: all of these are order-driven products. Nothing happens unless customer service has entered something into the base system. So in basic ERP terms, we have order-driven products — these are what happen when I call — and then we have so-called stock-driven products, which are our bulk volume that we process all the time: the basic collection services.
+
+46:00 - Miska Sulander
+At this point I'd still almost want to describe the container collection as well. What happens, what does a container collection affect? So that there's a complete picture of what that process is. And just that — the fact that a single container collection event can sit there for six months before it's eventually done — that too is useful information to have. So it's not an event or order that automatically gets done right away when it lands on the list.
+
+46:42 - Conference Room (Päivi Kaarne) - Speaker 1
+Container collection is a good example there.
+
+46:45 - Sanna Ruosaari
+It connects to the inventory. When we do the container collection workflow, one box needs to be: when an order customer calls and I enter some kind of order into the system, it creates a reservation in our inventory, earmarking that in six months I need to deliver one — don't sell this in the meantime. And then when I make the delivery, there's an inventory event again: when the driver picks up the task and goes to get the container from the warehouse, it creates an inventory event that removes it from the balance. And then to the customer. So there needs to be a connection to inventory functions for us.
+
+47:31 - Conference Room (Päivi Kaarne) - Speaker 2
+Yes, there was that meeting where Janne was involved — the person responsible for our containers and inventory matters. Janne was in that meeting, and there are lists — or was it just Jussi there, where some container information was.
+
+47:52 - Sanna Ruosaari
+All of that can be found. But if we now move to container swap — just the one, the container swap workflow.
+
+48:06 - Unidentified Speaker
+Or container delivery.
+
+48:07 - Sanna Ruosaari
+I still have a follow-up question, let me note down a heading for myself. Who does this — creates this kind of workflow?
+
+48:18 - Conference Room (Päivi Kaarne) - Speaker 2
+That's Janne. He handles it a bit, but shall we then go to Heidi? Yes, through the same channel as already here in the Project Teams.
+
+48:28 - Sanna Ruosaari
+I'll task this to Heidi, I'll finish the task in a moment. I still have a follow-up question for Miska and Rami. Now that we just dealt with that product Excel — do we mark somehow on it that certain products have an order-to-delivery chain that deviates from the standard? Yes, let's do that.
+
+48:50 - Miska Sulander
+It doesn't need to be — it could be a colour code with a legend. Or when there's a skip collection, you could even put something at the end of the row in some product column cell, saying we have this workflow documented in Jira. Like that, so the information is easier to find and cross-reference. Or just simply like this — it could just be: put the link there. If there's a link in that cell, it's assumed to have a special workflow. Let's do it that way. That's probably clearest. No need for anything else. If it's empty, it's standard. If not, see more at such and such place. Great. Miia.
+
+50:10 - Unidentified Speaker
+Miia, go ahead.
+
+50:12 - Sanna Ruosaari
+I don't have a question about this, but about another question relating to the Excel.
+
+50:18 - Miia Saviahde
+Did anyone still have something on the workflow?
+
+50:22 - Conference Room (Päivi Kaarne) - Speaker 4
+Well, I might still ask — now that this workflow link idea came up — whether, for example, things like credits payable to customers for certain waste fractions collected with certain collection equipment — would workflows also be made for those?
+
+50:54 - Miska Sulander
+How do these credits work?
+
+50:58 - Conference Room (Päivi Kaarne) - Speaker 4
+The way these work at the moment is: when a monthly report is received at the reception terminal, the weights are entered manually into the customer's transactions. There's a dedicated product for the credit.
+
+51:19 - Conference Room (Päivi Kaarne) - Speaker 2
+It's a credit per tonne, per thousand kilos, so the amount is entered accordingly.
+
+51:27 - Conference Room (Päivi Kaarne) - Speaker 2
+If it's 380 kilos. And what does this credit then affect after that?
+
+51:42 - Miska Sulander
+So in practice it's a product that has a negative price.
+
+51:59 - Sanna Ruosaari
+So do we want to handle credits this way in WasteHero as well?
+
+52:09 - Miska Sulander
+Maybe let's handle the credits like this: document the current approach, and then we'll see. Because from this 60-second quick explanation, I can't yet give the final answer. If we think about it — since you currently have a credit as its own product — let's do this: add it to the product list, and create a workflow for it if it has one, as has been said. It's added.
+
+53:02 - Conference Room (Päivi Kaarne) - Speaker 4
+Yes, right.
+
+53:04 - Conference Room (Päivi Kaarne) - Speaker 4
+It's added — so at that stage, since that too is a kind of special case, a workflow gets created for it as well.
+
+53:14 - Miska Sulander
+Yes, create a workflow for it — or a process flow — describing how it works, and then we can get into it.
+
+53:22 - Unidentified Speaker
+Yes.
+
+53:22 - Miska Sulander
+Into it then. So in practice, if a customer has brought some kind of waste to a waste site and paid for it there, it gets deducted from something. Or what's the thinking here? Regarding this credit still — if I as a customer bring an amount x of a certain type of waste to a waste site and pay there, it gets credited to me somewhere. Is that the process?
+
+54:25 - Unidentified Speaker
+No.
+
+54:25 - Conference Room (Päivi Kaarne) - Speaker 4
+This is for example: if a customer collects cardboard into a cardboard compactor, they get a credit paid by weight for the cardboard. Or cardboard bales from a compactor, plastic bales. Those are basically these four. And then there's also a credit paid for metal. But the customer base for this is probably countable on the fingers of one hand.
+
+54:53 - Miska Sulander
+Well anyway, so...
+
+54:55 - Conference Room (Päivi Kaarne) - Speaker 2
+We pick up products that don't come through our doors or facilities. So they don't go through the material gate. Our processing end doesn't receive these — instead we collect the compactor from the customer and empty the cardboard at another operator, and the customer gets a credit for the weight of the cardboard. They have to pay for the transport of the compactor, that's its own type. A credit for that cardboard, however much was in it.
+
+55:23 - Miska Sulander
+OK, so it's essentially a reward for recycling?
+
+55:26 - Conference Room (Päivi Kaarne) - Speaker 2
+Yes, and these come to us as Excel files, these weights for cardboard and plastic from those other operators, by email right now. It probably doesn't need an integration with those other operators into the system — but could it be in route management, so the driver somehow enters the weight, so that there's a credit type for the task, and the driver confirms and enters the weight?
+
+55:56 - Miska Sulander
+I'd almost say that's it — that's intuitively the process and workflow: we know we have the compactor emptying as a product, it includes transport and a credit. The credit has a negative price and is weight-based.
+
+56:25 - Unidentified Speaker
+Yes.
+
+56:26 - Conference Room (Päivi Kaarne) - Speaker 2
+When in a regular compactor emptying with mixed waste, it includes transport and waste. The waste comes from our reception point, MP. The waste portion and its price. And then the transport comes from route management — when the driver marks it as emptied, the transport portion comes from there, and then the waste portion comes from the processing end.
+
+57:03 - Sanna Ruosaari
+Yes. Who do I task this to? Put that one to Heidi as well. Is there a deadline for these, since I've been hovering around 27.3. Maybe we can keep that, unless someone wants to do it much earlier.
+
+57:31 - Miska Sulander
+It probably depends on your resources too. 27.3. I know everyone here has their glass full all the time, and everyone on our side has their glass full too, so we shouldn't really start putting in hard deadlines when we know that CRM and products and route management and everything is running in parallel. Let's do this: the deadline is — I added an Excel column so that when those workflows have been defined, you put the link to the document in there.
+
+58:13 - Sanna Ruosaari
+Very likely, since we have one item, two items, three items for a skip collection — the workflow is exactly the same.
+
+58:25 - Miska Sulander
+So you don't need to start creating a separate workflow for every individual line. No. No need. And the link can just be copied into all of them — I think that's fine — just to get the picture, because for example the transport services don't all share one workflow: within transport services there's now a skip truck and a hazardous waste truck, and they have different workflows. So if it has a workflow, even if the same workflow applies, put the link in there. Even if the link is the same. Yes. Great. OK, is there... There's still a hand up.
+
+59:09 - Sanna Ruosaari
+Still from before, or is there something new?
+
+59:12 - Miska Sulander
+I didn't get to ask yet — I let the workflow discussion continue in between.
+
+59:19 - Miia Saviahde
+True. Shall I ask now instead? Ask now. We're here now.
+
+59:25 - Miska Sulander
+I'd otherwise also suggest: if we start the weekly at five past, so people have time to get a glass of water and so on.
+
+59:33 - Miia Saviahde
+Pretty much the same group.
+
+59:34 - Miia Saviahde
+In this table with the attributes — there's this question from Rami: attributes have a correspondence in the price list selectors, and you've answered that attributes have a correspondence in the price list, property, customer, and contract data. And Rami has started working on row one on that — so should we continue working on where the correspondence is for these product types? Because the price list topic hasn't been addressed here yet, which is what you were asking about — now we can start ticking those off, but should we also do those other things?
+
+59:54 - Unidentified Speaker
+Can you repeat? It cut out mid-sentence.
+
+59:57 - Miska Sulander
+OK. So in B1.
+
+59:59 - Miia Saviahde
+Rami has started working on where the attribute is. He's asked you whether attributes have a correspondence in the price list selectors. Or this is a question: do they. And you've said that attributes have a correspondence in the price list, property, customer, and contract data. There is a correspondence, because we've been thinking through all the product attributes here — so should we continue in row one to work out where the correspondence is for these product types? Because the price list topic hasn't been considered here yet, which is what you were asking about — now we can start ticking those off, but should we also do those other things?
+
+1:00:44 - Miska Sulander
+Yes, we should. Is it the kind of thing that will come up at some point regardless, so does it benefit us to start doing it now at this stage as well? Yes it will come up at some point. It will come up at the point where we need to have some way to suggest available products and services to a specific customer in the user interface. So that OK, these products are possible for this matter, for this customer to set up — that's where it comes up, because it involves the customer, it potentially involves the property location, and also the product — so it's what sort of brings the whole puzzle together, so it's good to continue with it, or necessary to. Amir. Yes, we're... Sorry.
+
+1:01:52 - Amir Hassan
+I suggest we postpone the next one if possible, and focus on this one calmly. Let's move it to next week, because this is really important for reaching a good shared understanding — if that suits you.
+
+1:02:10 - Unidentified Speaker
+What's being postponed?
+
+1:02:11 - Unidentified Speaker
+Sorry?
+
+1:02:11 - Unidentified Speaker
+What are we cancelling?
+
+1:02:14 - Amir Hassan
+The next walkthrough...
+
+1:02:15 - Amir Hassan
+Sorry, I was talking to the wrong person. I'm suggesting we postpone the next walkthrough — the mockup walkthrough — and focus on this calmly now, because time has already run over.
+
+1:02:29 - Sanna Ruosaari
+We do want to go through the mockup.
+
+1:02:33 - Miska Sulander
+And it was meant to be covered in the weekly anyway.
+
+1:02:38 - Miska Sulander
+Shall we continue this, because Markus is already waiting in the next one.
+
+1:02:43 - Sanna Ruosaari
+Markus is already here with us, but we'll step out of this meeting. Let's take a one-minute bio break, get some coffee, and come to our weekly shortly, where we'll go through the rest.
+
+1:02:57 - Miska Sulander
+Thanks. Bye. We have again...
+
+1:03:00 - Miska Sulander
+No pressure, so to speak.
+
+1:03:04 - Conference Room (Päivi Kaarne) - Speaker 3
+We'll manage. We're stepping out now.
+
+1:03:06 - Miska Sulander
+Yes, and we'll start the weekly at five past ten. 5 minutes 15 seconds, see you shortly.
