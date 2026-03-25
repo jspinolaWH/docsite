@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 
 export function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
@@ -39,14 +40,25 @@ export function Layout() {
       </header>
 
       <div className="main-container">
-        <div className={`sidebar-wrapper ${sidebarOpen ? 'open' : ''}`}>
-          <Sidebar />
+        <div className={`sidebar-wrapper ${sidebarOpen ? 'open' : ''} ${sidebarCollapsed ? 'collapsed' : ''}`}>
+          <Sidebar collapsed={sidebarCollapsed} />
         </div>
+        <button
+          className={`sidebar-rail-toggle ${sidebarCollapsed ? 'collapsed' : ''}`}
+          onClick={() => setSidebarCollapsed(v => !v)}
+          aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {sidebarCollapsed
+              ? <polyline points="5 2 10 7 5 12" />
+              : <polyline points="9 2 4 7 9 12" />}
+          </svg>
+        </button>
         <div
           className={`sidebar-overlay ${sidebarOpen ? 'visible' : ''}`}
           onClick={() => setSidebarOpen(false)}
         />
-        <main className="content">
+        <main className={`content ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
           <Outlet />
         </main>
       </div>

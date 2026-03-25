@@ -4,7 +4,7 @@ import { useDocs } from '../hooks/useDocs';
 import { useTheme } from '../hooks/useTheme';
 import { CATEGORIES, DIAGRAM_LINKS } from '../types';
 
-export function Sidebar() {
+export function Sidebar({ collapsed: sidebarCollapsed = false }: { collapsed?: boolean }) {
   const { grouped } = useDocs();
   const { theme } = useTheme();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
@@ -13,7 +13,7 @@ export function Sidebar() {
     setCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar${sidebarCollapsed ? ' sidebar-hidden' : ''}`}>
       <nav>
         <NavLink to="/" className="sidebar-home" end>
           Home

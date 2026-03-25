@@ -184,6 +184,40 @@ a:hover {
 .sidebar-wrapper {
   width: var(--sidebar-width);
   flex-shrink: 0;
+  transition: width 0.25s ease;
+  overflow: hidden;
+}
+
+.sidebar-wrapper.collapsed {
+  width: 0;
+}
+
+.sidebar-rail-toggle {
+  position: fixed;
+  top: calc(var(--header-height) + 1rem);
+  left: calc(var(--sidebar-width) - 14px);
+  z-index: 95;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-primary);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: left 0.25s ease, color 0.15s, background 0.15s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.sidebar-rail-toggle:hover {
+  color: var(--color-accent);
+  background: var(--color-bg-secondary);
+}
+
+.sidebar-rail-toggle.collapsed {
+  left: 4px;
 }
 
 .sidebar {
@@ -193,9 +227,15 @@ a:hover {
   width: var(--sidebar-width);
   height: calc(100vh - var(--header-height));
   overflow-y: auto;
+  overflow-x: hidden;
   border-right: 1px solid var(--color-border);
   background: var(--color-bg-secondary);
   padding: 1rem 0;
+  transition: transform 0.25s ease;
+}
+
+.sidebar.sidebar-hidden {
+  transform: translateX(-100%);
 }
 
 .sidebar-home {
@@ -793,6 +833,10 @@ a:hover {
 @media (max-width: 768px) {
   .menu-toggle {
     display: block;
+  }
+
+  .sidebar-rail-toggle {
+    display: none;
   }
 
   .sidebar-wrapper {
