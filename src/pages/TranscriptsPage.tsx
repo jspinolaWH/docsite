@@ -91,7 +91,14 @@ function TranscriptCard({ meta }: { meta: TranscriptMeta }) {
       {/* Content */}
       <div style={transcriptBody}>
         {loading && <p style={statusText}>Loading…</p>}
-        {error && <p style={{ ...statusText, color: '#ef4444' }}>Failed to load: {error}</p>}
+        {error && lang === 'en' && (
+          <p style={{ ...statusText, color: '#f59e0b' }}>
+            English translation is being prepared — check back shortly.
+          </p>
+        )}
+        {error && lang === 'fi' && (
+          <p style={{ ...statusText, color: '#ef4444' }}>Failed to load: {error}</p>
+        )}
         {!loading && !error && text && (
           <pre style={preStyle}>{text}</pre>
         )}

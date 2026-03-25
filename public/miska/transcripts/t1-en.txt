@@ -1,0 +1,332 @@
+PJH ERP. Products and Price Lists Q&A Session
+Fri, Feb 6, 2026
+
+1:13 - Unidentified Speaker
+Hey.
+
+1:15 - Unidentified Speaker
+Right, microphone is on too, that helps immediately.
+
+1:29 - Unidentified Speaker
+Yeah.
+
+1:31 - Unidentified Speaker
+Yeah.
+
+1:33 - Unidentified Speaker
+Let's go with that.
+
+1:37 - Rami Aalto
+Hello, hello. Hello. Good, let's get right into it.
+
+1:48 - Miska Sulander
+Yeah, let's get to the point. You had some questions prepared in advance.
+
+2:00 - Rami Aalto
+Very modest ones.
+
+2:06 - Rami Aalto
+I put together my own Excel slides and I tried to build them from your presentation. Very much following that. Aligning with the model system, and then we went through it a bit — so here there's a model for products and a model for price lists. Then the heap changed and what was gone through there. But we went through this as a group and thought about these questions — specifically that topic was something new, they probably have their own management for it.
+
+3:08 - Miska Sulander
+They are in a sense — they are like a certain type of products. Which you could assemble into bundles. Because the way it works at the database level, it is a product just like a product bundle is. Yeah.
+
+3:31 - Rami Aalto
+So in practice then, when we talk about the amount of data for component details, it's in the same category — certain things are defined there.
+
+3:44 - Miska Sulander
+Right, certain things are defined there. What the mandatory fields and mandatory items are — I can't quite throw that out right now. A little bit of flexibility, so to speak. Yeah. Like, at a minimum it surely needs a name.
+
+4:06 - Unidentified Speaker
+Right.
+
+4:07 - Miska Sulander
+Name, name, name, name, type, category. Maybe there are some like those, but for example a low-code code might not necessarily be there for something like a processing fee, a processing fee component itself.
+
+4:21 - Unidentified Speaker
+Yeah.
+
+4:22 - Rami Aalto
+And so, if we think about the first heap there and that there would be three components — one emptying costs say four euros — so two euros goes to collection service and one euro to processing and one euro to base fee — can those be split in some way, like how much do these cover, or does it go... Say straight away if you get the feeling that I'm talking about things that shouldn't be talked about here.
+
+4:55 - Miska Sulander
+Those components can have their own price. Their own price, from which the product — the price of the mixed waste bin package — can then be formed.
+
+5:06 - Rami Aalto
+Okay, yeah.
+
+5:07 - Miska Sulander
+So it's then just simple math. 2 plus 1 plus 1 is 4.
+
+5:16 - Rami Aalto
+Yeah. So it comes through right there...
+
+5:22 - Miska Sulander
+Think of it this way — you have service responsibility A, you have one price. A price for collection service, processing fee, and base fee. For service responsibility B, you have a different price. Even if the collection service is the same, even if the waste fraction is exactly the same, the price for one service responsibility is different from another.
+
+6:02 - Rami Aalto
+Yeah. Yeah yeah, of course.
+
+6:04 - Miska Sulander
+And that's kind of — let's say, in the latest model — because this is something that wasn't quite available out of the box last spring.
+
+6:25 - Miska Sulander
+This, in a way, is the product explosion.
+
+6:27 - Miska Sulander
+That's why I don't yet have it live for you anywhere — the new version — because it's something we're actually now testing and using in our state and staging environments. So the UI I sent screenshots of was a previous version of what we had, but you can still get a feel for what it means in practice. It has been iterated on over the past month, the design has been refined a bit more. It's still slightly — when I went further down that list, I accidentally read it — the thing is that a product doesn't necessarily have those so-called price attributes itself. So service responsibility doesn't necessarily need to be on the product itself — the service responsibility can be on the price instead. And then if a product doesn't have a price for something, that product isn't available to that customer. Maintaining those same attributes on both the price and the product would be an absolutely enormous amount of work. This is quite complex. It hasn't been easy at all this autumn. Last autumn, frankly, we were wrestling and spinning our wheels — okay, how do you make this something that can actually be used — it was not an easy problem, let's say. Yeah, this is exactly the challenge — how to first build enough understanding so that we can move this idea forward. There's been a bit of searching involved here. There has been. But at least at a high level, looking at this now, I think the core is at least understood — how it works or operates.
+
+9:03 - Rami Aalto
+I was mainly thinking about product attributes — that if I have a product, whatever it might be. In practice these are more — or especially that — it doesn't really belong here.
+
+9:30 - Miska Sulander
+Low-code I see as a factor related to reporting and compliance, but service responsibility is one of those — and similarly dangerous waste is more of a rules-based thing — but service responsibility has been for me from the very beginning one of those core components that drives the products. Prices and service availability. It's possible I've understood it wrong. Hopefully I don't still have to correct my thinking at this stage, but still.
+
+10:09 - Rami Aalto
+Yeah, and these are things that we've been generally concerned about — that we do get, when we sell some product and some money comes in, that it's defined somewhere where that money goes. Accounting codes and accounting accounts will come here in the presentation, but are those then just like...
+
+10:39 - Miska Sulander
+How do accounting codes and accounting accounts work in practice? Is it per-product, or if we have one product and different service responsibilities, do those go to different accounting accounts by service responsibility?
+
+10:53 - Rami Aalto
+I think they go to different accounting accounts, so that would be more from the price list side perhaps.
+
+11:02 - Miska Sulander
+Then it needs to be available on the price list side, or there needs to be some logic there.
+
+11:13 - Rami Aalto
+Yeah. And this is — when I started thinking about this, specifically about building those products going forward — and the product categories, that's fine, but then this question of whether a product category can have its own or different definitions, like which fields appear, or is it the same for everyone.
+
+11:41 - Miska Sulander
+By default the fields are the same, the ones that are visible there. Quite flexible — or well, quite frankly we can still think about whether a product category really needs the ability to define which fields are mandatory for each category. Making the form look different for each product type — that would be a bit utopian and unnecessarily complex, but doing some kind of dynamic field validation could come into the picture. Maybe, I don't know if it falls within the scope of any requirement. I don't remember.
+
+12:32 - Rami Aalto
+Probably not, since this hasn't been thought of in that way.
+
+12:37 - Miska Sulander
+Right, so I'd say at this point that the fields are the same. And the validation is the same too. We have certain system-mandatory fields and then others are optional. It needs to be figured out a bit. But of course if you wanted that kind of field validation as future development, money talks. There are opportunities, and it's possible we'll decide ourselves that okay, it makes more sense and then it will come in at some point in time X. Quite naturally. But it's hard to say two or three years out. Or even a year out really, because development keeps evolving even while this implementation project is underway — this isn't enterprise software, so it still lives its own life in some way. Its own life also in the background.
+
+14:09 - Unidentified Speaker
+Yeah.
+
+14:10 - Unidentified Speaker
+This chart of accounts, well then...
+
+14:13 - Unidentified Speaker
+Yeah, accounting codes, accounting accounts.
+
+14:15 - Miska Sulander
+What does this chart of accounts mean? Is the goal to maintain some list of accounting accounts in WasteHero?
+
+14:26 - Rami Aalto
+This is something that has come up before as a question. Because in our accounting application we essentially have the chart of accounts — where each product goes, which accounting account, and the VAT codes for them — so is that something that could be brought in here separately, like some kind of tree menu, or when you start selecting an accounting account, whether it's on the price list or on the product, those wouldn't be manually typed data but something selectable from a list somewhere.
+
+15:10 - Miska Sulander
+How would this work — this one again — I don't really want to say anything about it now, because if I throw out something that's out of scope of the requirements then I'll get myself into trouble.
+
+15:23 - Rami Aalto
+Yeah and these are — I didn't look at this question list at all against what has been required and what might go the way of, you know, not wanting to go down the scope creep path.
+
+15:41 - Miska Sulander
+No one wants that, between ourselves — even though that robot is listening there — this is kind of mutual, it can so easily turn into a squabble about "yes, this was agreed and this is in the requirements, but this wasn't." I'd just see it as — we want to deliver a working application for the need you have, or that waste companies have, but of course when this picture is so big, then sometimes...
+
+16:16 - Miska Sulander
+The bureaucracy gets in the way too.
+
+16:18 - Miska Sulander
+I'll quickly pull up our requirements on the other screen. Let's see if there's some heading. Mikko might even have some answer to it — if there's something there that could address this. But I don't remember it off the top of my head. I think the requirement that accounting account information must be addable to a product — I remember that. But that we'd need to be able to maintain the whole chart of accounts in WasteHero — I don't think we have a requirement for that.
+
+16:50 - Rami Aalto
+Probably not. And yes, at least on our side, it's been established that the actual maintenance of the chart of accounts is in the accounting application.
+
+17:02 - Miska Sulander
+Yeah, of course the maintenance would be there. But it would be easier if you had a drop-down. And the values were defined somewhere. Yeah. Rather than having to type them in. Accounting accounts probably have some numeric code at least, so you'd have to type the code and then validation is of course completely impossible if it's just a text field. Well, we'd need to think about how to maybe get the chart of accounts in somehow — perhaps with some kind of metadata field. I don't remember if there's any such logic for products, a metadata field where you could provide a list of values and it would be a drop-down. But at least if and when we're constantly rethinking things and developing, maybe this just surfaces as a necessary thing — it could be useful that additional fields aren't always text or number format, since they now apply to several entities. Yeah.
+
+18:51 - Rami Aalto
+There, requirement 3.4.17 talks about this to some extent — mainly in the sense that the same product must be able to be installed and directed to different accounts and cost centers. Yeah. That kind of relates to this. Yeah. Well yeah.
+
+19:15 - Miska Sulander
+We have "Based on price list or region." So it comes from the price list side. The correct accounting account must be addable there. The requirement doesn't say — well it doesn't say anything other than cost center.
+
+19:47 - Rami Aalto
+Yeah, that doesn't quite line up there, need to look at that a bit more. And this is exactly the idea — in price lists, in price list rules, there are those attributes, and when these match up, points are calculated from them, higher points win, and a price is assigned accordingly. Then a product has — well the product or the target of that product, isn't that right — if you put a 240-litre mixed waste bin package and set it as a product for a private household, then that combination comes from there, in that a private household says it's this type of property and this kind of municipality.
+
+20:40 - Miska Sulander
+Property type matters to you. It doesn't have to be that way. But property type can be one of the price-determining factors. In the model that currently exists in the present environment, it is that. It's perhaps the most important — let's say the most important price-determining factor. It is specifically the property type. Then there's also the question of how those are matched. Our customers have the service responsibility.
+
+21:30 - Rami Aalto
+But a property doesn't have a service responsibility.
+
+21:35 - Miska Sulander
+Service responsibility can be overridden per contract. If I have a summer cottage and a detached house, the services for the summer cottage can be overridden to a different service responsibility. Even if the service responsibility under my customer account is something else. Because customer and property are different entities. Service responsibility is at least required, not property.
+
+22:11 - Unidentified Speaker
+Yeah.
+
+22:12 - Rami Aalto
+I'm wondering if there's anything on the property that drives the price.
+
+22:20 - Miska Sulander
+Well the area, location, physical location can drive the price. We've also expanded it so that it's possible — or at least it was intended — to expand this so that it doesn't necessarily go just by municipality code. There can of course be a municipality code as a price-driving factor. That's the simplest, but it can also be an area drawn on a map. If a certain city block gets a different price, then it should theoretically be possible to draw that area on the map and then that area is given as a price component. If the property then falls within the coordinates of that defined area, then it gets that price accordingly. That's how this came up perhaps. I also talked about this with Nanne at some point before Christmas. A bit like I wanted to test our thinking and spark ideas specifically around geographical areas. Here in the archipelago, in Turku, it probably comes into play more than elsewhere, but still. It's also a possible factor — either municipality code or an area drawn on a map. But of course, at least for you in the municipal responsibility price list, the prices were quite strongly by municipality. So then there's no point in maintaining any map sets anywhere — if it's that simple, then there's no reason to start drawing areas on a map by hand. Unless those areas — well, contractor areas, we should now probably be able to bring in coordinate data. That's what I hope and understand, because otherwise they're quite difficult to maintain, those contract areas, if you can't get them as coordinates. Yeah, I've at least understood that we can get them. Yeah, and that's also what I understood from Kari's IRA comment or some Teams comment — in what format — the thing is how that format gets pulled into our database, I haven't had time to think about that yet, but surely technology can handle it.
+
+25:06 - Rami Aalto
+Right, yeah.
+
+25:07 - Miska Sulander
+So, the thing that's come up for us — cost-price calculation.
+
+25:14 - Rami Aalto
+Doesn't the cost price essentially mean what you pay — the contractor payment is still separate — but then we have things like if we rent something or re-rent something, I don't know, a waste bin or something like that, we pay ten a month and bill twenty a month, so that shows up there.
+
+25:47 - Miska Sulander
+This was something like — what kind of products have a cost price? Is it the most common product or collection services?
+
+25:57 - Rami Aalto
+Yes, we'd like it for services too, for collection services as well.
+
+26:01 - Miska Sulander
+But does the cost price — what does it depend on? Can it depend on the contractor?
+
+26:09 - Rami Aalto
+It can depend on the contractor, it can depend on the contract area, it can also depend on the processing — what happens to the waste — where it goes for further processing, it can depend on that. There was quite a litany of various things. This came up for us really as a question, because this isn't anywhere — as far as I know this isn't in the requirements at all. The other four companies have handled it, or rather we too have been handling the calculation somewhere else outside the system, so this was more of a — does something like that exist there? Well, it certainly doesn't come for free. Right.
+
+27:04 - Miska Sulander
+Then we say no to that. But let me think about this. Not in a way that it would be definitive or necessarily official, let's say — but is there some easy way to add it, for example on the price list side? So that if the price list has certain components, then with those same certain components the cost price would be some fixed number of euros for a given product.
+
+27:48 - Rami Aalto
+Right, that's exactly what I was thinking — is there that kind of possibility, for example. This is specifically then — if a price list rule has one price, that's the price billed to the customer, and if there's a second price, is that then kind of — well this much is what it costs us.
+
+28:08 - Miska Sulander
+That wouldn't really be anything more than — kind of a second field with a second value on the price. It's not conceptually any more complicated than that, if we can just assume that — if the assumption is that the same parameters that produce one customer price also produce some cost price — then the maintenance is sustainable and sensible. So it's not necessarily that much harder of a thing.
+
+28:46 - Rami Aalto
+As long as it doesn't turn into a situation where one price going to a customer has to be made up of how many different prices. If it suddenly means there has to be one customer-facing price and 20 different internal prices, and those all have to be tagged — what type of price is this, where in the chart of accounts does this go, which cost center — then that's like a price within a price, a price list rule within a price list rule. That probably goes a bit too far.
+
+29:36 - Miska Sulander
+That probably goes a bit too far. Need to think about this a bit more. And maybe draw it out. Let's make a note of this and also show it to someone else.
+
+29:50 - Rami Aalto
+Yeah. The idea is that it would specifically only be used in reporting. Yeah. In reporting, to get more real-time data on the situation. Since it's been done externally before, some kind of system for it already exists. But of course it's always more convenient if you can see it on a nice dashboard, see directly what the situation is.
+
+30:17 - Miska Sulander
+Exactly, yeah. Of course from a process and business perspective it would make a lot of sense to have one system where that information is available. But need to put on our thinking caps. Whether it would be possible with some small tweaks.
+
+30:42 - Rami Aalto
+Yeah, and what's also relevant there — what would be the way to get the basic picture out of there — if we're interested in, say, margin euros — an emptying costs the customer four euros and we pay two and a half, and then based on that price you just look at the dashboard and say great, this much margin is coming in. Maybe that's sufficient in some situations. But if you really go into precise detail on things, then it certainly won't work perfectly straight away. But yeah, if you think about it, it's good that we look into it.
+
+31:44 - Miska Sulander
+Yeah. I can't say for certain on this timeline. A solution needs to be found. Yeah.
+
+31:54 - Rami Aalto
+Let's see what kind of thing it is that it'll come up at some point.
+
+32:02 - Unidentified Speaker
+Yeah.
+
+32:03 - Rami Aalto
+One more question outside this list by the way. Contractor payments. Are those through these price lists or from somewhere else entirely?
+
+32:15 - Miska Sulander
+The idea was kind of that we have a product. That product has two price lists. It has the customer price list and it has the contractor price list. There can be the same components or different components in them, but still — it's kind of a two-sided price list if you think of it visually. It's conceptually very — the way those prices are defined is very similar in both cases. Still need to gather and look at the attributes — what kind of attributes are needed there.
+
+33:01 - Unidentified Speaker
+Are different ones needed?
+
+33:03 - Unidentified Speaker
+Yeah.
+
+33:04 - Miska Sulander
+Good heavens, it's cutting out now.
+
+33:08 - Rami Aalto
+It probably is, I'd think. Let's see, I have it there. I've tried to put together something for myself. There's a slideshow system here that hopefully opens things up a bit. I had just marked it there. For the contractor price list — that it's attached to the product there.
+
+33:49 - Miska Sulander
+Yeah, that's one of those things. Lives its own life.
+
+33:53 - Rami Aalto
+Yeah, and here I've also put the cost-price list as separate, but it doesn't necessarily work that way.
+
+34:04 - Miska Sulander
+Well it doesn't necessarily work that way. You could of course maintain such a cost-price list as a kind of ghost in there, but it really isn't worth it.
+
+34:18 - Rami Aalto
+In my view it should by default come from...
+
+34:20 - Miska Sulander
+By default we have a customer price list — or we have a price list and a contractor price list. And the price list is really the one that determines the prices for customers. And the logic of how the price is determined is in the price list. You can't really maintain any ghost there either, because the ghost would affect the prices, since there's a spike built into the system there.
+
+34:50 - Rami Aalto
+Yeah, well that's fair enough. This is almost right, but needs a bit of tweaking. I thought I'd update this as my understanding grows.
+
+35:05 - Miska Sulander
+But otherwise this does summarise the concept and the hierarchy. Where does it go?
+
+35:13 - Unidentified Speaker
+Yeah.
+
+35:14 - Rami Aalto
+I don't really have much else — this clarifies things for now. The weekend is almost here and all these things will be forgotten for a moment.
+
+35:31 - Miska Sulander
+Can't really forget them.
+
+35:33 - Rami Aalto
+Oh no.
+
+35:35 - Miska Sulander
+All kinds of things going on here. I have this project, but then again I'm also bad at saying no and all that. We probably have the same famous Norwegian customer that was used as a reference. I don't know if it's actually the same customer. I don't know any more of that story because we have different people who go through and calculate those offers, but still there too you need to consult on the migration work. You really can't forget work right now.
+
+36:16 - Rami Aalto
+Well it's good in a way that there's work, but then on the other hand workload balancing is an interesting challenge. That's true.
+
+36:27 - Miska Sulander
+That's its own thing as well. Yes. A little bird told me that you had applied for a job with us, but I don't know about that either.
+
+36:38 - Rami Aalto
+I had gone and clicked on that Apply button to get the application form open. You're not actually interested.
+
+36:48 - Miska Sulander
+Well in a way...
+
+36:50 - Rami Aalto
+I am a little bit interested, but then on the other hand the roles so far have been a bit like — I don't have a waste management background or expertise, and on the other hand I'm not a developer etc. I'm a kind of hand-waver, I don't know how many of those you have.
+
+37:13 - Miska Sulander
+Don't they exist in every organisation? Usually they do, yeah.
+
+37:18 - Rami Aalto
+Well in a way the pro thing is that I'm half Norwegian, so I can get by in Norwegian already. Drop the other half of every word. I'm even a dual citizen. Oh really, okay.
+
+37:35 - Miska Sulander
+Fair enough.
+
+37:36 - Rami Aalto
+Yeah, and otherwise...
+
+37:37 - Miska Sulander
+I at least personally would like to keep you on the PJH side. At least for the duration of this first implementation project, because it seems like the collaboration is working well.
+
+37:50 - Rami Aalto
+Yeah, this has been quite interesting work here. I sort of suspect that... I sort of suspect there are a couple of piles here that require constant tending. There are a few piles that spread out pretty fast if there's no one calming things down.
+
+38:19 - Miska Sulander
+Yeah. Pretty much the same. Yeah. Same here.
+
+38:24 - Rami Aalto
+But yeah, that's how it is. Anyway, thanks for these. I'll be off now.
+
+38:32 - Miska Sulander
+Hope that was useful.
+
+38:34 - Miska Sulander
+I'll take notes on those — some of the open things and those that aren't directly written in requirements but are lurking around.
+
+38:45 - Rami Aalto
+Yeah. And also look at things a bit. And then indeed keep these somewhat in mind when we start thinking about these products a bit more, so that I can explain them correctly.
+
+39:03 - Miska Sulander
+Yeah, throw questions through Teams. Somewhat poorly — notifications do come to the phone, but otherwise this Linux battery and Teams don't really work well together. They tend to get lost sometimes.
+
+39:22 - Rami Aalto
+Yeah, no problem. I'll throw questions if something comes up. Good. Nothing else but enjoy the work.
