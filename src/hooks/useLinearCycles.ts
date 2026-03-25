@@ -10,6 +10,7 @@ export interface LinearIssue {
   estimate?: number;
   state: { name: string; color: string; type: string };
   assignee?: { displayName: string };
+  parent?: { id: string };
 }
 
 export function issuePoints(issue: LinearIssue): number {
@@ -113,6 +114,7 @@ const CYCLE_ISSUES_QUERY = `
           estimate
           state { name color type }
           assignee { displayName }
+          parent { id }
         }
       }
     }

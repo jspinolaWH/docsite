@@ -221,6 +221,7 @@ export function LinearCycleDetailPage() {
   const [stateFilter, setStateFilter] = useState('');
   const [assigneeFilter, setAssigneeFilter] = useState('');
   const [priorityFilter, setPriorityFilter] = useState('');
+  const [hideSubtasks, setHideSubtasks] = useState(false);
 
   const status: CycleStatus | null = cycle ? getCycleStatus(cycle) : null;
   const color = status ? STATUS_CONFIG[status].color : '#6b7280';
@@ -234,13 +235,14 @@ export function LinearCycleDetailPage() {
   const assignees = useMemo(() => [...new Set(issues.map(i => i.assignee?.displayName ?? 'Unassigned'))].sort(), [issues]);
 
   const filtered = useMemo(() => issues.filter(i => {
+    if (hideSubtasks && i.parent) return false;
     const q = search.toLowerCase();
     if (q && !i.title.toLowerCase().includes(q) && !i.identifier.toLowerCase().includes(q)) return false;
     if (stateFilter && i.state.name !== stateFilter) return false;
     if (assigneeFilter && (i.assignee?.displayName ?? 'Unassigned') !== assigneeFilter) return false;
     if (priorityFilter && String(i.priority) !== priorityFilter) return false;
     return true;
-  }), [issues, search, stateFilter, assigneeFilter, priorityFilter]);
+  }), [issues, search, stateFilter, assigneeFilter, priorityFilter, hideSubtasks]);
 
   const sel: React.CSSProperties = {
     padding: '0.4rem 0.6rem',
@@ -331,6 +333,19 @@ export function LinearCycleDetailPage() {
                   <button onClick={() => setView('people')} style={tabBtn(view === 'people')}>By Person</button>
                 </div>
 
+                {/* Hide subtasks toggle */}
+                <button
+                  onClick={() => setHideSubtasks(v => !v)}
+                  style={{
+                    ...tabBtn(hideSubtasks),
+                    background: hideSubtasks ? '#6366f1' : 'var(--color-bg-secondary)',
+                    color: hideSubtasks ? '#fff' : 'var(--color-text-secondary)',
+                    border: hideSubtasks ? '1px solid #6366f1' : '1px solid var(--color-border)',
+                  }}
+                >
+                  {hideSubtasks ? 'Subtasks hidden' : 'Hide subtasks'}
+                </button>
+
                 {view === 'table' && (
                   <>
                     <input type="text" placeholder="Search by title or ID…" value={search} onChange={e => setSearch(e.target.value)}
@@ -370,7 +385,7 @@ export function LinearCycleDetailPage() {
                   </div>
                 </>
               ) : (
-                <AssigneeView issues={issues} />
+                <AssigneeView issues={hideSubtasks ? issues.filter(i => !i.parent) : issues} />
               )}
 
             </div>
