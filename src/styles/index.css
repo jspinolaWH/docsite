@@ -234,6 +234,23 @@ a:hover {
   transition: transform 0.25s ease;
 }
 
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
 .sidebar.sidebar-hidden {
   transform: translateX(-100%);
 }
