@@ -10,6 +10,8 @@ import { EntityDiagramsPage } from './pages/EntityDiagramsPage';
 import { FlowDiagramsPage } from './pages/FlowDiagramsPage';
 import { LinearCyclesPage } from './pages/LinearCyclesPage';
 import { LinearCycleDetailPage } from './pages/LinearCycleDetailPage';
+import { TranscriptsPage } from './pages/TranscriptsPage';
+import { RequirementsCompliancePage } from './pages/RequirementsCompliancePage';
 
 export default function App() {
   const docsCtx = useDocsProvider();
@@ -28,6 +30,8 @@ export default function App() {
               <Route path="/diagrams/flow-diagrams" element={<FlowDiagramsPage />} />
               <Route path="/cycles" element={<LinearCyclesPage />} />
               <Route path="/cycles/:id" element={<LinearCycleDetailPage />} />
+              <Route path="/miska/transcripts" element={<TranscriptsPage />} />
+              <Route path="/miska/requirements" element={<RequirementsCompliancePage />} />
             </Route>
           </Routes>
         </BrowserRouter>

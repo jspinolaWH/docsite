@@ -1,8 +1,72 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useDocs } from '../hooks/useDocs';
 import { useTheme } from '../hooks/useTheme';
 import { CATEGORIES, DIAGRAM_LINKS } from '../types';
+
+const ExternalIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 12 12" style={{ marginLeft: '6px', verticalAlign: 'middle', flexShrink: 0 }}>
+    <path d="M10 1H7M10 1V4M10 1L5 6M4 2H2v8h8V8" fill="none" stroke="currentColor" strokeWidth="1.5" />
+  </svg>
+);
+
+function MiskaDocsSection() {
+  const [open, setOpen] = useState(true);
+  const { pathname } = useLocation();
+  const color = '#7c3aed';
+
+  return (
+    <div className="sidebar-category">
+      <button
+        className="sidebar-category-header"
+        onClick={() => setOpen((p) => !p)}
+        style={{ borderLeftColor: color }}
+      >
+        <span className="sidebar-category-label" style={{ color }}>
+          Miska Docs
+        </span>
+        <span className={`sidebar-chevron ${open ? 'open' : ''}`}>
+          <svg width="12" height="12" viewBox="0 0 12 12">
+            <path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="2" />
+          </svg>
+        </span>
+      </button>
+
+      {open && (
+        <ul className="sidebar-docs">
+          <li>
+            <NavLink
+              to="/miska/transcripts"
+              className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
+            >
+              Transcripts
+            </NavLink>
+          </li>
+          <li>
+            <a
+              href="/docsite/miska/GenericProductsMockup.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`sidebar-link${pathname === '/__never__' ? ' active' : ''}`}
+              style={{ display: 'flex', alignItems: 'center' }}
+            >
+              Generic Products Mockup
+              <ExternalIcon />
+            </a>
+          </li>
+          <li>
+            <NavLink
+              to="/miska/requirements"
+              className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
+            >
+              Requirements Compliance
+            </NavLink>
+          </li>
+        </ul>
+      )}
+    </div>
+  );
+}
 
 export function Sidebar({ collapsed: sidebarCollapsed = false }: { collapsed?: boolean }) {
   const { grouped } = useDocs();
@@ -44,6 +108,9 @@ export function Sidebar({ collapsed: sidebarCollapsed = false }: { collapsed?: b
             />
           </svg>
         </a>
+
+        {/* ── Miska Docs ── */}
+        <MiskaDocsSection />
 
         {Object.entries(CATEGORIES).map(([catId, config]) => {
           const isCollapsed = collapsed[catId] ?? false;
