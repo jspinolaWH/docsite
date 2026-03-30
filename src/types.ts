@@ -131,7 +131,7 @@ export const INVOICING_CATEGORIES: Record<string, CategoryConfig> = {
   },
   'inv-billing': {
     id: 'inv-billing',
-    label: 'Billing & Charges',
+    label: 'Billing Events & FINVOICE',
     color: '#0369a1',
     bgColor: '#f0f9ff',
     borderColor: '#bae6fd',
@@ -141,7 +141,7 @@ export const INVOICING_CATEGORIES: Record<string, CategoryConfig> = {
   },
   'inv-configuration': {
     id: 'inv-configuration',
-    label: 'Configuration',
+    label: 'Configuration & Cycles',
     color: '#d97706',
     bgColor: '#fffbeb',
     borderColor: '#fde68a',
@@ -149,9 +149,9 @@ export const INVOICING_CATEGORIES: Record<string, CategoryConfig> = {
     darkBgColor: '#3b1a00',
     darkBorderColor: '#b45309',
   },
-  'inv-reports': {
-    id: 'inv-reports',
-    label: 'Reports & Analytics',
+  'inv-advanced': {
+    id: 'inv-advanced',
+    label: 'Integration & Advanced',
     color: '#0f766e',
     bgColor: '#f0fdfa',
     borderColor: '#99f6e4',
