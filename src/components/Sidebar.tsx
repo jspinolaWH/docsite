@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useDocs } from '../hooks/useDocs';
+import { useInvoicingDocs } from '../hooks/useInvoicingDocs';
 import { useTheme } from '../hooks/useTheme';
-import { CATEGORIES, DIAGRAM_LINKS } from '../types';
+import { CATEGORIES, INVOICING_CATEGORIES, DIAGRAM_LINKS } from '../types';
 
 const ExternalIcon = () => (
   <svg width="12" height="12" viewBox="0 0 12 12" style={{ marginLeft: '6px', verticalAlign: 'middle', flexShrink: 0 }}>
@@ -68,106 +69,106 @@ function MiskaDocsSection() {
   );
 }
 
-export function Sidebar({ collapsed: sidebarCollapsed = false }: { collapsed?: boolean }) {
-  const { grouped } = useDocs();
-  const { theme } = useTheme();
-  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
-
-  const toggle = (key: string) =>
-    setCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
+function SectionSwitcher() {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const isInvoicing = pathname.startsWith('/invoicing');
 
   return (
-    <aside className={`sidebar${sidebarCollapsed ? ' sidebar-hidden' : ''}`}>
-      <nav>
-        <NavLink to="/" className="sidebar-home" end>
-          Home
-        </NavLink>
+    <div style={{
+      display: 'flex',
+      gap: '4px',
+      padding: '10px 12px 8px',
+      borderBottom: '1px solid var(--border)',
+      marginBottom: '4px',
+    }}>
+      <button
+        onClick={() => navigate('/')}
+        style={{
+          flex: 1,
+          padding: '5px 8px',
+          fontSize: '0.72rem',
+          fontWeight: 600,
+          borderRadius: '6px',
+          border: 'none',
+          cursor: 'pointer',
+          transition: 'background 0.15s, color 0.15s',
+          background: !isInvoicing ? '#7c3aed' : 'transparent',
+          color: !isInvoicing ? '#fff' : 'var(--text-muted)',
+          outline: !isInvoicing ? 'none' : '1px solid var(--border)',
+        }}
+      >
+        P&amp;P
+      </button>
+      <button
+        onClick={() => navigate('/invoicing')}
+        style={{
+          flex: 1,
+          padding: '5px 8px',
+          fontSize: '0.72rem',
+          fontWeight: 600,
+          borderRadius: '6px',
+          border: 'none',
+          cursor: 'pointer',
+          transition: 'background 0.15s, color 0.15s',
+          background: isInvoicing ? '#0369a1' : 'transparent',
+          color: isInvoicing ? '#fff' : 'var(--text-muted)',
+          outline: isInvoicing ? 'none' : '1px solid var(--border)',
+        }}
+      >
+        Invoicing
+      </button>
+    </div>
+  );
+}
 
-        <NavLink to="/cycles" className="sidebar-home">
-          Cycles
-        </NavLink>
+function PPSidebarContent() {
+  const { grouped } = useDocs();
+  const { theme } = useTheme();
+  const [localCollapsed, setLocalCollapsed] = useState<Record<string, boolean>>({});
 
-        <a
-          href="https://jspinolawh.github.io/ProductsPricing/Mockup.html"
-          className="sidebar-home"
-          target="_blank"
-          rel="noopener noreferrer"
+  const toggle = (key: string) =>
+    setLocalCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
+
+  return (
+    <>
+      <NavLink to="/" className="sidebar-home" end>
+        Home
+      </NavLink>
+
+      <NavLink to="/cycles" className="sidebar-home">
+        Cycles
+      </NavLink>
+
+      <a
+        href="https://jspinolawh.github.io/ProductsPricing/Mockup.html"
+        className="sidebar-home"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Mockup
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          style={{ marginLeft: '6px', verticalAlign: 'middle' }}
         >
-          Mockup
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            style={{ marginLeft: '6px', verticalAlign: 'middle' }}
-          >
-            <path
-              d="M10 1H7M10 1V4M10 1L5 6M4 2H2v8h8V8"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            />
-          </svg>
-        </a>
+          <path
+            d="M10 1H7M10 1V4M10 1L5 6M4 2H2v8h8V8"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          />
+        </svg>
+      </a>
 
-        {/* ── Miska Docs ── */}
-        <MiskaDocsSection />
+      <MiskaDocsSection />
 
-        {Object.entries(CATEGORIES).map(([catId, config]) => {
-          const isCollapsed = collapsed[catId] ?? false;
-          const categoryColor =
-            theme === 'dark' ? config.darkColor : config.color;
+      {Object.entries(CATEGORIES).map(([catId, config]) => {
+        const isCollapsed = localCollapsed[catId] ?? false;
+        const categoryColor = theme === 'dark' ? config.darkColor : config.color;
 
-          // Special handling for diagrams category (uses static links)
-          if (catId === 'diagrams') {
-            return (
-              <div key={catId} className="sidebar-category">
-                <button
-                  className="sidebar-category-header"
-                  onClick={() => toggle(catId)}
-                  style={{ borderLeftColor: categoryColor }}
-                >
-                  <span
-                    className="sidebar-category-label"
-                    style={{ color: categoryColor }}
-                  >
-                    {config.label}
-                  </span>
-                  <span
-                    className={`sidebar-chevron ${isCollapsed ? '' : 'open'}`}
-                  >
-                    <svg width="12" height="12" viewBox="0 0 12 12">
-                      <path
-                        d="M4 2l4 4-4 4"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      />
-                    </svg>
-                  </span>
-                </button>
-
-                {!isCollapsed && (
-                  <ul className="sidebar-docs">
-                    {DIAGRAM_LINKS.map((link) => (
-                      <li key={link.slug}>
-                        <NavLink
-                          to={`/diagrams/${link.slug}`}
-                          className={({ isActive }) =>
-                            `sidebar-link${isActive ? ' active' : ''}`
-                          }
-                        >
-                          {link.title}
-                        </NavLink>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            );
-          }
-
-          // Regular docs categories
-          const docs = grouped[catId] || [];
+        if (catId === 'diagrams') {
           return (
             <div key={catId} className="sidebar-category">
               <button
@@ -175,37 +176,27 @@ export function Sidebar({ collapsed: sidebarCollapsed = false }: { collapsed?: b
                 onClick={() => toggle(catId)}
                 style={{ borderLeftColor: categoryColor }}
               >
-                <span
-                  className="sidebar-category-label"
-                  style={{ color: categoryColor }}
-                >
+                <span className="sidebar-category-label" style={{ color: categoryColor }}>
                   {config.label}
                 </span>
-                <span
-                  className={`sidebar-chevron ${isCollapsed ? '' : 'open'}`}
-                >
+                <span className={`sidebar-chevron ${isCollapsed ? '' : 'open'}`}>
                   <svg width="12" height="12" viewBox="0 0 12 12">
-                    <path
-                      d="M4 2l4 4-4 4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
+                    <path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="2" />
                   </svg>
                 </span>
               </button>
 
               {!isCollapsed && (
                 <ul className="sidebar-docs">
-                  {docs.map((doc) => (
-                    <li key={doc.slug}>
+                  {DIAGRAM_LINKS.map((link) => (
+                    <li key={link.slug}>
                       <NavLink
-                        to={`/doc/${doc.slug}`}
+                        to={`/diagrams/${link.slug}`}
                         className={({ isActive }) =>
                           `sidebar-link${isActive ? ' active' : ''}`
                         }
                       >
-                        {doc.title}
+                        {link.title}
                       </NavLink>
                     </li>
                   ))}
@@ -213,7 +204,127 @@ export function Sidebar({ collapsed: sidebarCollapsed = false }: { collapsed?: b
               )}
             </div>
           );
-        })}
+        }
+
+        const docs = grouped[catId] || [];
+        return (
+          <div key={catId} className="sidebar-category">
+            <button
+              className="sidebar-category-header"
+              onClick={() => toggle(catId)}
+              style={{ borderLeftColor: categoryColor }}
+            >
+              <span className="sidebar-category-label" style={{ color: categoryColor }}>
+                {config.label}
+              </span>
+              <span className={`sidebar-chevron ${isCollapsed ? '' : 'open'}`}>
+                <svg width="12" height="12" viewBox="0 0 12 12">
+                  <path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="2" />
+                </svg>
+              </span>
+            </button>
+
+            {!isCollapsed && (
+              <ul className="sidebar-docs">
+                {docs.map((doc) => (
+                  <li key={doc.slug}>
+                    <NavLink
+                      to={`/doc/${doc.slug}`}
+                      className={({ isActive }) =>
+                        `sidebar-link${isActive ? ' active' : ''}`
+                      }
+                    >
+                      {doc.title}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+function InvoicingSidebarContent() {
+  const { grouped } = useInvoicingDocs();
+  const { theme } = useTheme();
+  const [localCollapsed, setLocalCollapsed] = useState<Record<string, boolean>>({});
+
+  const toggle = (key: string) =>
+    setLocalCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
+
+  return (
+    <>
+      <NavLink to="/invoicing" className="sidebar-home" end>
+        Home
+      </NavLink>
+
+      {Object.entries(INVOICING_CATEGORIES).map(([catId, config]) => {
+        const isCollapsed = localCollapsed[catId] ?? false;
+        const categoryColor = theme === 'dark' ? config.darkColor : config.color;
+        const docs = grouped[catId] || [];
+
+        return (
+          <div key={catId} className="sidebar-category">
+            <button
+              className="sidebar-category-header"
+              onClick={() => toggle(catId)}
+              style={{ borderLeftColor: categoryColor }}
+            >
+              <span className="sidebar-category-label" style={{ color: categoryColor }}>
+                {config.label}
+              </span>
+              <span className={`sidebar-chevron ${isCollapsed ? '' : 'open'}`}>
+                <svg width="12" height="12" viewBox="0 0 12 12">
+                  <path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="2" />
+                </svg>
+              </span>
+            </button>
+
+            {!isCollapsed && (
+              <ul className="sidebar-docs">
+                {docs.length === 0 ? (
+                  <li style={{ padding: '4px 12px', opacity: 0.45, fontStyle: 'italic', fontSize: '0.8rem' }}>
+                    No documents yet
+                  </li>
+                ) : (
+                  docs.map((doc) => (
+                    <li key={doc.slug}>
+                      <NavLink
+                        to={`/invoicing/doc/${doc.slug}`}
+                        className={({ isActive }) =>
+                          `sidebar-link${isActive ? ' active' : ''}`
+                        }
+                      >
+                        {doc.title}
+                      </NavLink>
+                    </li>
+                  ))
+                )}
+              </ul>
+            )}
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+export function Sidebar({ collapsed: sidebarCollapsed = false }: { collapsed?: boolean }) {
+  const { pathname } = useLocation();
+  const isInvoicing = pathname.startsWith('/invoicing');
+
+  return (
+    <aside className={`sidebar${sidebarCollapsed ? ' sidebar-hidden' : ''}`}>
+      <SectionSwitcher />
+      <nav>
+        {isInvoicing ? (
+          <InvoicingSidebarContent />
+        ) : (
+          <PPSidebarContent />
+        )}
       </nav>
     </aside>
   );

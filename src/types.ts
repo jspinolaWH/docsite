@@ -117,6 +117,50 @@ export const DIAGRAM_LINKS: DiagramLink[] = [
   { slug: 'flow-diagrams', title: 'Flow Diagrams' },
 ];
 
+// Categories for the Invoicing section
+export const INVOICING_CATEGORIES: Record<string, CategoryConfig> = {
+  'inv-overview': {
+    id: 'inv-overview',
+    label: 'Overview & Concepts',
+    color: '#7c3aed',
+    bgColor: '#f5f3ff',
+    borderColor: '#ddd6fe',
+    darkColor: '#c4b5fd',
+    darkBgColor: '#3b0764',
+    darkBorderColor: '#6b21a8',
+  },
+  'inv-billing': {
+    id: 'inv-billing',
+    label: 'Billing & Charges',
+    color: '#0369a1',
+    bgColor: '#f0f9ff',
+    borderColor: '#bae6fd',
+    darkColor: '#38bdf8',
+    darkBgColor: '#082f49',
+    darkBorderColor: '#0369a1',
+  },
+  'inv-configuration': {
+    id: 'inv-configuration',
+    label: 'Configuration',
+    color: '#d97706',
+    bgColor: '#fffbeb',
+    borderColor: '#fde68a',
+    darkColor: '#fcd34d',
+    darkBgColor: '#3b1a00',
+    darkBorderColor: '#b45309',
+  },
+  'inv-reports': {
+    id: 'inv-reports',
+    label: 'Reports & Analytics',
+    color: '#0f766e',
+    bgColor: '#f0fdfa',
+    borderColor: '#99f6e4',
+    darkColor: '#2dd4bf',
+    darkBgColor: '#042f2e',
+    darkBorderColor: '#0f766e',
+  },
+};
+
 // Subcategories for sprint-planning
 export const SPRINT_SUBCATEGORIES: Record<string, string> = {
   'sprint-1': 'Sprint 1',
