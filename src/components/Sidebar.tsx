@@ -261,6 +261,36 @@ function InvoicingSidebarContent() {
         Home
       </NavLink>
 
+      <div className="sidebar-category">
+        <button
+          className="sidebar-category-header"
+          onClick={() => toggle('inv-diagrams')}
+          style={{ borderLeftColor: '#0369a1' }}
+        >
+          <span className="sidebar-category-label" style={{ color: '#0369a1' }}>
+            Diagrams
+          </span>
+          <span className={`sidebar-chevron ${localCollapsed['inv-diagrams'] ? '' : 'open'}`}>
+            <svg width="12" height="12" viewBox="0 0 12 12">
+              <path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="2" />
+            </svg>
+          </span>
+        </button>
+
+        {!localCollapsed['inv-diagrams'] && (
+          <ul className="sidebar-docs">
+            <li>
+              <NavLink
+                to="/invoicing/diagrams/flow-diagrams"
+                className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
+              >
+                Flow Diagrams
+              </NavLink>
+            </li>
+          </ul>
+        )}
+      </div>
+
       {Object.entries(INVOICING_CATEGORIES).map(([catId, config]) => {
         const isCollapsed = localCollapsed[catId] ?? false;
         const categoryColor = theme === 'dark' ? config.darkColor : config.color;
