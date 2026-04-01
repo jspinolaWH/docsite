@@ -159,6 +159,16 @@ export const INVOICING_CATEGORIES: Record<string, CategoryConfig> = {
     darkBgColor: '#042f2e',
     darkBorderColor: '#0f766e',
   },
+  'inv-structure': {
+    id: 'inv-structure',
+    label: 'Structure Breakdown',
+    color: '#be185d',
+    bgColor: '#fdf2f8',
+    borderColor: '#fbcfe8',
+    darkColor: '#f9a8d4',
+    darkBgColor: '#4a0520',
+    darkBorderColor: '#9d174d',
+  },
 };
 
 // Subcategories for sprint-planning
