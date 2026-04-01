@@ -113,3 +113,14 @@ Authority users (e.g. waste management authorities) can:
 - View invoice status
 
 **Trigger:** Customer objections or fee inquiries that require authority review. Read-only access — no modification rights.
+
+---
+
+## Flow Diagrams
+
+Interactive Mermaid diagrams illustrating the end-to-end flows for this release. Each link opens a standalone diagram in a new tab.
+
+| # | Diagram | Stories covered |
+|---|---------|----------------|
+| 5 | [Credit Invoice Flow](/docsite/diagrams/html/invoicing/inv-05-credit-invoice-flow.html) | PD-269 |
+| 8 | [E-Invoice Integration & Billing Address Management](/docsite/diagrams/html/invoicing/inv-08-einvoice-address-management.html) | PD-107, PD-282 |

@@ -141,3 +141,15 @@ Invoice all shared service items with a per-subscriber percentage split:
 Retroactive addition of participants to shared services:
 - Full redistribution of **all events** in the date range
 - Handles scenarios where a new subscriber joins mid-period
+
+---
+
+## Flow Diagrams
+
+Interactive Mermaid diagrams illustrating the end-to-end flows for this release. Each link opens a standalone diagram in a new tab.
+
+| # | Diagram | Stories covered |
+|---|---------|----------------|
+| 3 | [Shared Service Invoicing](/docsite/diagrams/html/invoicing/inv-03-shared-service-invoicing.html) | PD-280, PD-279 |
+| 6 | [Billing Cycles, Seasonal Fees & Minimum Fee](/docsite/diagrams/html/invoicing/inv-06-billing-cycles-seasonal-minimum.html) | PD-291, PD-288, PD-286 |
+| 7 | [Event Correction & Transfer](/docsite/diagrams/html/invoicing/inv-07-event-correction-transfer.html) | PD-364, PD-319, PD-344, PD-275 |

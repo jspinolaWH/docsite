@@ -189,3 +189,13 @@ Waste management authority approval of outgoing invoices before issuance:
 - Content locked after approval proposal is sent
 
 > **Status:** Still requires clarification — PJH currently has no need for this feature.
+
+---
+
+## Flow Diagrams
+
+Interactive Mermaid diagrams illustrating the end-to-end flows for this release. Each link opens a standalone diagram in a new tab.
+
+| # | Diagram | Stories covered |
+|---|---------|----------------|
+| 1 | [Billing Event Lifecycle](/docsite/diagrams/html/invoicing/inv-01-billing-event-lifecycle.html) | PD-299, PD-297, PD-298, PD-310, PD-228 |

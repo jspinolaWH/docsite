@@ -151,3 +151,14 @@ After invoice generation but before delivery:
 - Cancel sending of invoices
 - Schedule sending for a future time
 - Recall from external system (if integration supports recall API)
+
+---
+
+## Flow Diagrams
+
+Interactive Mermaid diagrams illustrating the end-to-end flows for this release. Each link opens a standalone diagram in a new tab.
+
+| # | Diagram | Stories covered |
+|---|---------|----------------|
+| 2 | [Billing Run — Simulation, Validation & Send](/docsite/diagrams/html/invoicing/inv-02-billing-run-simulation.html) | PD-274, PD-272, PD-271, PD-278, PD-273, PD-270 |
+| 4 | [Public vs. Private Law Invoicing](/docsite/diagrams/html/invoicing/inv-04-public-private-law.html) | PD-285, PD-284 |

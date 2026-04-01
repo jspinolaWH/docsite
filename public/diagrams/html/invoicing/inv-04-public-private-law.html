@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Public vs Private Law Invoicing</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 20px; background: #f9fafb; }
+        .container { max-width: 1600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h1 { margin-top: 0; color: #111827; }
+        .subtitle { color: #6b7280; margin-bottom: 30px; }
+        .mermaid { background: white; }
+        .side-panel {
+            display: flex; flex-direction: column; gap: 14px;
+        }
+        .info-box { border-radius: 10px; padding: 16px; border: 1px solid; }
+        .info-box.blue { background: #eff6ff; border-color: #3b82f6; }
+        .info-box.amber { background: #fffbeb; border-color: #f59e0b; }
+        .info-box.red { background: #fef2f2; border-color: #ef4444; }
+        .info-box.green { background: #f0fdf4; border-color: #059669; }
+        .info-box h3 { margin-top: 0; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+        .info-box.blue h3 { color: #1e40af; }
+        .info-box.amber h3 { color: #92400e; }
+        .info-box.red h3 { color: #991b1b; }
+        .info-box.green h3 { color: #065f46; }
+        .info-box p, .info-box li { font-size: 12px; line-height: 1.7; margin: 0; }
+        .info-box.blue p, .info-box.blue li { color: #1e40af; }
+        .info-box.amber p, .info-box.amber li { color: #92400e; }
+        .info-box.red p, .info-box.red li { color: #991b1b; }
+        .info-box.green p, .info-box.green li { color: #065f46; }
+        ul { padding-left: 16px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Scenario 4: Public vs Private Law Invoicing</h1>
+    <p class="subtitle">The system auto-classifies transactions, applies different VAT and enforcement rules, and supports combined or separate invoices per customer. (PD-285, PD-284, PD-289)</p>
+
+    <div style="display: grid; grid-template-columns: 1fr 340px; gap: 30px; align-items: start;">
+        <div class="mermaid">
+graph TD
+    START([Customer Invoice Being Generated<br/>Municipal customer with mixed services]) --> CLASSIFY
+
+    subgraph CLASSIFY["Step 1 — Auto-Classification (PD-285)"]
+        CHECK[System checks predefined criteria:<br/>Customer type, product/service type,<br/>regional regulations, contract terms]
+        PUB[Public-law transaction:<br/>Municipal waste collection fee<br/>Household waste per tariff]
+        PRIV[Private-law transaction:<br/>Home composter sold to customer<br/>Commercial contract terms]
+    end
+
+    CHECK --> PUB
+    CHECK --> PRIV
+
+    PUB --> VATPUB[VAT: Per municipal tariff<br/>0% if statutory fee]
+    PRIV --> VATPRIV[VAT: 25.5%<br/>Commercial rate applies]
+
+    VATPUB & VATPRIV --> LINEMARK[PD-284: Each invoice line marked<br/>with classification identifier<br/>PUBLIC-LAW or PRIVATE-LAW<br/>at the line level in FINVOICE data]
+
+    LINEMARK --> CONFIG{Company Configuration:<br/>How should these<br/>be invoiced?}
+
+    CONFIG -->|Combined invoice| COMBINED[Single invoice to customer<br/>Both transaction types on same document<br/>Each line retains its classification marker]
+    CONFIG -->|Separate invoices| SEPARATE[Two invoices generated:<br/>Invoice A: Public-law services only<br/>Invoice B: Private-law services only]
+
+    COMBINED --> FINVOICE1[FINVOICE data includes<br/>per-line classification metadata<br/>for external system routing]
+    SEPARATE --> FINVOICE2[Each FINVOICE file tagged<br/>with correct legal framework<br/>Sent to appropriate invoicing route]
+
+    FINVOICE1 & FINVOICE2 --> ENFORCE
+
+    subgraph ENFORCE["Step 2 — Downstream Enforcement Routing (PD-284)"]
+        PUB_ENF[Public-law invoices:<br/>Municipal enforcement authority<br/>Statutory collection process]
+        PRIV_ENF[Private-law invoices:<br/>General enforcement / debt collection<br/>Commercial collection process]
+    end
+
+    ENFORCE --> AR[PD-289: AR data attached per line<br/>Public/private classification,<br/>ledger account codes,<br/>VAT breakdown, cost objects]
+
+    AR --> DONE([Invoice delivered<br/>Correct enforcement path triggered<br/>Accounting correctly split])
+
+    style CLASSIFY fill:#eff6ff,stroke:#3b82f6
+    style COMBINED fill:#fef3c7,stroke:#f59e0b
+    style SEPARATE fill:#e0e7ff,stroke:#6366f1
+    style ENFORCE fill:#f3f4f6,stroke:#9ca3af
+    style PUB fill:#dbeafe,stroke:#3b82f6
+    style PRIV fill:#fce7f3,stroke:#ec4899
+    style DONE fill:#dcfce7,stroke:#059669,stroke-width:3px
+        </div>
+
+        <div class="side-panel">
+            <div class="info-box blue">
+                <h3>PD-285 — Auto-classification criteria</h3>
+                <ul>
+                    <li>Customer type (municipal vs commercial)</li>
+                    <li>Product/service classification</li>
+                    <li>Regional regulations</li>
+                    <li>Contract terms</li>
+                </ul>
+                <p style="margin-top:8px;">Classification is automatic — no manual tagging required for standard cases.</p>
+            </div>
+
+            <div class="info-box amber">
+                <h3>⚠️ PJH open question</h3>
+                <p>PD-285 / PD-284: "Does the decision on the combined vs separate approach need to be made before go-live, and can the operating model be changed or selected after go-live?"</p>
+                <p style="margin-top:8px;">This is an open configuration decision that must be resolved during implementation.</p>
+            </div>
+
+            <div class="info-box red">
+                <h3>Why this matters: different collection paths</h3>
+                <p>Public-law invoices use <strong>statutory enforcement</strong> — the municipality can compel payment. Private-law invoices go through <strong>commercial debt collection</strong>. Using the wrong path for an invoice type creates legal compliance risk.</p>
+            </div>
+
+            <div class="info-box green">
+                <h3>✓ Example invoice</h3>
+                <p><strong>Municipal customer receives:</strong><br>
+                Line 1: Household waste collection €50 — PUBLIC-LAW, 0% VAT<br>
+                Line 2: Home composter €120 — PRIVATE-LAW, 25.5% VAT<br><br>
+                Both lines on one invoice, each correctly tagged. FINVOICE export includes enforcement routing metadata per line.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { useMaxWidth: true, htmlLabels: true } });
+</script>
+</body>
+</html>

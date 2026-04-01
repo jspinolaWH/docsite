@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Billing Run: Simulation, Validation & Send</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 20px; background: #f9fafb; }
+        .container { max-width: 1600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h1 { margin-top: 0; color: #111827; }
+        .subtitle { color: #6b7280; margin-bottom: 30px; }
+        .mermaid { background: white; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Scenario 2: Billing Run — Simulation, Validation & Send</h1>
+    <p class="subtitle">How an invoicing user prepares, previews, validates and sends a batch of invoices safely (PD-272, PD-274, PD-271, PD-278, PD-273, PD-270)</p>
+
+    <div class="mermaid">
+graph TD
+    START([Invoicing User<br/>Initiates Billing Run]) --> CONFIG
+
+    subgraph CONFIG["Step 1 — Configure Run Parameters (PD-293)"]
+        F1[Filter: Municipality]
+        F2[Filter: Customer type]
+        F3[Filter: Service type e.g. sludge]
+        F4[Filter: Min invoice amount €]
+        F5[Filter: Time period]
+        F6[Filter: Service responsibility]
+    end
+
+    F1 & F2 & F3 & F4 & F5 & F6 --> SIM
+
+    subgraph SIM["Step 2 — Simulation Run (PD-272)"]
+        SIMRUN[Execute Simulated Invoicing Run<br/>Same rules as real run<br/>Marked as TEST DATA — not official]
+        SIMREP[Summary Report Generated<br/>Total invoices, VAT breakdown,<br/>cost centre allocations,<br/>missing or incorrect data]
+    end
+
+    SIMRUN --> SIMREP
+
+    SIMREP --> SIMCHECK{Errors in<br/>Simulation?}
+
+    SIMCHECK -->|Yes — fix before proceeding| SIMFIX[Correct flagged events<br/>PD-277: Edit quantities, accounts,<br/>VAT rates, classification]
+    SIMFIX --> SIMRUN
+
+    SIMCHECK -->|No — simulation clean| PREVIEW
+
+    subgraph PREVIEW["Step 3 — Per-Invoice Preview (PD-274)"]
+        PREV[Generate draft invoice preview<br/>Shows exact content of final invoice:<br/>customer details, event breakdown,<br/>accounting allocations, tax summary]
+        PREVCHECK{Preview<br/>Acceptable?}
+    end
+
+    PREV --> PREVCHECK
+    PREVCHECK -->|Issue found| SIMFIX
+    PREVCHECK -->|Approved| AUTOCHECK
+
+    subgraph AUTOCHECK["Step 4 — Automatic Checks (PD-271)"]
+        AC1[Missing billing address?]
+        AC2[Invalid account numbers?]
+        AC3[Missing or wrong VAT rate?]
+        AC4[Events without cost centres?]
+        AC5[Public/private law classification missing?]
+    end
+
+    AC1 & AC2 & AC3 & AC4 & AC5 --> BLOCK{Any check<br/>fails?}
+
+    BLOCK -->|Yes — invoice blocked| RESOLVE[User resolves flagged errors<br/>Error summary report generated<br/>Invoice cannot proceed until fixed]
+    RESOLVE --> AUTOCHECK
+
+    BLOCK -->|All passed| LOCK
+
+    subgraph LOCK["Step 5 — System Locks Data During Run (PD-270)"]
+        LOCKBILL[Billing address locked<br/>Billing groups locked<br/>Invoice content cannot change]
+        NOTIFY[Other users notified:<br/>'Billing run in progress'<br/>Non-financial data still editable]
+    end
+
+    LOCKBILL --> SEND
+    NOTIFY --> SEND
+
+    subgraph SEND["Step 6 — Send or Cancel (PD-273)"]
+        REVIEW[User reviews consolidated invoice view<br/>Status: DRAFT → READY]
+        SCHEDULE[Optional: Schedule sending time<br/>PJH: send manually — not automatic]
+        CANCEL[Cancel option available:<br/>Invoice numbers released for reuse<br/>Status reverts to previous state]
+    end
+
+    REVIEW --> SCHEDULE
+    SCHEDULE --> TRANSMIT[Transmit FINVOICE to<br/>External Invoicing System]
+    REVIEW --> CANCEL
+
+    TRANSMIT --> RESULT{Transfer<br/>Result}
+    RESULT -->|Success| DONE[Status: SENT / COMPLETED<br/>Invoicing run finished]
+    RESULT -->|Error| ERRHANDLE[Status: ERROR<br/>Correct and re-send<br/>PD-297: Sent status means<br/>content is now locked]
+
+    style SIMRUN fill:#e0e7ff,stroke:#6366f1
+    style SIMREP fill:#e0e7ff,stroke:#6366f1
+    style LOCKBILL fill:#fef3c7,stroke:#f59e0b
+    style DONE fill:#dcfce7,stroke:#059669,stroke-width:3px
+    style ERRHANDLE fill:#fee2e2,stroke:#ef4444
+    style RESOLVE fill:#fee2e2,stroke:#ef4444
+    style CANCEL fill:#f3f4f6,stroke:#9ca3af
+    </div>
+</div>
+<script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { useMaxWidth: true, htmlLabels: true } });
+</script>
+</body>
+</html>
