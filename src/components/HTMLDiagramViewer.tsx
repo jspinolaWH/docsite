@@ -140,7 +140,7 @@ export function HTMLDiagramViewer({ src, title }: HTMLDiagramViewerProps) {
         />
       </div>
       <div style={styles.hint}>
-        💡 Ctrl + Scroll to zoom • Drag to pan • Use controls above or fullscreen{isFullscreen && ' • Scroll to zoom • Press ESC to exit'}
+        💡 Drag to pan • Ctrl + Scroll to zoom • Use controls above or fullscreen{isFullscreen && ' • Scroll to zoom • Press ESC to exit'}
       </div>
     </div>
   );
