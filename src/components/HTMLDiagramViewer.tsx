@@ -184,14 +184,14 @@ const styles: Record<string, React.CSSProperties> = {
   viewer: {
     position: 'relative',
     width: '100%',
-    height: '600px',
+    height: '800px',
     overflow: 'hidden',
     backgroundColor: 'var(--color-bg-tertiary)',
     userSelect: 'none',
   },
   iframe: {
     width: '100%',
-    height: '100%',
+    height: '2000px',
     border: 'none',
     display: 'block',
   },
@@ -214,6 +214,6 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: 0,
   },
   fullscreenViewer: {
-    height: 'calc(100vh - 120px)',
+    height: 'calc(100vh - 100px)',
   },
 };
