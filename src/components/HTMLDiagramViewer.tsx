@@ -52,12 +52,13 @@ export function HTMLDiagramViewer({ src, title }: HTMLDiagramViewerProps) {
     }
   };
 
-  // Non-passive wheel listener so we can preventDefault and zoom without page scrolling
+  // Wheel zoom: only active in fullscreen or when Ctrl is held — otherwise let the page scroll
   useEffect(() => {
     const viewer = viewerRef.current;
     if (!viewer) return;
 
     const handleWheel = (e: WheelEvent) => {
+      if (!e.ctrlKey && !document.fullscreenElement) return;
       e.preventDefault();
       e.stopPropagation();
       const delta = e.deltaY * -0.002;
@@ -139,7 +140,7 @@ export function HTMLDiagramViewer({ src, title }: HTMLDiagramViewerProps) {
         />
       </div>
       <div style={styles.hint}>
-        💡 Scroll to zoom • Drag to pan • Use controls above or fullscreen{isFullscreen && ' • Press ESC to exit'}
+        💡 Ctrl + Scroll to zoom • Drag to pan • Use controls above or fullscreen{isFullscreen && ' • Scroll to zoom • Press ESC to exit'}
       </div>
     </div>
   );
