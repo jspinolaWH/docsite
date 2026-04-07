@@ -7,12 +7,38 @@ interface HTMLDiagramViewerProps {
 }
 
 export function HTMLDiagramViewer({ src, title }: HTMLDiagramViewerProps) {
+  const [zoom, setZoom] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const viewerRef = useRef<HTMLDivElement>(null);
+
+  const zoomIn = () => setZoom((prev) => Math.min(prev + 0.25, 4));
+  const zoomOut = () => setZoom((prev) => Math.max(prev - 0.25, 0.5));
+  const resetZoom = () => {
+    setZoom(1);
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    setPosition({
+      x: e.clientX - dragStart.x,
+      y: e.clientY - dragStart.y,
+    });
+  };
+
+  const handleMouseUp = () => setIsDragging(false);
 
   const toggleFullscreen = async () => {
     if (!containerRef.current) return;
-
     try {
       if (!document.fullscreenElement) {
         await containerRef.current.requestFullscreen();
@@ -26,11 +52,32 @@ export function HTMLDiagramViewer({ src, title }: HTMLDiagramViewerProps) {
     }
   };
 
+  // Non-passive wheel listener so we can preventDefault and zoom without page scrolling
+  useEffect(() => {
+    const viewer = viewerRef.current;
+    if (!viewer) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const delta = e.deltaY * -0.002;
+      setZoom((prev) => Math.min(Math.max(0.5, prev + delta), 4));
+    };
+
+    viewer.addEventListener('wheel', handleWheel, { passive: false });
+    return () => viewer.removeEventListener('wheel', handleWheel);
+  }, []);
+
+  useEffect(() => {
+    const handleGlobalMouseUp = () => setIsDragging(false);
+    window.addEventListener('mouseup', handleGlobalMouseUp);
+    return () => window.removeEventListener('mouseup', handleGlobalMouseUp);
+  }, []);
+
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
     };
-
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
@@ -40,7 +87,17 @@ export function HTMLDiagramViewer({ src, title }: HTMLDiagramViewerProps) {
       <div style={styles.header}>
         <h3 style={styles.title}>{title}</h3>
         <div style={styles.controls}>
-          <button onClick={toggleFullscreen} className="diagram-button" title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}>
+          <button onClick={zoomOut} className="diagram-button" title="Zoom Out">
+            −
+          </button>
+          <span style={styles.zoomLevel}>{Math.round(zoom * 100)}%</span>
+          <button onClick={zoomIn} className="diagram-button" title="Zoom In">
+            +
+          </button>
+          <button onClick={resetZoom} className="diagram-reset-button" title="Reset View">
+            Reset
+          </button>
+          <button onClick={toggleFullscreen} className="diagram-button" title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}>
             {isFullscreen ? (
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M1 6h4V2M15 10h-4v4M11 2v4h4M5 14v-4H1" />
@@ -53,16 +110,36 @@ export function HTMLDiagramViewer({ src, title }: HTMLDiagramViewerProps) {
           </button>
         </div>
       </div>
-      <div style={{ ...styles.viewer, ...(isFullscreen ? styles.fullscreenViewer : {}) }}>
+      <div
+        ref={viewerRef}
+        style={{ ...styles.viewer, ...(isFullscreen ? styles.fullscreenViewer : {}) }}
+      >
         <iframe
           src={src}
-          style={styles.iframe}
+          style={{
+            ...styles.iframe,
+            transform: `translate(${position.x}px, ${position.y}px) scale(${zoom})`,
+            transformOrigin: 'top left',
+          }}
           title={title}
           sandbox="allow-scripts allow-same-origin"
         />
+        {/* Transparent overlay captures mouse/wheel events — iframes swallow them otherwise */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 1,
+            cursor: isDragging ? 'grabbing' : 'grab',
+          }}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        />
       </div>
       <div style={styles.hint}>
-        💡 Scroll within the diagram to navigate{isFullscreen && ' • Press ESC to exit fullscreen'}
+        💡 Scroll to zoom • Drag to pan • Use controls above or fullscreen{isFullscreen && ' • Press ESC to exit'}
       </div>
     </div>
   );
@@ -97,12 +174,19 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     gap: '0.5rem',
   },
+  zoomLevel: {
+    fontSize: '0.875rem',
+    color: 'var(--color-text-muted)',
+    minWidth: '50px',
+    textAlign: 'center',
+  },
   viewer: {
     position: 'relative',
     width: '100%',
     height: '600px',
     overflow: 'hidden',
     backgroundColor: 'var(--color-bg-tertiary)',
+    userSelect: 'none',
   },
   iframe: {
     width: '100%',
