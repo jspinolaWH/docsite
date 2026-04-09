@@ -169,6 +169,16 @@ export const INVOICING_CATEGORIES: Record<string, CategoryConfig> = {
     darkBgColor: '#4a0520',
     darkBorderColor: '#9d174d',
   },
+  'inv-mvp-mapping': {
+    id: 'inv-mvp-mapping',
+    label: 'MVP Mapping',
+    color: '#16a34a',
+    bgColor: '#f0fdf4',
+    borderColor: '#bbf7d0',
+    darkColor: '#86efac',
+    darkBgColor: '#052e16',
+    darkBorderColor: '#15803d',
+  },
 };
 
 // Subcategories for sprint-planning
