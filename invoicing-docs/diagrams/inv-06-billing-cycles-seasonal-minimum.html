@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Billing Cycles, Seasonal Fees & Minimum Fee</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 20px; background: #f9fafb; }
+        .container { max-width: 1600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h1 { margin-top: 0; color: #111827; }
+        .subtitle { color: #6b7280; margin-bottom: 30px; }
+        .mermaid { background: white; }
+        .example-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+            margin-top: 24px;
+        }
+        .ex-box { border-radius: 10px; padding: 14px; border: 1px solid; }
+        .ex-box h4 { margin: 0 0 8px; font-size: 13px; }
+        .ex-box p { font-size: 12px; line-height: 1.7; margin: 0; }
+        .ex-box.blue { background: #eff6ff; border-color: #3b82f6; }
+        .ex-box.blue h4 { color: #1e40af; }
+        .ex-box.blue p { color: #1e40af; }
+        .ex-box.green { background: #f0fdf4; border-color: #059669; }
+        .ex-box.green h4 { color: #065f46; }
+        .ex-box.green p { color: #065f46; }
+        .ex-box.amber { background: #fffbeb; border-color: #f59e0b; }
+        .ex-box.amber h4 { color: #92400e; }
+        .ex-box.amber p { color: #92400e; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Scenario 6: Billing Cycles, Seasonal Fees & Minimum Fee</h1>
+    <p class="subtitle">One customer, two properties — different billing frequencies, time-based fees without events, and minimum charge enforcement. (PD-291, PD-292, PD-288, PD-286)</p>
+
+    <div class="mermaid">
+graph TD
+    START([Customer: Owns Residential Property<br/>AND Summer Cottage]) --> SETUP
+
+    subgraph SETUP["Configure per-property billing settings (PD-291)"]
+        PROP1[Residential property:<br/>Mixed waste collection<br/>Billing cycle: Quarterly]
+        PROP2[Summer cottage:<br/>Waste management services<br/>Billing cycle: Annual]
+        SEP[PD-292: Septic tank emptying<br/>Billing rule: IMMEDIATE<br/>Invoiced right after service<br/>Not bundled with quarterly cycle]
+    end
+
+    PROP1 --> SEASONAL1
+    PROP2 --> SEASONAL2
+
+    subgraph SEASONAL1["Residential — Time-based fees (PD-288)"]
+        SF1[Annual base fee: €150<br/>PD-288: Not triggered by an event<br/>System auto-recognises as billable<br/>Invoiced in January]
+    end
+
+    subgraph SEASONAL2["Summer Cottage — Time-based fees (PD-288)"]
+        SF2[Annual base fee: €75<br/>Invoiced in April]
+        SF3[No event needed —<br/>fee is time-bound product]
+    end
+
+    SF1 --> Q1[Q1 Invoice — Residential<br/>Mixed waste events Jan–Mar<br/>+ Annual base fee €150<br/>PD-290: Bundled per rules]
+
+    SEP --> IMMED[Immediate Invoice<br/>Septic tank emptied Sep 3<br/>Invoice generated Sep 3<br/>Not delayed until December]
+
+    SF2 & SF3 --> ANN[Annual Invoice — Summer Cottage<br/>All cottage events Jan–Dec<br/>+ Annual base fee €75]
+
+    Q1 --> MINCHECK1{Residential Q1:<br/>Events total ≥ min fee?}
+    ANN --> MINCHECK2{Cottage annual total:<br/>≥ minimum fee €30?}
+
+    MINCHECK1 -->|Yes — e.g. €210 total| INV1[Invoice: €210<br/>No adjustment needed]
+    MINCHECK1 -->|No — e.g. only €18 total| MINADD1[PD-286: Add minimum fee adjustment<br/>Difference added as surcharge line<br/>Final invoice: €30<br/>PJH: comparison on VAT 0% amount]
+
+    MINCHECK2 -->|Property sold in November| MIDSALE[PD-286: Contract ended mid-year<br/>Minimum fee NOT applied to new owner<br/>Final invoice adjusted for previous owner<br/>only through November]
+    MINCHECK2 -->|Customer has €45 in events| INV2[Invoice: €45<br/>Minimum fee already met]
+
+    INV1 & MINADD1 & IMMED & MIDSALE & INV2 --> DONE([All invoices generated<br/>Each service on correct cycle<br/>Seasonal fees auto-processed<br/>Minimum fees enforced correctly])
+
+    style SETUP fill:#eff6ff,stroke:#3b82f6
+    style SEASONAL1 fill:#f0fdf4,stroke:#059669
+    style SEASONAL2 fill:#f0fdf4,stroke:#059669
+    style MINADD1 fill:#fef3c7,stroke:#f59e0b
+    style MIDSALE fill:#fef3c7,stroke:#f59e0b
+    style IMMED fill:#e0e7ff,stroke:#6366f1
+    style DONE fill:#dcfce7,stroke:#059669,stroke-width:3px
+    style SEP fill:#fce7f3,stroke:#ec4899
+    </div>
+
+    <div class="example-row">
+        <div class="ex-box blue">
+            <h4>PD-291 — Billing cycles</h4>
+            <p>Each service or event type is linked to a predefined billing cycle (monthly, quarterly, annual). The system groups events automatically by their assigned schedule. Different services on the same customer account follow independent schedules.</p>
+        </div>
+        <div class="ex-box green">
+            <h4>PD-288 — Seasonal / time-based fees</h4>
+            <p>Fees that exist independently of any operational event (base fees, monthly service fees, annual property charges, block collection fees, rents). The system auto-generates these as billable events on a configured schedule. No manual data entry required each period.</p>
+        </div>
+        <div class="ex-box amber">
+            <h4>PD-286 — Minimum fee logic</h4>
+            <p>PJH note: "If the previous owner has not met the minimum charge by November, the system adjusts the final invoice accordingly. If ownership changes during the year, the minimum charge adjustment must not apply to the new owner." Comparison uses VAT 0% (net) amount.</p>
+        </div>
+    </div>
+</div>
+<script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { useMaxWidth: true, htmlLabels: true } });
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Billing Event Lifecycle</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 20px; background: #f9fafb; }
+        .container { max-width: 1600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h1 { margin-top: 0; color: #111827; }
+        .subtitle { color: #6b7280; margin-bottom: 30px; }
+        .mermaid { background: white; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Scenario 1: Complete Billing Event Lifecycle</h1>
+    <p class="subtitle">From service execution to confirmed invoice delivery — the full status journey of a billing event (PD-299, PD-297, PD-298, PD-310)</p>
+
+    <div class="mermaid">
+graph TD
+    START([Service Executed<br/>e.g. Container Emptied]) --> CREATE
+
+    subgraph ORIGIN["Event Origin"]
+        CREATE[Event Created in System<br/>PD-299: Records date, product, quantity,<br/>weight, VAT, cost centre, service<br/>responsibility, municipality, eco-fee]
+        DRIVER[Driver/Vehicle<br/>Registered on Event<br/>PD-228]
+        MANUAL[Manual Event Creation<br/>PD-283: Land rent,<br/>expert work, etc.]
+    end
+
+    CREATE --> STATUS1[Status: IN PROGRESS<br/>Event recorded — no invoice yet]
+    DRIVER --> CREATE
+    MANUAL --> CREATE
+
+    STATUS1 --> VALIDATE
+
+    subgraph VALIDATE["Pre-Invoice Validation"]
+        CHECK1[PD-278: Mandatory fields check<br/>Accounts, cost centres, VAT rate,<br/>customer number, billing address]
+        CHECK2[PD-271: Configurable auto-checks<br/>Price vs price list, quantity thresholds,<br/>legal classification completeness]
+    end
+
+    CHECK1 --> ERR{Errors<br/>Found?}
+    CHECK2 --> ERR
+
+    ERR -->|Yes| ERRLIST[Error List Generated<br/>PD-278: Event blocked from invoicing<br/>until all mandatory fields resolved]
+    ERRLIST --> FIX[Office Corrects Data<br/>PD-277: Manual event editing<br/>with full audit trail]
+    FIX --> CHECK1
+
+    ERR -->|No| READY[Event Ready for Invoicing<br/>All validation passed]
+
+    READY --> FINVOICE
+
+    subgraph FINVOICE["FINVOICE Data Generation — PD-310"]
+        GEN[Generate FINVOICE 3 Data<br/>Mandatory fields + accounting info]
+        SPLIT[Single invoice line may split<br/>across multiple ledger accounts<br/>Transport / Treatment / VAT]
+        LANG[Language applied from<br/>customer profile — PD-308<br/>FI / SV / EN]
+        TEMPL[Invoice template code<br/>sent to external system — PD-307]
+    end
+
+    GEN --> SPLIT --> LANG --> TEMPL
+
+    TEMPL --> STATUS2[Status: SENT<br/>FINVOICE generated<br/>PD-297: Content locked after sending]
+
+    STATUS2 --> TRANSFER{Transfer to<br/>External Invoicing<br/>System}
+
+    TRANSFER -->|Success| STATUS3[Status: COMPLETED<br/>Confirmed by invoicing system<br/>Invoice number assigned — PD-309]
+    TRANSFER -->|Failure| STATUS4[Status: ERROR<br/>PD-297: Incorrect data or<br/>transfer failure]
+
+    STATUS4 --> CORRECT[Correct Invoice Data<br/>Re-send FINVOICE material]
+    CORRECT --> TRANSFER
+
+    STATUS3 --> DONE([Invoice Delivered<br/>to Customer])
+
+    style STATUS1 fill:#dbeafe,stroke:#3b82f6
+    style STATUS2 fill:#fef3c7,stroke:#f59e0b
+    style STATUS3 fill:#dcfce7,stroke:#059669,stroke-width:3px
+    style STATUS4 fill:#fee2e2,stroke:#ef4444
+    style ERRLIST fill:#fee2e2,stroke:#ef4444
+    style READY fill:#d1fae5,stroke:#059669
+    style DONE fill:#dcfce7,stroke:#059669,stroke-width:2px
+    </div>
+</div>
+<script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { useMaxWidth: true, htmlLabels: true } });
+</script>
+</body>
+</html>

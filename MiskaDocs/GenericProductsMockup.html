@@ -1,0 +1,3208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WasteHero 2.0 - Generic Products Model</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, system-ui, sans-serif; background: #fafafa; }
+.main-header { background: white; border-bottom: 1px solid #e5e7eb; padding: 16px 32px; }
+.header-title { font-size: 20px; font-weight: 600; color: #111827; }
+.tab-nav { background: white; border-bottom: 1px solid #e5e7eb; padding: 0 32px; display: flex; gap: 32px; overflow-x: auto; }
+.tab-item { padding: 16px 0; color: #6b7280; font-size: 14px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; }
+.tab-item:hover { color: #374151; }
+.tab-item.active { color: #2563eb; border-bottom-color: #2563eb; }
+.content-wrapper { display: flex; }
+.left-sidebar { width: 200px; background: white; border-right: 1px solid #e5e7eb; min-height: calc(100vh - 120px); padding: 20px 0; }
+.main-area { flex: 1; padding: 24px 32px; }
+.category-title { font-size: 11px; color: #9ca3af; text-transform: uppercase; padding: 0 16px; margin-bottom: 8px; font-weight: 600; }
+.category-item { padding: 10px 16px; font-size: 13px; color: #6b7280; cursor: pointer; display: flex; justify-content: space-between; }
+.category-item:hover { background: #f9fafb; }
+.category-item.active { background: #eff6ff; color: #2563eb; font-weight: 500; }
+.category-count { font-size: 11px; color: #9ca3af; }
+.toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 12px; }
+.search-box { flex: 1; max-width: 400px; padding: 10px 16px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; }
+.btn { padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
+.btn-primary { background: #2563eb; color: white; }
+.btn-secondary { background: white; border: 1px solid #d1d5db; color: #374151; }
+.btn-danger { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+.btn-danger:hover { background: #fecaca; }
+.btn:hover { opacity: 0.9; }
+.table-container { background: white; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: #f9fafb; }
+th { padding: 12px 16px; text-align: left; font-size: 11px; color: #6b7280; text-transform: uppercase; font-weight: 600; }
+td { padding: 16px; border-top: 1px solid #f3f4f6; font-size: 14px; }
+tr:hover { background: #f9fafb; }
+.product-name { color: #111827; font-weight: 500; cursor: pointer; }
+.product-name:hover { color: #2563eb; }
+.product-code { color: #9ca3af; font-size: 12px; display: block; margin-top: 2px; }
+.badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; }
+.badge-service { background: #cffafe; color: #0891b2; }
+.badge-material { background: #ede9fe; color: #7c3aed; }
+.badge-one-off { background: #fef3c7; color: #d97706; }
+.badge-additional { background: #fce7f3; color: #db2777; }
+.main-tab-content { display: none; }
+.main-tab-content.active { display: block; }
+.product-tab, .price-tab { padding: 14px 0; color: #6b7280; font-size: 13px; cursor: pointer; border-bottom: 2px solid transparent; display: inline-block; }
+.product-tab:hover, .price-tab:hover { color: #374151; }
+.product-tab.active, .price-tab.active { color: #2563eb; border-bottom-color: #2563eb; }
+.product-tab-content { display: none; }
+.product-tab-content.active { display: block; }
+
+/* Selector pills */
+.pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; margin: 2px; }
+.pill-fraction { background: #dbeafe; color: #1d4ed8; }
+.pill-container { background: #f3e8ff; color: #7c3aed; }
+.pill-resp { background: #fef3c7; color: #92400e; }
+.pill-speed { background: #dcfce7; color: #166534; }
+
+/* Comparison banner */
+.comparison-banner { background: #eff6ff; border: 1px solid #bfdbfe; padding: 16px 32px; font-size: 13px; color: #1e40af; display: flex; align-items: center; gap: 12px; }
+.comparison-banner strong { font-size: 15px; }
+
+/* Cards grid */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.15s; }
+.card:hover { box-shadow: 0 4px 6px rgba(0,0,0,0.1); transform: translateY(-2px); }
+
+/* BOM accordion */
+.bom-fraction-header { padding: 12px 16px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-weight: 500; font-size: 14px; }
+.bom-fraction-header:hover { background: #f3f4f6; }
+.bom-fraction-body { display: none; padding: 0 16px 16px 16px; }
+.bom-fraction-body.open { display: block; }
+
+/* Filter bar */
+.filter-bar { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+.filter-bar select { padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px; background: white; }
+.filter-bar label { font-size: 12px; color: #6b7280; font-weight: 500; }
+
+/* Stats row */
+.stats-row { display: flex; gap: 16px; margin-bottom: 24px; }
+.stat-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; flex: 1; }
+.stat-card .stat-value { font-size: 28px; font-weight: 700; color: #111827; }
+.stat-card .stat-label { font-size: 13px; color: #6b7280; margin-top: 4px; }
+.stat-card .stat-change { font-size: 12px; color: #10b981; margin-top: 8px; }
+
+/* Form modals */
+.form-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 400; align-items: center; justify-content: center; }
+.form-modal.active { display: flex; }
+.form-content { background: white; width: 90%; max-width: 700px; max-height: 90vh; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+.form-header { padding: 20px 24px; border-bottom: 1px solid #e5e7eb; }
+.form-header h3 { font-size: 18px; font-weight: 600; }
+.form-body { padding: 24px; overflow-y: auto; }
+.form-footer { padding: 20px 24px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 12px; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #374151; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; font-family: inherit; }
+.form-group textarea { resize: vertical; min-height: 80px; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-section { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #f3f4f6; }
+.form-section-title { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: #111827; }
+
+/* Checkbox grid for selectors */
+.checkbox-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.checkbox-card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.15s; }
+.checkbox-card:hover { border-color: #93c5fd; }
+.checkbox-card input:checked ~ span { font-weight: 600; }
+.checkbox-card:has(input:checked) { border-color: #2563eb; background: #eff6ff; }
+
+/* Info callout */
+.info-callout { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 14px 16px; font-size: 13px; color: #1e40af; display: flex; align-items: center; gap: 10px; }
+
+/* Recycling bar */
+.recycling-bar { display: inline-block; width: 60px; height: 6px; background: #e5e7eb; border-radius: 3px; vertical-align: middle; margin-left: 8px; }
+.recycling-bar-fill { height: 100%; border-radius: 3px; }
+
+/* Property pills for fraction table */
+.pill-hazardous { background: #fee2e2; color: #dc2626; }
+.pill-recyclable { background: #dcfce7; color: #166534; }
+.pill-status-active { background: #dcfce7; color: #166534; }
+.pill-status-inactive { background: #f3f4f6; color: #6b7280; }
+
+/* BOM accordion in form */
+.bom-form-header { padding: 12px 16px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: 14px; }
+.bom-form-header:hover { background: #f3f4f6; }
+.bom-form-body { display: none; padding: 12px 16px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; margin-top: -5px; margin-bottom: 8px; }
+.bom-form-body.open { display: block; }
+
+/* Component pricing */
+.pr-components-container { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-top: 12px; }
+.pr-components-container .comp-input-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.pr-components-container .comp-input-row label { flex: 1; font-size: 13px; color: #374151; }
+.pr-components-container .comp-input-row .comp-account { font-size: 11px; color: #9ca3af; }
+.pr-components-container .comp-input-row input { width: 130px; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; text-align: right; }
+.pr-components-total { font-size: 15px; font-weight: 700; color: #111827; padding-top: 10px; border-top: 1px solid #e5e7eb; margin-top: 4px; text-align: right; }
+.component-breakdown-row td { background: #f9fafb !important; padding: 6px 16px !important; font-size: 12px; color: #6b7280; border-top: none !important; }
+.expand-components { background: none; border: none; cursor: pointer; color: #2563eb; font-size: 11px; padding: 0; margin-left: 4px; }
+.expand-components:hover { text-decoration: underline; }
+
+/* Additional services */
+.trigger-badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+.trigger-automatic { background: #fef3c7; color: #92400e; }
+.trigger-manual { background: #dbeafe; color: #1e40af; }
+.trigger-driver { background: #dcfce7; color: #166534; }
+.service-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; }
+.service-card-Automatic { border-left: 4px solid #f59e0b; }
+.service-card-Manual { border-left: 4px solid #3b82f6; }
+.service-card-Driver-Initiated { border-left: 4px solid #10b981; }
+.service-group-title { font-size: 13px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin: 20px 0 8px 0; }
+.service-group-title:first-child { margin-top: 0; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="main-header">
+    <div class="header-title">WasteHero 2.0 — Product & Pricing Management</div>
+</div>
+
+<!-- Comparison Banner -->
+<div class="comparison-banner">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    <div>
+        <strong>Generic Products Model</strong> — PJH representative product catalog.
+        Waste fraction and container size are selectors on the product, not baked into the product name.
+        Service speed is a selector for sludge products.
+    </div>
+</div>
+
+<!-- Tabs -->
+<div class="tab-nav">
+    <div class="tab-item active" onclick="showMainTab('products')">Products</div>
+    <div class="tab-item" onclick="showMainTab('price-lists')">Price Lists</div>
+    <div class="tab-item" onclick="showMainTab('categories')">Categories</div>
+    <div class="tab-item" onclick="showMainTab('fractions')">Waste Fractions</div>
+    <div class="tab-item" onclick="showMainTab('container-types')">Container Types</div>
+    <div class="tab-item" onclick="showMainTab('pricing-units')">Pricing Units</div>
+    <div class="tab-item" onclick="showMainTab('municipalities')">Municipalities</div>
+    <div class="tab-item" onclick="showMainTab('zones')">Zones</div>
+</div>
+
+<!-- Products Tab -->
+<div id="products-main-tab" class="main-tab-content active">
+    <div class="content-wrapper">
+        <!-- Left Sidebar: Categories -->
+        <div class="left-sidebar">
+            <div class="category-title">Categories</div>
+            <div class="category-item active" onclick="filterCategory('all', this)">
+                All Products <span class="category-count" id="count-all">17</span>
+            </div>
+            <div id="category-sidebar"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-area">
+            <!-- Stats -->
+            <div class="stats-row" id="stats-row"></div>
+
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <input type="text" class="search-box" placeholder="Search products..." id="product-search" oninput="filterProducts()">
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-secondary" onclick="alert('Import/Export would be implemented in the production application.')">Import CSV</button>
+                    <button class="btn btn-secondary" onclick="alert('Import/Export would be implemented in the production application.')">Export CSV</button>
+                    <button class="btn btn-secondary" id="toggle-components-btn" onclick="toggleComponents()">Show Components</button>
+                    <button class="btn btn-primary" onclick="showNewProduct()">+ New Product</button>
+                </div>
+            </div>
+
+            <!-- Product Table -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Category</th>
+                            <th>Selectors</th>
+                            <th>BOM</th>
+                            <th>Add. Services</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Price Lists Tab -->
+<div id="price-lists-main-tab" class="main-tab-content">
+    <div style="padding: 24px 32px;">
+        <div class="toolbar">
+            <h2 style="font-size: 20px; font-weight: 600;">Price Lists</h2>
+            <button class="btn btn-primary" onclick="showNewPriceList()">+ New Price List</button>
+        </div>
+
+        <!-- Price List Cards -->
+        <div class="cards-grid" id="price-list-cards"></div>
+
+        <!-- Price List Detail (shown when a card is clicked) -->
+        <div id="price-list-detail" style="display: none; margin-top: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <h3 id="pl-detail-name" style="font-size: 20px; font-weight: 600;"></h3>
+                    <p id="pl-detail-meta" style="font-size: 13px; color: #6b7280; margin-top: 4px;"></p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-secondary" onclick="showEditPriceListMeta()">Edit Details</button>
+                    <button class="btn btn-secondary" onclick="duplicatePriceList()">Duplicate</button>
+                    <button class="btn btn-primary" onclick="showPriceRowForm()">+ Add Price Row</button>
+                    <button class="btn btn-secondary" id="pl-vat-toggle" onclick="toggleVatDisplay()" style="border: 2px solid #2563eb; color: #2563eb; font-weight: 600; background: #eff6ff;">VAT &nbsp; Show Gross (incl. VAT)</button>
+                    <button class="btn btn-secondary" onclick="alert('Import/Export would be implemented in the production application.')">Export CSV</button>
+                    <button class="btn btn-danger" onclick="deletePriceList()">Delete</button>
+                    <button class="btn btn-secondary" onclick="closePriceListDetail()">Close</button>
+                </div>
+            </div>
+
+            <!-- Filter bar -->
+            <div class="filter-bar">
+                <div>
+                    <label>Product</label><br>
+                    <select id="pl-filter-product" onchange="filterPriceListItems()">
+                        <option value="">All Products</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Waste Fraction</label><br>
+                    <select id="pl-filter-fraction" onchange="filterPriceListItems()">
+                        <option value="">All Fractions</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Container Type</label><br>
+                    <select id="pl-filter-container" onchange="filterPriceListItems()">
+                        <option value="">All Containers</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Service Speed</label><br>
+                    <select id="pl-filter-speed" onchange="filterPriceListItems()">
+                        <option value="">All Speeds</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Service Resp.</label><br>
+                    <select id="pl-filter-resp" onchange="filterPriceListItems()">
+                        <option value="">All</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Price List Items Table -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Waste Fraction</th>
+                            <th>Container</th>
+                            <th>Service Speed</th>
+                            <th>Service Resp.</th>
+                            <th>Zone</th>
+                            <th>Unit</th>
+                            <th id="pl-price-header" style="text-align: right;">Price (EUR)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pl-items-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Categories Tab -->
+<div id="categories-main-tab" class="main-tab-content">
+    <div style="padding: 24px 32px;">
+        <div class="toolbar">
+            <h2 style="font-size: 20px; font-weight: 600;">Product Categories</h2>
+            <button class="btn btn-primary" onclick="showNewCategory()">+ New Category</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category Name</th>
+                        <th>Type</th>
+                        <th>Products</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="category-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Waste Fractions Tab -->
+<div id="fractions-main-tab" class="main-tab-content">
+    <div style="padding: 24px 32px;">
+        <div class="toolbar">
+            <h2 style="font-size: 20px; font-weight: 600;">Waste Fractions <span style="font-size: 14px; font-weight: 400; color: #6b7280;">(Reference Data)</span></h2>
+            <button class="btn btn-primary" onclick="showNewFraction()">+ New Fraction</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>English</th>
+                        <th>EWC Code</th>
+                        <th>Recycling %</th>
+                        <th>Weight (kg/m³)</th>
+                        <th>Properties</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="fraction-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Container Types Tab -->
+<div id="container-types-main-tab" class="main-tab-content">
+    <div style="padding: 24px 32px;">
+        <div class="toolbar">
+            <h2 style="font-size: 20px; font-weight: 600;">Container Types <span style="font-size: 14px; font-weight: 400; color: #6b7280;">(Reference Data)</span></h2>
+            <button class="btn btn-primary" onclick="showNewContainerType()">+ New Container Type</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Code</th>
+                        <th>Volume (L)</th>
+                        <th>Weight (kg)</th>
+                        <th>Emplacement</th>
+                        <th>Material</th>
+                        <th>Features</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="container-types-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Pricing Units Tab -->
+<div id="pricing-units-main-tab" class="main-tab-content">
+    <div style="padding: 24px 32px;">
+        <div class="toolbar">
+            <h2 style="font-size: 20px; font-weight: 600;">Pricing Units</h2>
+            <button class="btn btn-primary" onclick="showNewPricingUnit()">+ New Unit</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name (FI)</th>
+                        <th>Name (EN)</th>
+                        <th>Code</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="pricing-units-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Municipalities Tab -->
+<div id="municipalities-main-tab" class="main-tab-content">
+    <div style="padding: 24px 32px;">
+        <div class="toolbar">
+            <h2 style="font-size: 20px; font-weight: 600;">Municipalities <span style="font-size: 14px; font-weight: 400; color: #6b7280;">(Reference Data)</span></h2>
+        </div>
+        <div class="info-callout" style="margin-bottom: 16px;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <span>Municipalities are seeded per client configuration. Contact admin to modify.</span>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Municipal Code</th>
+                        <th>PJH Code</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="municipalities-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Zones Tab -->
+<div id="zones-main-tab" class="main-tab-content">
+    <div style="padding: 24px 32px;">
+        <div class="toolbar">
+            <h2 style="font-size: 20px; font-weight: 600;">Zones</h2>
+            <button class="btn btn-primary" onclick="showNewZone()">+ New Zone</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="zones-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Zone Form Modal -->
+<div id="zone-form-modal" class="form-modal" onclick="if(event.target===this)closeZoneForm()">
+    <div class="form-content" style="max-width: 500px;">
+        <div class="form-header">
+            <h3 id="zone-form-title">New Zone</h3>
+        </div>
+        <div class="form-body">
+            <div class="form-group">
+                <label>Name *</label>
+                <input type="text" id="zone-name" placeholder="e.g., Tampere">
+            </div>
+            <div class="form-group">
+                <label>Type</label>
+                <select id="zone-type">
+                    <option value="Zone">Zone</option>
+                    <option value="Area">Area</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <input type="text" id="zone-description" placeholder="e.g., Tampereen kaupunki">
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="zone-status">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-footer">
+            <button class="btn btn-secondary" onclick="closeZoneForm()">Cancel</button>
+            <button class="btn btn-primary" id="zone-form-submit" onclick="submitZoneForm()">Create Zone</button>
+        </div>
+    </div>
+</div>
+
+<!-- Pricing Unit Form Modal -->
+<div id="pricing-unit-form-modal" class="form-modal" onclick="if(event.target===this)closePricingUnitForm()">
+    <div class="form-content" style="max-width: 500px;">
+        <div class="form-header">
+            <h3 id="pricing-unit-form-title">New Pricing Unit</h3>
+        </div>
+        <div class="form-body">
+            <div class="form-group">
+                <label>Name (FI) *</label>
+                <input type="text" id="pu-name" placeholder="e.g., Per tyhjennys">
+            </div>
+            <div class="form-group">
+                <label>Name (EN)</label>
+                <input type="text" id="pu-name-en" placeholder="e.g., Per emptying">
+            </div>
+            <div class="form-group">
+                <label>Code *</label>
+                <input type="text" id="pu-code" placeholder="e.g., EMPTY">
+            </div>
+        </div>
+        <div class="form-footer">
+            <button class="btn btn-secondary" onclick="closePricingUnitForm()">Cancel</button>
+            <button class="btn btn-primary" id="pricing-unit-form-submit" onclick="submitPricingUnitForm()">Create Unit</button>
+        </div>
+    </div>
+</div>
+
+<!-- Container Type Form Modal -->
+<div id="container-type-form-modal" class="form-modal" onclick="if(event.target===this)closeContainerTypeForm()">
+    <div class="form-content" style="max-width: 600px;">
+        <div class="form-header">
+            <h3 id="container-type-form-title">New Container Type</h3>
+        </div>
+        <div class="form-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input type="text" id="ct-name" placeholder="e.g., 240L">
+                </div>
+                <div class="form-group">
+                    <label>Code *</label>
+                    <input type="text" id="ct-code" placeholder="e.g., BIN-240">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Volume (liters)</label>
+                    <input type="number" id="ct-volume" min="0" placeholder="e.g., 240">
+                </div>
+                <div class="form-group">
+                    <label>Weight (kg)</label>
+                    <input type="number" id="ct-weight" min="0" placeholder="e.g., 14">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Emplacement</label>
+                    <select id="ct-emplacement">
+                        <option value="Surface">Surface</option>
+                        <option value="Semi-underground">Semi-underground</option>
+                        <option value="Underground">Underground</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Material</label>
+                    <select id="ct-material">
+                        <option value="Plastic">Plastic</option>
+                        <option value="Metal">Metal</option>
+                        <option value="Composite">Composite</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Features</label>
+                <div style="display: flex; gap: 24px; margin-top: 6px;">
+                    <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer;">
+                        <input type="checkbox" id="ct-has-wheels"> Has Wheels
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer;">
+                        <input type="checkbox" id="ct-has-lid"> Has Lid
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer;">
+                        <input type="checkbox" id="ct-is-cylindrical"> Is Cylindrical
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="ct-status">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-footer">
+            <button class="btn btn-secondary" onclick="closeContainerTypeForm()">Cancel</button>
+            <button class="btn btn-primary" id="container-type-form-submit" onclick="submitContainerTypeForm()">Create Container Type</button>
+        </div>
+    </div>
+</div>
+
+<!-- Waste Fraction Form Modal -->
+<div id="fraction-form-modal" class="form-modal" onclick="if(event.target===this)closeFractionForm()">
+    <div class="form-content" style="max-width: 600px;">
+        <div class="form-header">
+            <h3 id="fraction-form-title">New Waste Fraction</h3>
+        </div>
+        <div class="form-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Fraction Name (FI) *</label>
+                    <input type="text" id="frac-name" placeholder="e.g., Sekajäte">
+                </div>
+                <div class="form-group">
+                    <label>Fraction Name (EN)</label>
+                    <input type="text" id="frac-name-en" placeholder="e.g., Mixed waste">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Short Code</label>
+                    <input type="text" id="frac-code" placeholder="e.g., SEK">
+                </div>
+                <div class="form-group">
+                    <label>EWC/LoW Code</label>
+                    <input type="text" id="frac-ewc" placeholder="e.g., 20 03 01">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="frac-description" placeholder="Brief description of this waste fraction..."></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Recycling %</label>
+                    <input type="number" id="frac-recycling" min="0" max="100" placeholder="0-100">
+                </div>
+                <div class="form-group">
+                    <label>Default Weight (kg/m³)</label>
+                    <input type="number" id="frac-density" min="0" step="1" placeholder="e.g., 200">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="frac-status">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="form-group"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                    <input type="checkbox" id="frac-hazardous" style="width: auto;">
+                    <label for="frac-hazardous" style="margin-bottom: 0;">Hazardous Waste</label>
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                    <input type="checkbox" id="frac-recyclable" style="width: auto;">
+                    <label for="frac-recyclable" style="margin-bottom: 0;">Recyclable</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-footer">
+            <button class="btn btn-secondary" onclick="closeFractionForm()">Cancel</button>
+            <button class="btn btn-primary" id="fraction-form-submit" onclick="submitFractionForm()">Create Fraction</button>
+        </div>
+    </div>
+</div>
+
+<!-- New Product Form Modal -->
+<div id="product-form-modal" class="form-modal" onclick="if(event.target===this)closeProductForm()">
+    <div class="form-content" style="max-width: 900px;">
+        <div class="form-header">
+            <h3 id="product-form-title">New Product</h3>
+        </div>
+        <div class="form-body">
+            <!-- Section A: Basic Information -->
+            <div class="form-section">
+                <div class="form-section-title">Basic Information</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Product Name *</label>
+                        <input type="text" id="prod-name" placeholder="e.g., Jäteastian tyhjennys">
+                    </div>
+                    <div class="form-group">
+                        <label>English Name</label>
+                        <input type="text" id="prod-name-en" placeholder="e.g., Container Emptying">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Product Code *</label>
+                        <input type="text" id="prod-code" placeholder="e.g., COL-001">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="prod-category" onchange="onProductCategoryChange()">
+                            <option value="">Select category...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="prod-status">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Type</label>
+                        <select id="prod-type" onchange="onProductTypeChange()">
+                            <option value="sellable">Sellable</option>
+                            <option value="component">Component</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="display: flex; align-items: center; gap: 16px; margin-top: 8px;">
+                        <label style="display: flex; align-items: center; gap: 6px; margin-bottom: 0; cursor: pointer;">
+                            <input type="checkbox" id="prod-portal" style="width: auto;" checked>
+                            Available in Portal
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; margin-bottom: 0; cursor: pointer;">
+                            <input type="checkbox" id="prod-scale" style="width: auto;">
+                            Available in Scale System
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Hazardous</label>
+                        <select id="prod-hazardous">
+                            <option value="Ei">Ei</option>
+                            <option value="Kyllä">Kyllä</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="prod-default-account-group" class="form-row" style="display:none;">
+                    <div class="form-group">
+                        <label>Default Account Code</label>
+                        <input type="text" id="prod-default-account" placeholder="e.g., 3010">
+                    </div>
+                    <div class="form-group"></div>
+                </div>
+            </div>
+
+            <!-- Section B: Selectors (hidden by default) -->
+            <div id="product-selectors-section" style="display: none;">
+                <div class="form-section">
+                    <div class="form-section-title">Allowed Waste Fractions</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span id="prod-fraction-counter" style="font-size: 13px; color: #6b7280;">0 fractions selected</span>
+                        <div style="display: flex; gap: 12px;">
+                            <a href="#" onclick="toggleAllFractions(true);return false" style="font-size: 13px; color: #2563eb;">Select All</a>
+                            <a href="#" onclick="toggleAllFractions(false);return false" style="font-size: 13px; color: #6b7280;">None</a>
+                        </div>
+                    </div>
+                    <div class="checkbox-grid" id="prod-fractions-grid"></div>
+                </div>
+                <div class="form-section">
+                    <div class="form-section-title">Allowed Container Types</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span id="prod-container-counter" style="font-size: 13px; color: #6b7280;">0 containers selected</span>
+                        <div style="display: flex; gap: 12px;">
+                            <a href="#" onclick="toggleAllContainers(true);return false" style="font-size: 13px; color: #2563eb;">Select All</a>
+                            <a href="#" onclick="toggleAllContainers(false);return false" style="font-size: 13px; color: #6b7280;">None</a>
+                        </div>
+                    </div>
+                    <div class="checkbox-grid" id="prod-containers-grid"></div>
+                </div>
+
+                <div class="form-section" id="prod-intervals-section" style="display:none;">
+                    <div class="form-section-title">Allowed Emptying Intervals</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span id="prod-interval-counter" style="font-size: 13px; color: #6b7280;">0 intervals selected</span>
+                        <div style="display: flex; gap: 12px;">
+                            <a href="#" onclick="toggleAllIntervals(true);return false" style="font-size: 13px; color: #2563eb;">Select All</a>
+                            <a href="#" onclick="toggleAllIntervals(false);return false" style="font-size: 13px; color: #6b7280;">None</a>
+                        </div>
+                    </div>
+                    <div class="checkbox-grid" id="prod-intervals-grid"></div>
+                </div>
+
+                <!-- SKU comparison callout -->
+                <div id="sku-callout" class="info-callout" style="margin-bottom: 24px; display: none;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                    <span id="sku-callout-text"></span>
+                </div>
+            </div>
+
+            <!-- Section: Allowed Service Speeds (hidden by default) -->
+            <div id="product-speeds-section" style="display: none;">
+                <div class="form-section">
+                    <div class="form-section-title">Allowed Service Speeds</div>
+                    <div class="checkbox-grid" id="prod-speeds-grid"></div>
+                </div>
+            </div>
+
+            <!-- Section C: Child Products / BOM (hidden by default) -->
+            <div id="product-bom-section" style="display: none;">
+                <div class="form-section" style="border-bottom: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div class="form-section-title" style="margin-bottom: 0;">Child Products (Bill of Materials)</div>
+                        <button class="btn btn-secondary" style="padding: 6px 14px; font-size: 12px;" onclick="addChildProductRow()">+ Add Component</button>
+                    </div>
+                    <div id="prod-child-products-editor"></div>
+                </div>
+            </div>
+        </div>
+        <div class="form-footer">
+            <button class="btn btn-secondary" onclick="closeProductForm()">Cancel</button>
+            <button class="btn btn-primary" id="product-form-submit" onclick="submitProductForm()">Create Product</button>
+        </div>
+    </div>
+</div>
+
+<!-- New Category Form Modal -->
+<div id="category-form-modal" class="form-modal" onclick="if(event.target===this)closeCategoryForm()">
+    <div class="form-content" style="max-width: 600px;">
+        <div class="form-header">
+            <h3 id="category-form-title">New Category</h3>
+        </div>
+        <div class="form-body">
+            <div class="form-group">
+                <label>Category Name *</label>
+                <input type="text" id="cat-name" placeholder="e.g., Tyhjennyspalvelut">
+            </div>
+            <div class="form-group">
+                <label>Type</label>
+                <select id="cat-type">
+                    <option value="service">Service</option>
+                    <option value="material">Material</option>
+                    <option value="additional">Additional</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="cat-description" placeholder="Brief description of this category..."></textarea>
+            </div>
+        </div>
+        <div class="form-footer">
+            <button class="btn btn-secondary" onclick="closeCategoryForm()">Cancel</button>
+            <button class="btn btn-primary" id="category-form-submit" onclick="submitCategoryForm()">Create Category</button>
+        </div>
+    </div>
+</div>
+
+<!-- New Price List Form Modal -->
+<div id="pricelist-form-modal" class="form-modal" onclick="if(event.target===this)closePriceListForm()">
+    <div class="form-content" style="max-width: 600px;">
+        <div class="form-header">
+            <h3 id="pricelist-form-title">New Price List</h3>
+        </div>
+        <div class="form-body">
+            <div class="form-group">
+                <label>Name *</label>
+                <input type="text" id="pl-name" placeholder="e.g., Tampereen kunnan jätetaksa 2026">
+            </div>
+            <div class="form-group">
+                <label>Municipality</label>
+                <select id="pl-municipality">
+                    <option value="">Select municipality...</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Valid From</label>
+                    <input type="date" id="pl-valid-from">
+                </div>
+                <div class="form-group">
+                    <label>Valid To</label>
+                    <input type="date" id="pl-valid-to">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Currency</label>
+                    <input type="text" id="pl-currency" value="EUR">
+                </div>
+                <div class="form-group">
+                    <label>VAT Rate</label>
+                    <input type="text" id="pl-vat" value="25.5%">
+                </div>
+            </div>
+        </div>
+        <div class="form-footer">
+            <button class="btn btn-secondary" onclick="closePriceListForm()">Cancel</button>
+            <button class="btn btn-primary" id="pricelist-form-submit" onclick="submitPriceListForm()">Create Price List</button>
+        </div>
+    </div>
+</div>
+
+<!-- Price Row Form Modal -->
+<div id="pricerow-form-modal" class="form-modal" onclick="if(event.target===this)closePriceRowForm()">
+    <div class="form-content" style="max-width: 800px;">
+        <div class="form-header">
+            <h3 id="pricerow-form-title">Add Price Row</h3>
+        </div>
+        <div class="form-body">
+            <!-- Section 1: Product Selection -->
+            <div class="form-section">
+                <div class="form-section-title">Product</div>
+                <div class="form-group">
+                    <label>Product *</label>
+                    <select id="pr-product" onchange="onPriceRowProductChange()">
+                        <option value="">Select product...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section 2: Conditions (dynamic) -->
+            <div class="form-section">
+                <div class="form-section-title">Conditions</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group" id="pr-fraction-group" style="display: none;">
+                        <label>Waste Fraction</label>
+                        <select id="pr-fraction">
+                            <option value="">Select fraction...</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="pr-container-group" style="display: none;">
+                        <label>Container Type</label>
+                        <select id="pr-container">
+                            <option value="">Select container...</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="pr-speed-group" style="display: none;">
+                        <label>Service Speed</label>
+                        <select id="pr-speed">
+                            <option value="">Select speed...</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="pr-resp-group" style="display: none;">
+                        <label>Service Responsibility</label>
+                        <select id="pr-resp">
+                            <option value="">Select...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Zone</label>
+                        <select id="pr-zone">
+                            <option value="">Select zone...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Customer Type</label>
+                        <select id="pr-customer-type">
+                            <option value="">— (no filter)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Pricing -->
+            <div class="form-section" style="border-bottom: none;">
+                <div class="form-section-title">Pricing</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <select id="pr-unit"></select>
+                    </div>
+                    <div class="form-group" id="pr-single-price-group">
+                        <label>Price (EUR)</label>
+                        <input type="number" id="pr-price" step="0.01" min="0" placeholder="0.00">
+                    </div>
+                </div>
+                <!-- Component pricing (hidden by default) -->
+                <div id="pr-components-group" style="display: none;">
+                    <div class="pr-components-container">
+                        <div style="font-weight: 600; font-size: 13px; margin-bottom: 12px;">Component Price Breakdown</div>
+                        <div id="pr-component-inputs"></div>
+                        <div class="pr-components-total" id="pr-components-total">Total: &euro;0.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-footer">
+            <button class="btn btn-secondary" onclick="closePriceRowForm()">Cancel</button>
+            <button class="btn btn-primary" id="pricerow-form-submit" onclick="submitPriceRowForm()">Add Price Row</button>
+        </div>
+    </div>
+</div>
+
+<!-- Product Detail Overlay -->
+<div id="product-detail" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: white; z-index: 300; overflow-y: auto;">
+    <div style="padding: 24px 32px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 id="detail-product-name" style="font-size: 22px; font-weight: 600;"></h2>
+            <p id="detail-product-meta" style="font-size: 13px; color: #6b7280; margin-top: 4px;"></p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary" onclick="showEditProduct()">Edit</button>
+            <button class="btn btn-danger" onclick="deleteProduct()">Delete</button>
+            <button class="btn btn-secondary" onclick="closeProductDetail()">Close</button>
+        </div>
+    </div>
+    <div style="padding: 0 32px;">
+        <div style="display: flex; gap: 32px; border-bottom: 1px solid #e5e7eb;">
+            <span class="product-tab active" onclick="showProductTab('overview')">Overview</span>
+            <span class="product-tab" onclick="showProductTab('bom')">BOM / Components</span>
+            <span class="product-tab" onclick="showProductTab('price-lists')">Price Lists</span>
+            <span class="product-tab" onclick="showProductTab('additional')">Additional Services</span>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview-content" class="product-tab-content active" style="padding: 24px 0;">
+            <div id="detail-overview"></div>
+        </div>
+
+        <!-- BOM Tab -->
+        <div id="bom-content" class="product-tab-content">
+            <div id="detail-bom"></div>
+        </div>
+
+        <!-- Price Lists Tab -->
+        <div id="price-lists-content" class="product-tab-content">
+            <div id="detail-price-lists"></div>
+        </div>
+
+        <!-- Additional Services Tab -->
+        <div id="additional-content" class="product-tab-content">
+            <div id="detail-additional"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Service Form Modal -->
+<div id="additional-service-form-modal" class="form-modal" onclick="if(event.target===this)closeAdditionalServiceForm()">
+    <div class="form-content" style="max-width: 600px;">
+        <div class="form-header">
+            <h3 id="additional-service-form-title">Add Additional Service</h3>
+        </div>
+        <div class="form-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Name (FI) *</label>
+                    <input type="text" id="as-name" placeholder="e.g., Peruutusmaksu">
+                </div>
+                <div class="form-group">
+                    <label>Name (EN)</label>
+                    <input type="text" id="as-name-en" placeholder="e.g., Cancellation Fee">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Price (EUR) *</label>
+                    <input type="number" id="as-price" step="0.01" min="0" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Unit *</label>
+                    <select id="as-unit"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Trigger Type *</label>
+                <select id="as-trigger">
+                    <option value="Automatic">Automatic — System-applied</option>
+                    <option value="Manual">Manual — Customer service adds/removes</option>
+                    <option value="Driver-Initiated">Driver-Initiated — Driver records, office approves</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="as-description" placeholder="When and how this charge is applied..."></textarea>
+            </div>
+        </div>
+        <div class="form-footer">
+            <button class="btn btn-secondary" onclick="closeAdditionalServiceForm()">Cancel</button>
+            <button class="btn btn-primary" id="additional-service-form-submit" onclick="submitAdditionalServiceForm()">Add Service</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Embedded data (avoids CORS issues when opening as local file)
+const DATA = {
+    "products": [
+        {"id":"GEN-001","code":"COL-001","name":"Jäteastian tyhjennys*","name_en":"Container Emptying","category":"Arjen palvelut*","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":true,"available_in_scale_system":false,"hazardous":"Ei","product_type":"sellable","allowed_emptying_intervals":[1,2,4,8,12,26,52],"allowed_waste_fractions":["Sekajäte","Biojäte","Muovi","Kartonki","Lasi","Metalli"],"allowed_container_types":["140L","240L","360L","660L","770L","Syväsäiliö 0.8 m³","Syväsäiliö 1.3 m³","Syväsäiliö 5 m³","Pintasäiliö 2.5 m³","Pintasäiliö 3 m³"],"child_products":[{"product_id":"COMP-001","applicable_fractions":["Sekajäte","Biojäte","Kartonki","Muovi","Lasi","Metalli"],"account":"3010"},{"product_id":"COMP-002","applicable_fractions":["Sekajäte","Biojäte"],"account":"4010"},{"product_id":"COMP-003","applicable_fractions":["Sekajäte"],"account":"5010"}],"additional_services":[{"name":"Peruutusmaksu","name_en":"Cancellation Fee","price":25.00,"unit":"Per tyhjennys","trigger_type":"Automatic","description":"Applied when access denied or container not reachable on scheduled collection day."},{"name":"Uudelleentilaus","name_en":"Return Trip","price":15.00,"unit":"Per tyhjennys","trigger_type":"Automatic","description":"Charged when a second trip is needed due to customer-caused issues."},{"name":"Vetomatka","name_en":"Pulling Distance","price":5.00,"unit":"Per 5m","trigger_type":"Driver-Initiated","description":"Charged per commenced 5-meter increment beyond the first 5 meters from access point."},{"name":"Ylimääräinen tyhjennys","name_en":"Extra Emptying","price":12.00,"unit":"Per tyhjennys","trigger_type":"Manual","description":"Ad-hoc emptying requested by customer outside normal schedule."},{"name":"Lukkoavaus","name_en":"Lock Opening","price":8.00,"unit":"Per tyhjennys","trigger_type":"Driver-Initiated","description":"Driver needs to open a lock to access the container."}]},
+        {"id":"GEN-002","code":"COL-002","name":"Puristintyhjennys","name_en":"Compactor Emptying","category":"Arjen palvelut*","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":true,"available_in_scale_system":false,"hazardous":"Ei","product_type":"sellable","allowed_emptying_intervals":[1,2,4,8,12,26,52],"allowed_waste_fractions":["Sekajäte"],"allowed_container_types":["Syväsäiliö 5 m³","Pintasäiliö 2.5 m³","Pintasäiliö 3 m³"],"child_products":[{"product_id":"COMP-001","applicable_fractions":[],"account":"3010"},{"product_id":"COMP-002","applicable_fractions":[],"account":"4010"}]},
+        {"id":"GEN-003","code":"COL-003","name":"Vaihtolavasäiliö","name_en":"Swap Body Container","category":"Arjen palvelut*","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":true,"available_in_scale_system":false,"hazardous":"Ei","product_type":"sellable","allowed_emptying_intervals":[],"allowed_waste_fractions":["Sekajäte"],"allowed_container_types":[],"child_products":[{"product_id":"COMP-001","applicable_fractions":[],"account":"3010"},{"product_id":"COMP-002","applicable_fractions":[],"account":"4010"}]},
+        {"id":"GEN-004","code":"COL-004","name":"Aluepiste","name_en":"Area Collection Point","category":"Arjen palvelut*","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":false,"available_in_scale_system":false,"hazardous":"Ei","product_type":"sellable","allowed_emptying_intervals":[],"allowed_waste_fractions":["Sekajäte","Biojäte","Muovi","Kartonki","Lasi","Metalli"],"allowed_container_types":["Syväsäiliö 0.8 m³","Syväsäiliö 1.3 m³","Syväsäiliö 5 m³"],"child_products":[]},
+        {"id":"GEN-005","code":"LIE-001","name":"Lietetyhjennys","name_en":"Sludge Emptying","category":"Lietepalvelut*","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":true,"available_in_scale_system":false,"hazardous":"Ei","product_type":"sellable","allowed_emptying_intervals":[],"allowed_waste_fractions":[],"allowed_container_types":[],"allowed_service_speeds":["tilaus","tasma","paivystys","saannollinen"],"child_products":[{"product_id":"COMP-001","applicable_fractions":[],"account":"3010"},{"product_id":"COMP-002","applicable_fractions":[],"account":"4010"}]},
+        {"id":"GEN-006","code":"VKA-001","name":"Energiahyödynnettävä yhdyskuntajäte","name_en":"Energy-recoverable municipal waste","category":"Käsittelypalvelut, vaaka","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":false,"available_in_scale_system":true,"hazardous":"Ei","product_type":"sellable","allowed_emptying_intervals":[],"allowed_waste_fractions":[],"allowed_container_types":[],"child_products":[]},
+        {"id":"GEN-007","code":"VKA-002","name":"Energiahyödynnettävä tuotantotoiminnan jäte","name_en":"Energy-recoverable industrial waste","category":"Käsittelypalvelut, vaaka","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":false,"available_in_scale_system":true,"hazardous":"Ei","product_type":"sellable","allowed_emptying_intervals":[],"allowed_waste_fractions":[],"allowed_container_types":[],"child_products":[]},
+        {"id":"GEN-008","code":"VKA-003","name":"Loppusijoitettava jäte jäteverollinen","name_en":"Landfill waste, taxable","category":"Käsittelypalvelut, vaaka","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":false,"available_in_scale_system":true,"hazardous":"Ei","product_type":"sellable","allowed_emptying_intervals":[],"allowed_waste_fractions":[],"allowed_container_types":[],"child_products":[]},
+        {"id":"GEN-009","code":"VKA-004","name":"Loppusijoitettava jäte jäteveroton","name_en":"Landfill waste, tax-exempt","category":"Käsittelypalvelut, vaaka","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":false,"available_in_scale_system":true,"hazardous":"Ei","product_type":"sellable","allowed_emptying_intervals":[],"allowed_waste_fractions":[],"allowed_container_types":[],"child_products":[]},
+        {"id":"GEN-010","code":"VKA-005","name":"Esikäsiteltävä jäte","name_en":"Pre-treatment waste","category":"Käsittelypalvelut, vaaka","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":false,"available_in_scale_system":true,"hazardous":"Ei","product_type":"sellable","allowed_emptying_intervals":[],"allowed_waste_fractions":[],"allowed_container_types":[],"child_products":[]},
+        {"id":"GEN-011","code":"VKA-006","name":"Erityiskäsiteltävä energiahyödynnettävä jäte","name_en":"Special treatment energy-recoverable waste","category":"Käsittelypalvelut, vaaka","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":false,"available_in_scale_system":true,"hazardous":"Ei","product_type":"sellable","allowed_emptying_intervals":[],"allowed_waste_fractions":[],"allowed_container_types":[],"child_products":[]},
+        {"id":"GEN-012","code":"VKA-007","name":"Loppusijoitettava erityisjäte asbestit","name_en":"Special waste, asbestos for landfill","category":"Käsittelypalvelut, vaaka","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":false,"available_in_scale_system":true,"hazardous":"Kyllä","product_type":"sellable","allowed_emptying_intervals":[],"allowed_waste_fractions":[],"allowed_container_types":[],"child_products":[]},
+        {"id":"GEN-013","code":"VKA-008","name":"Loppusijoitettava vieraslajimaa-aines jäteveroton","name_en":"Invasive alien soil material, tax-exempt","category":"Käsittelypalvelut, vaaka","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":false,"available_in_scale_system":true,"hazardous":"Ei","product_type":"sellable","allowed_emptying_intervals":[],"allowed_waste_fractions":[],"allowed_container_types":[],"child_products":[]},
+        {"id":"GEN-014","code":"VKA-009","name":"Käytöstäpoiston materiaalit KPL","name_en":"Decommissioning materials PCS","category":"Käsittelypalvelut, vaaka","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":false,"available_in_scale_system":true,"hazardous":"Ei","product_type":"sellable","allowed_emptying_intervals":[],"allowed_waste_fractions":[],"allowed_container_types":[],"child_products":[]},
+        {"id":"COMP-001","code":"COMP-KUL","name":"Kuljetusmaksu","name_en":"Transport fee","category":"Arjen palvelut*","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":false,"available_in_scale_system":false,"hazardous":"Ei","product_type":"component","default_account":"3010","allowed_waste_fractions":[],"allowed_container_types":[],"child_products":[],"allowed_emptying_intervals":[]},
+        {"id":"COMP-002","code":"COMP-KAS","name":"Käsittelymaksu","name_en":"Treatment fee","category":"Arjen palvelut*","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":false,"available_in_scale_system":false,"hazardous":"Ei","product_type":"component","default_account":"4010","allowed_waste_fractions":[],"allowed_container_types":[],"child_products":[],"allowed_emptying_intervals":[]},
+        {"id":"COMP-003","code":"COMP-EKO","name":"Ekomaksu","name_en":"Eco fee","category":"Arjen palvelut*","category_badge":"badge-service","category_type":"service","type_display":"Service Product","status":"active","available_in_portal":false,"available_in_scale_system":false,"hazardous":"Ei","product_type":"component","default_account":"5010","allowed_waste_fractions":[],"allowed_container_types":[],"child_products":[],"allowed_emptying_intervals":[]}
+    ],
+    "categories": [
+        {"name":"Arjen palvelut*","type":"service","badge":"badge-service","type_display":"Service Product","description":"Container emptyings and everyday waste collection","product_count":4,"schema_fields":8},
+        {"name":"Lietepalvelut*","type":"service","badge":"badge-service","type_display":"Service Product","description":"Sludge emptying and transport","product_count":1,"schema_fields":8},
+        {"name":"Käsittelypalvelut, vaaka","type":"service","badge":"badge-service","type_display":"Service Product","description":"Waste reception, scale-based treatment","product_count":9,"schema_fields":8}
+    ],
+    "service_speeds": [
+        {"code":"tilaus","name":"Tilaus","name_en":"Order-based"},
+        {"code":"tasma","name":"Täsmä","name_en":"Scheduled"},
+        {"code":"paivystys","name":"Päivystys","name_en":"On-call"},
+        {"code":"saannollinen","name":"Säännöllinen","name_en":"Regular"}
+    ],
+    "waste_fractions": [
+        {"name":"Sekajäte","name_en":"Mixed waste","code":"SEK","ewc_code":"20 03 01","recycling_percentage":35,"default_weight_kg_per_m3":200,"hazardous":false,"recyclable":false,"status":"active","description":"Mixed household waste"},
+        {"name":"Biojäte","name_en":"Biowaste","code":"BIO","ewc_code":"20 01 08","recycling_percentage":95,"default_weight_kg_per_m3":500,"hazardous":false,"recyclable":true,"status":"active","description":"Biodegradable kitchen and garden waste"},
+        {"name":"Kartonki","name_en":"Cardboard","code":"KAR","ewc_code":"20 01 01","recycling_percentage":85,"default_weight_kg_per_m3":50,"hazardous":false,"recyclable":true,"status":"active","description":"Cardboard and paperboard packaging"},
+        {"name":"Paperi","name_en":"Paper","code":"PAP","ewc_code":"20 01 01","recycling_percentage":85,"default_weight_kg_per_m3":100,"hazardous":false,"recyclable":true,"status":"active","description":"Newspapers, magazines, office paper"},
+        {"name":"Lasi","name_en":"Glass","code":"LAS","ewc_code":"20 01 02","recycling_percentage":90,"default_weight_kg_per_m3":350,"hazardous":false,"recyclable":true,"status":"active","description":"Glass bottles and jars"},
+        {"name":"Metalli","name_en":"Metal","code":"MET","ewc_code":"20 01 40","recycling_percentage":85,"default_weight_kg_per_m3":200,"hazardous":false,"recyclable":true,"status":"active","description":"Metal cans, foils, small metal items"},
+        {"name":"Muovi","name_en":"Plastic","code":"MUO","ewc_code":"20 01 39","recycling_percentage":65,"default_weight_kg_per_m3":30,"hazardous":false,"recyclable":true,"status":"active","description":"Plastic packaging and containers"}
+    ],
+    "customer_types": [
+        {"name":"Individual","name_fi":"Yksityinen"},
+        {"name":"Business","name_fi":"Yritys"}
+    ],
+    "container_types": [
+        {"name":"140L","code":"BIN-140","volume_liters":140,"weight_kg":8,"emplacement":"Surface","material":"Plastic","has_wheels":true,"has_lid":true,"is_cylindrical":false,"status":"active"},
+        {"name":"240L","code":"BIN-240","volume_liters":240,"weight_kg":14,"emplacement":"Surface","material":"Plastic","has_wheels":true,"has_lid":true,"is_cylindrical":false,"status":"active"},
+        {"name":"360L","code":"BIN-360","volume_liters":360,"weight_kg":18,"emplacement":"Surface","material":"Plastic","has_wheels":true,"has_lid":true,"is_cylindrical":false,"status":"active"},
+        {"name":"660L","code":"BIN-660","volume_liters":660,"weight_kg":45,"emplacement":"Surface","material":"Plastic","has_wheels":true,"has_lid":true,"is_cylindrical":false,"status":"active"},
+        {"name":"770L","code":"BIN-770","volume_liters":770,"weight_kg":50,"emplacement":"Surface","material":"Plastic","has_wheels":true,"has_lid":true,"is_cylindrical":false,"status":"active"},
+        {"name":"1100L","code":"BIN-1100","volume_liters":1100,"weight_kg":55,"emplacement":"Surface","material":"Plastic","has_wheels":true,"has_lid":true,"is_cylindrical":false,"status":"active"},
+        {"name":"Syväsäiliö 0.8 m³","code":"DEEP-800","volume_liters":800,"weight_kg":200,"emplacement":"Underground","material":"Metal","has_wheels":false,"has_lid":true,"is_cylindrical":true,"status":"active"},
+        {"name":"Syväsäiliö 1.3 m³","code":"DEEP-1300","volume_liters":1300,"weight_kg":300,"emplacement":"Underground","material":"Metal","has_wheels":false,"has_lid":true,"is_cylindrical":true,"status":"active"},
+        {"name":"Syväsäiliö 5 m³","code":"DEEP-5000","volume_liters":5000,"weight_kg":800,"emplacement":"Underground","material":"Metal","has_wheels":false,"has_lid":true,"is_cylindrical":true,"status":"active"},
+        {"name":"Pintasäiliö 2.5 m³","code":"SEMI-2500","volume_liters":2500,"weight_kg":500,"emplacement":"Semi-underground","material":"Metal","has_wheels":false,"has_lid":true,"is_cylindrical":false,"status":"active"},
+        {"name":"Pintasäiliö 3 m³","code":"SEMI-3000","volume_liters":3000,"weight_kg":600,"emplacement":"Semi-underground","material":"Metal","has_wheels":false,"has_lid":true,"is_cylindrical":false,"status":"active"}
+    ],
+    "price_lists": [
+        {
+            "name":"Tampereen kunnan jätetaksa 2026","municipality":"Tampere","validity_from":"2026-01-01","validity_to":"2026-12-31","currency":"EUR","vat_rate":"25.5%","status":"active",
+            "items":[
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Sekajäte","container_type":"140L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":6.5,"service_speed":"","components":[{"product_id":"COMP-001","name":"Kuljetusmaksu","account":"3010","price":3.50},{"product_id":"COMP-002","name":"Käsittelymaksu","account":"4010","price":2.00},{"product_id":"COMP-003","name":"Ekomaksu","account":"5010","price":1.00}]},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Sekajäte","container_type":"240L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":7.1,"service_speed":"","components":[{"product_id":"COMP-001","name":"Kuljetusmaksu","account":"3010","price":3.80},{"product_id":"COMP-002","name":"Käsittelymaksu","account":"4010","price":2.20},{"product_id":"COMP-003","name":"Ekomaksu","account":"5010","price":1.10}]},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Sekajäte","container_type":"360L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":7.5,"service_speed":"","components":[{"product_id":"COMP-001","name":"Kuljetusmaksu","account":"3010","price":4.00},{"product_id":"COMP-002","name":"Käsittelymaksu","account":"4010","price":2.30},{"product_id":"COMP-003","name":"Ekomaksu","account":"5010","price":1.20}]},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Sekajäte","container_type":"660L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":10.2,"service_speed":"","components":[{"product_id":"COMP-001","name":"Kuljetusmaksu","account":"3010","price":5.50},{"product_id":"COMP-002","name":"Käsittelymaksu","account":"4010","price":3.00},{"product_id":"COMP-003","name":"Ekomaksu","account":"5010","price":1.70}]},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Sekajäte","container_type":"770L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":11.8,"service_speed":"","components":[{"product_id":"COMP-001","name":"Kuljetusmaksu","account":"3010","price":6.30},{"product_id":"COMP-002","name":"Käsittelymaksu","account":"4010","price":3.50},{"product_id":"COMP-003","name":"Ekomaksu","account":"5010","price":2.00}]},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Biojäte","container_type":"140L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":5.8,"service_speed":"","components":[{"product_id":"COMP-001","name":"Kuljetusmaksu","account":"3010","price":3.20},{"product_id":"COMP-002","name":"Käsittelymaksu","account":"4010","price":2.60}]},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Biojäte","container_type":"240L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":6.3,"service_speed":"","components":[{"product_id":"COMP-001","name":"Kuljetusmaksu","account":"3010","price":3.50},{"product_id":"COMP-002","name":"Käsittelymaksu","account":"4010","price":2.80}]},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Muovi","container_type":"240L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":4.2,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Muovi","container_type":"360L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":4.8,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Muovi","container_type":"660L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":6.5,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Muovi","container_type":"770L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":7.2,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Kartonki","container_type":"240L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":3.9,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Kartonki","container_type":"360L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":4.5,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Kartonki","container_type":"660L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":6.1,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Kartonki","container_type":"770L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":6.8,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Lasi","container_type":"140L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":3.5,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Lasi","container_type":"240L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":4.0,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Lasi","container_type":"360L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":4.8,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Lasi","container_type":"660L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":6.2,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Metalli","container_type":"140L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":3.2,"service_speed":""},
+                {"product":"Lietetyhjennys","waste_fraction":"","container_type":"","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per kerta","price":45.00,"service_speed":"tilaus"},
+                {"product":"Lietetyhjennys","waste_fraction":"","container_type":"","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per m³","price":12.50,"service_speed":"tilaus"},
+                {"product":"Lietetyhjennys","waste_fraction":"","container_type":"","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per kerta","price":38.00,"service_speed":"saannollinen"},
+                {"product":"Lietetyhjennys","waste_fraction":"","container_type":"","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per m³","price":11.00,"service_speed":"saannollinen"},
+                {"product":"Lietetyhjennys","waste_fraction":"","container_type":"","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per kerta","price":55.00,"service_speed":"paivystys"},
+                {"product":"Lietetyhjennys","waste_fraction":"","container_type":"","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per m³","price":15.00,"service_speed":"paivystys"},
+                {"product":"Energiahyödynnettävä yhdyskuntajäte","waste_fraction":"","container_type":"","service_responsibility":"","customer_type":"","zone":"","unit":"Per tonni","price":95.00,"service_speed":""},
+                {"product":"Energiahyödynnettävä tuotantotoiminnan jäte","waste_fraction":"","container_type":"","service_responsibility":"","customer_type":"","zone":"","unit":"Per tonni","price":110.00,"service_speed":""},
+                {"product":"Loppusijoitettava jäte jäteverollinen","waste_fraction":"","container_type":"","service_responsibility":"","customer_type":"","zone":"","unit":"Per tonni","price":180.00,"service_speed":""},
+                {"product":"Loppusijoitettava jäte jäteveroton","waste_fraction":"","container_type":"","service_responsibility":"","customer_type":"","zone":"","unit":"Per tonni","price":155.00,"service_speed":""},
+                {"product":"Esikäsiteltävä jäte","waste_fraction":"","container_type":"","service_responsibility":"","customer_type":"","zone":"","unit":"Per tonni","price":120.00,"service_speed":""},
+                {"product":"Erityiskäsiteltävä energiahyödynnettävä jäte","waste_fraction":"","container_type":"","service_responsibility":"","customer_type":"","zone":"","unit":"Per tonni","price":140.00,"service_speed":""},
+                {"product":"Loppusijoitettava erityisjäte asbestit","waste_fraction":"","container_type":"","service_responsibility":"","customer_type":"","zone":"","unit":"Per tonni","price":250.00,"service_speed":""},
+                {"product":"Käytöstäpoiston materiaalit KPL","waste_fraction":"","container_type":"","service_responsibility":"","customer_type":"","zone":"","unit":"Per kpl","price":15.00,"service_speed":""}
+            ]
+        },
+        {
+            "name":"Parkanon kunnan jätetaksa 2026","municipality":"Parkano","validity_from":"2026-01-01","validity_to":"2026-12-31","currency":"EUR","vat_rate":"25.5%","status":"active",
+            "items":[
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Sekajäte","container_type":"140L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":8.4,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Sekajäte","container_type":"240L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":9.39,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Sekajäte","container_type":"360L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":10.2,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Biojäte","container_type":"140L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":7.5,"service_speed":""},
+                {"product":"Jäteastian tyhjennys*","waste_fraction":"Biojäte","container_type":"240L","service_responsibility":"Kuntavastuu asuminen","customer_type":"","zone":"","unit":"Per tyhjennys","price":8.1,"service_speed":""},
+                {"product":"Loppusijoitettava jäte jäteverollinen","waste_fraction":"","container_type":"","service_responsibility":"","customer_type":"","zone":"","unit":"Per tonni","price":195.0,"service_speed":""},
+                {"product":"Energiahyödynnettävä yhdyskuntajäte","waste_fraction":"","container_type":"","service_responsibility":"","customer_type":"","zone":"","unit":"Per tonni","price":100.0,"service_speed":""}
+            ]
+        }
+    ],
+    "municipalities": [
+        {"code":"837","name":"Tampere","pjh_code":"1","status":"active"},
+        {"code":"211","name":"Kangasala","pjh_code":"2","status":"active"},
+        {"code":"418","name":"Lempäälä","pjh_code":"3","status":"active"},
+        {"code":"536","name":"Nokia","pjh_code":"4","status":"active"},
+        {"code":"562","name":"Orivesi","pjh_code":"5","status":"active"},
+        {"code":"604","name":"Pirkkala","pjh_code":"6","status":"active"},
+        {"code":"980","name":"Ylöjärvi","pjh_code":"7","status":"active"},
+        {"code":"619","name":"Punkalaidun","pjh_code":"8","status":"active"},
+        {"code":"922","name":"Vesilahti","pjh_code":"8","status":"active"},
+        {"code":"887","name":"Urjala","pjh_code":"8","status":"active"},
+        {"code":"108","name":"Hämeenkyrö","pjh_code":"9","status":"active"},
+        {"code":"177","name":"Juupajoki","pjh_code":"10","status":"active"},
+        {"code":"635","name":"Pälkäne","pjh_code":"13","status":"active"},
+        {"code":"109","name":"Hämeenlinna","pjh_code":"13","status":"active"},
+        {"code":"702","name":"Ruovesi","pjh_code":"16","status":"active"},
+        {"code":"291","name":"Kuhmoinen","pjh_code":"17","status":"active"},
+        {"code":"143","name":"Ikaalinen","pjh_code":"20","status":"active"},
+        {"code":"181","name":"Jämijärvi","pjh_code":"20","status":"active"},
+        {"code":"581","name":"Parkano","pjh_code":"21","status":"active"},
+        {"code":"250","name":"Kihniö","pjh_code":"21","status":"active"},
+        {"code":"182","name":"Jämsä","pjh_code":"23","status":"active"},
+        {"code":"508","name":"Mänttä-Vilppula","pjh_code":"23","status":"active"},
+        {"code":"249","name":"Keuruu","pjh_code":"24","status":"active"},
+        {"code":"936","name":"Virrat","pjh_code":"24","status":"active"},
+        {"code":"989","name":"Ähtäri","pjh_code":"24","status":"active"},
+        {"code":"790","name":"Sastamala","pjh_code":"0","status":"active"},
+        {"code":"908","name":"Valkeakoski","pjh_code":"0","status":"active"},
+        {"code":"020","name":"Akaa","pjh_code":"0","status":"active"},
+        {"code":"010","name":"Alavus","pjh_code":"0","status":"active"}
+    ],
+    "zones": [
+        {"name":"Pirkanmaa Etelä","zone_type":"Zone","description":"Eteläinen Pirkanmaa (Tampere, Nokia, Pirkkala, Lempäälä)","status":"active"},
+        {"name":"Pirkanmaa Pohjoinen","zone_type":"Zone","description":"Pohjoinen Pirkanmaa (Parkano, Ikaalinen, Kihniö)","status":"active"}
+    ],
+    "pricing_units": [
+        {"name":"Per tyhjennys","name_en":"Per emptying","code":"EMPTY"},
+        {"name":"Per tonni","name_en":"Per ton","code":"TON"},
+        {"name":"Per vuosi","name_en":"Per year","code":"YEAR"},
+        {"name":"Per kg","name_en":"Per kg","code":"KG"},
+        {"name":"Per keräily","name_en":"Per collection","code":"COLL"},
+        {"name":"Per m³","name_en":"Per m³","code":"M3"},
+        {"name":"Per kpl","name_en":"Per piece","code":"PCS"},
+        {"name":"Per tunti","name_en":"Per hour","code":"HOUR"},
+        {"name":"Per kerta","name_en":"Per visit","code":"VISIT"}
+    ],
+    "service_responsibilities": [
+        {"name":"Kuntavastuu asuminen","code":"KVA"},
+        {"name":"TSV","code":"TSV"},
+        {"name":"Markkina","code":"MKT"},
+        {"name":"Sidosryhmä","code":"SDR"}
+    ]
+};
+
+let currentCategory = 'all';
+let hideComponents = true;
+
+const EMPTYING_INTERVALS = [1, 2, 4, 8, 12, 26, 52];
+const INTERVAL_LABELS = {1: "1 vk", 2: "2 vk", 4: "4 vk", 8: "8 vk", 12: "12 vk", 26: "26 vk", 52: "52 vk"};
+
+// Helper: resolve service speed name from code
+function getSpeedName(code) {
+    if (!code) return '';
+    const speed = DATA.service_speeds.find(s => s.code === code);
+    return speed ? speed.name : code;
+}
+
+// Helper: resolve child products for a given fraction
+function getChildProductsForFraction(product, fraction) {
+    if (!product || !product.child_products) return [];
+    return product.child_products.filter(cp =>
+        cp.applicable_fractions.length === 0 || cp.applicable_fractions.includes(fraction)
+    ).map(cp => {
+        const compProduct = DATA.products.find(p => p.id === cp.product_id);
+        return { ...cp, name: compProduct ? compProduct.name : cp.product_id, product_id: cp.product_id };
+    });
+}
+
+// Helper: get all child products (ignoring fraction filter)
+function getAllChildProducts(product) {
+    if (!product || !product.child_products) return [];
+    return product.child_products.map(cp => {
+        const compProduct = DATA.products.find(p => p.id === cp.product_id);
+        return { ...cp, name: compProduct ? compProduct.name : cp.product_id };
+    });
+}
+let currentPriceList = null;
+let currentProduct = null;
+let showGross = false;
+
+function renderAll() {
+    renderStats();
+    renderCategorySidebar();
+    renderProductTable();
+    renderPriceListCards();
+    renderCategoryTable();
+    renderFractionTable();
+    renderContainerTypesTable();
+    renderPricingUnitsTable();
+    renderMunicipalitiesTable();
+    renderZonesTable();
+}
+
+function renderStats() {
+    const sellableCount = DATA.products.filter(p => p.product_type === 'sellable').length;
+    const componentCount = DATA.products.filter(p => p.product_type === 'component').length;
+    const portalCount = DATA.products.filter(p => p.available_in_portal).length;
+    const scaleCount = DATA.products.filter(p => p.available_in_scale_system).length;
+    const categoryCount = DATA.categories.length;
+    const priceListCount = DATA.price_lists.length;
+    const municipalities = DATA.price_lists.map(pl => pl.municipality).filter(Boolean).join(', ') || 'None';
+
+    document.getElementById('stats-row').innerHTML = `
+        <div class="stat-card">
+            <div class="stat-value">${sellableCount}</div>
+            <div class="stat-label">Sellable Products</div>
+            <div class="stat-change">${componentCount} components</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${portalCount}</div>
+            <div class="stat-label">Portal Products</div>
+            <div class="stat-change">${scaleCount} scale system</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${categoryCount}</div>
+            <div class="stat-label">Categories</div>
+            <div class="stat-label" style="margin-top: 2px;">Active</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">${priceListCount}</div>
+            <div class="stat-label">Price Lists</div>
+            <div class="stat-label" style="margin-top: 2px;">${municipalities}</div>
+        </div>`;
+}
+
+// Initialize on page load
+renderAll();
+
+// === Main tab switching ===
+function showMainTab(tabId) {
+    document.querySelectorAll('.main-tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-item').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId + '-main-tab').classList.add('active');
+    event.target.classList.add('active');
+}
+
+// === Category Sidebar ===
+function renderCategorySidebar() {
+    const sidebar = document.getElementById('category-sidebar');
+    sidebar.innerHTML = DATA.categories.map(c => {
+        const count = DATA.products.filter(p => p.category === c.name).length;
+        return `<div class="category-item${currentCategory === c.name ? ' active' : ''}" onclick="filterCategory('${c.name}', this)">
+            ${c.name} <span class="category-count">${count}</span>
+        </div>`;
+    }).join('');
+    document.getElementById('count-all').textContent = DATA.products.length;
+}
+
+function filterCategory(cat, el) {
+    currentCategory = cat;
+    document.querySelectorAll('.category-item').forEach(e => e.classList.remove('active'));
+    if (el) el.classList.add('active');
+    renderProductTable();
+}
+
+// === Product Table ===
+function renderProductTable() {
+    const tbody = document.getElementById('product-table-body');
+    const search = (document.getElementById('product-search').value || '').toLowerCase();
+
+    let products = DATA.products;
+    if (hideComponents) {
+        products = products.filter(p => p.product_type !== 'component');
+    }
+    if (currentCategory !== 'all') {
+        products = products.filter(p => p.category === currentCategory);
+    }
+    if (search) {
+        products = products.filter(p =>
+            p.name.toLowerCase().includes(search) ||
+            p.code.toLowerCase().includes(search) ||
+            p.category.toLowerCase().includes(search)
+        );
+    }
+
+    tbody.innerHTML = products.map(p => {
+        const isComponent = p.product_type === 'component';
+        const hasSelectors = (p.allowed_waste_fractions.length > 0 || p.allowed_container_types.length > 0);
+        const hasSpeeds = (p.allowed_service_speeds && p.allowed_service_speeds.length > 0);
+        const fractionPills = p.allowed_waste_fractions.map(f => `<span class="pill pill-fraction">${f}</span>`).join('');
+        const containerPills = p.allowed_container_types.map(c => `<span class="pill pill-container">${c}</span>`).join('');
+        const speedPills = hasSpeeds ? p.allowed_service_speeds.map(s => `<span class="pill pill-speed">${getSpeedName(s)}</span>`).join('') : '';
+        const selectorCell = (hasSelectors || hasSpeeds)
+            ? `<div style="max-width: 280px;">${fractionPills}${containerPills ? '<br>' + containerPills : ''}${speedPills ? '<br>' + speedPills : ''}</div>`
+            : '<span style="color: #9ca3af;">&mdash;</span>';
+
+        const cpCount = (p.child_products || []).length;
+        const bomDisplay = cpCount > 0
+            ? `${cpCount} component${cpCount !== 1 ? 's' : ''}`
+            : '<span style="color: #9ca3af;">&mdash;</span>';
+
+        const asCount = (p.additional_services || []).length;
+        const asDisplay = asCount > 0
+            ? `${asCount} service${asCount !== 1 ? 's' : ''}`
+            : '<span style="color: #9ca3af;">&mdash;</span>';
+
+        const typeBadge = isComponent
+            ? '<span class="pill" style="background:#fef3c7;color:#92400e;font-size:10px;margin-left:6px;">Component</span>'
+            : '';
+
+        return `<tr>
+            <td>
+                <span class="product-name" onclick="showProductDetail('${p.id}')">${p.name}</span>${typeBadge}
+                ${p.name_en ? `<span class="product-code">${p.name_en}</span>` : ''}
+            </td>
+            <td><code style="font-size: 12px; background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${p.code}</code></td>
+            <td><span class="badge ${p.category_badge}">${p.category}</span></td>
+            <td>${selectorCell}</td>
+            <td>${bomDisplay}</td>
+            <td>${asDisplay}</td>
+            <td><span class="badge" style="background: #dcfce7; color: #166534;">${p.status}</span></td>
+            <td><button class="btn btn-secondary" style="padding: 6px 14px; font-size: 12px;" onclick="showProductDetail('${p.id}')">View</button></td>
+        </tr>`;
+    }).join('');
+}
+
+function filterProducts() {
+    renderProductTable();
+}
+
+function toggleComponents() {
+    hideComponents = !hideComponents;
+    document.getElementById('toggle-components-btn').textContent = hideComponents ? 'Show Components' : 'Hide Components';
+    renderProductTable();
+}
+
+// === Product Detail ===
+function showProductDetail(productId) {
+    currentProduct = DATA.products.find(p => p.id === productId);
+    if (!currentProduct) return;
+
+    document.getElementById('detail-product-name').textContent = currentProduct.name;
+    document.getElementById('detail-product-meta').textContent =
+        `${currentProduct.code} | ${currentProduct.category} | ${currentProduct.type_display}` +
+        (currentProduct.name_en ? ` | ${currentProduct.name_en}` : '');
+
+    renderDetailOverview();
+    renderDetailBOM();
+    renderDetailPriceLists();
+    renderDetailAdditional();
+
+    // Reset to overview tab
+    document.querySelectorAll('.product-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.product-tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelector('.product-tab').classList.add('active');
+    document.getElementById('overview-content').classList.add('active');
+
+    document.getElementById('product-detail').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeProductDetail() {
+    document.getElementById('product-detail').style.display = 'none';
+    document.body.style.overflow = '';
+    currentProduct = null;
+}
+
+function showProductTab(tabId) {
+    document.querySelectorAll('.product-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.product-tab-content').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById(tabId + '-content').classList.add('active');
+}
+
+function renderDetailOverview() {
+    const p = currentProduct;
+    const hasSelectors = p.allowed_waste_fractions.length > 0 || p.allowed_container_types.length > 0;
+    const hasSpeeds = p.allowed_service_speeds && p.allowed_service_speeds.length > 0;
+
+    let html = `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+            <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 20px; border-radius: 8px;">
+                <div style="font-weight: 600; margin-bottom: 16px;">Basic Information</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+                    <div><span style="color: #6b7280;">Name:</span><br><strong>${p.name}</strong></div>
+                    <div><span style="color: #6b7280;">English Name:</span><br><strong>${p.name_en || '—'}</strong></div>
+                    <div><span style="color: #6b7280;">Code:</span><br><strong>${p.code}</strong></div>
+                    <div><span style="color: #6b7280;">Category:</span><br><span class="badge ${p.category_badge}">${p.category}</span></div>
+                    <div><span style="color: #6b7280;">Status:</span><br><span class="badge" style="background: #dcfce7; color: #166534;">${p.status}</span></div>
+                    <div><span style="color: #6b7280;">Hazardous:</span><br><strong>${p.hazardous}</strong></div>
+                    <div><span style="color: #6b7280;">Product Type:</span><br><strong>${p.product_type === 'component' ? 'Component' : 'Sellable'}</strong></div>
+                    <div><span style="color: #6b7280;">Available in Portal:</span><br><strong>${p.available_in_portal ? 'Yes' : 'No'}</strong></div>
+                    <div><span style="color: #6b7280;">Available in Scale System:</span><br><strong>${p.available_in_scale_system ? 'Yes' : 'No'}</strong></div>
+                    ${p.product_type === 'component' ? `<div><span style="color: #6b7280;">Default Account:</span><br><code>${p.default_account || '—'}</code></div>` : ''}
+                </div>
+            </div>
+            <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 20px; border-radius: 8px;">
+                <div style="font-weight: 600; margin-bottom: 16px;">Selectors (Generic Model)</div>`;
+
+    if (hasSelectors) {
+        html += `
+                <div style="margin-bottom: 16px;">
+                    <div style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">Allowed Waste Fractions:</div>
+                    <div>${p.allowed_waste_fractions.map(f => `<span class="pill pill-fraction">${f}</span>`).join(' ')}</div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <div style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">Allowed Container Types:</div>
+                    <div>${p.allowed_container_types.map(c => `<span class="pill pill-container">${c}</span>`).join(' ')}</div>
+                </div>`;
+        if (p.allowed_emptying_intervals && p.allowed_emptying_intervals.length > 0) {
+            html += `
+                <div>
+                    <div style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">Allowed Emptying Intervals:</div>
+                    <div>${p.allowed_emptying_intervals.map(i => `<span class="pill pill-resp">${INTERVAL_LABELS[i] || i + ' vk'}</span>`).join(' ')}</div>
+                </div>`;
+        }
+    } else if (hasSpeeds) {
+        html += `
+                <div style="margin-bottom: 16px;">
+                    <div style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">Allowed Service Speeds:</div>
+                    <div>${p.allowed_service_speeds.map(s => `<span class="pill pill-speed">${getSpeedName(s)}</span>`).join(' ')}</div>
+                </div>`;
+    } else if (p.product_type === 'component') {
+        html += `<div style="color: #6b7280; font-size: 13px; font-style: italic;">This is a component product — it is used as a building block in sellable products.</div>`;
+    } else {
+        html += `<div style="color: #6b7280; font-size: 13px; font-style: italic;">This product has no selectors — it represents a single specific product.</div>`;
+    }
+
+    html += `
+            </div>
+        </div>`;
+
+    document.getElementById('detail-overview').innerHTML = html;
+}
+
+function renderDetailBOM() {
+    const p = currentProduct;
+    const childProducts = p.child_products || [];
+
+    if (p.product_type === 'component') {
+        document.getElementById('detail-bom').innerHTML = `
+            <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 40px; border-radius: 8px; text-align: center; color: #6b7280;">
+                This is a component product — it is used as a building block in other products' BOM.
+            </div>`;
+        return;
+    }
+
+    if (childProducts.length === 0) {
+        document.getElementById('detail-bom').innerHTML = `
+            <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 40px; border-radius: 8px; text-align: center; color: #6b7280;">
+                No child products (components) defined for this product.
+            </div>`;
+        return;
+    }
+
+    let html = `<h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Child Products (Bill of Materials)</h3>`;
+    html += `
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Component Product</th><th>Code</th><th>Account</th><th>Applicable Fractions</th></tr></thead>
+                <tbody>`;
+
+    childProducts.forEach(cp => {
+        const compProduct = DATA.products.find(pr => pr.id === cp.product_id);
+        const compName = compProduct ? compProduct.name : cp.product_id;
+        const compCode = compProduct ? compProduct.code : '—';
+        const fractionsDisplay = cp.applicable_fractions.length > 0
+            ? cp.applicable_fractions.map(f => `<span class="pill pill-fraction">${f}</span>`).join(' ')
+            : '<span class="pill pill-resp">All fractions</span>';
+
+        html += `<tr>
+            <td><span class="product-name" onclick="showProductDetail('${cp.product_id}')" style="cursor:pointer;">${compName}</span></td>
+            <td><code style="font-size: 12px; background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${compCode}</code></td>
+            <td><code>${cp.account}</code></td>
+            <td>${fractionsDisplay}</td>
+        </tr>`;
+    });
+
+    html += `</tbody></table></div>`;
+    document.getElementById('detail-bom').innerHTML = html;
+}
+
+function toggleBomFraction(header) {
+    const body = header.nextElementSibling;
+    const arrow = header.querySelector('span:last-child');
+    body.classList.toggle('open');
+    arrow.innerHTML = body.classList.contains('open') ? '&#9660;' : '&#9654;';
+}
+
+function renderDetailPriceLists() {
+    const p = currentProduct;
+    let allItems = [];
+
+    DATA.price_lists.forEach(pl => {
+        pl.items.forEach(item => {
+            if (item.product === p.name) {
+                allItems.push({ ...item, price_list: pl.name, municipality: pl.municipality });
+            }
+        });
+    });
+
+    if (allItems.length === 0) {
+        document.getElementById('detail-price-lists').innerHTML = `
+            <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 40px; border-radius: 8px; text-align: center; color: #6b7280;">
+                This product is not referenced in any price list.
+            </div>`;
+        return;
+    }
+
+    document.getElementById('detail-price-lists').innerHTML = `
+        <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Price List References (${allItems.length} entries)</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Price List</th>
+                        <th>Waste Fraction</th>
+                        <th>Container</th>
+                        <th>Service Speed</th>
+                        <th>Service Resp.</th>
+                        <th>Unit</th>
+                        <th style="text-align: right;">Price (EUR)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${allItems.map(item => `
+                        <tr>
+                            <td><strong>${item.price_list}</strong><br><span style="font-size: 12px; color: #6b7280;">${item.municipality}</span></td>
+                            <td>${item.waste_fraction ? `<span class="pill pill-fraction">${item.waste_fraction}</span>` : '<span style="color: #9ca3af;">&mdash;</span>'}</td>
+                            <td>${item.container_type ? `<span class="pill pill-container">${item.container_type}</span>` : '<span style="color: #9ca3af;">&mdash;</span>'}</td>
+                            <td>${item.service_speed ? `<span class="pill pill-speed">${getSpeedName(item.service_speed)}</span>` : '<span style="color: #9ca3af;">&mdash;</span>'}</td>
+                            <td>${item.service_responsibility || '<span style="color: #9ca3af;">&mdash;</span>'}</td>
+                            <td>${item.unit}</td>
+                            <td style="text-align: right; font-weight: 600;">&euro;${item.price.toFixed(2)}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>`;
+}
+
+// === Price List Cards ===
+function renderPriceListCards() {
+    const container = document.getElementById('price-list-cards');
+    container.innerHTML = DATA.price_lists.map((pl, idx) => `
+        <div class="card" onclick="showPriceListDetail(${idx})">
+            <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">${pl.name}</div>
+            <div style="font-size: 13px; color: #6b7280; margin-bottom: 12px;">${pl.municipality} | ${pl.validity_from} to ${pl.validity_to}</div>
+            <div style="display: flex; gap: 16px; font-size: 13px;">
+                <div><strong>${pl.items.length}</strong> price rows</div>
+                <div>VAT ${pl.vat_rate}</div>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding-top: 12px; margin-top: 12px; border-top: 1px solid #e5e7eb;">
+                <span style="font-size: 11px; color: #9ca3af;">${pl.currency}</span>
+                <span style="font-size: 11px; color: #10b981; font-weight: 600;">${pl.status}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function showPriceListDetail(idx) {
+    currentPriceList = DATA.price_lists[idx];
+    document.getElementById('price-list-cards').style.display = 'none';
+    document.getElementById('price-list-detail').style.display = 'block';
+    document.getElementById('pl-detail-name').textContent = currentPriceList.name;
+    document.getElementById('pl-detail-meta').textContent =
+        `${currentPriceList.municipality} | ${currentPriceList.validity_from} to ${currentPriceList.validity_to} | ${currentPriceList.currency} | VAT ${currentPriceList.vat_rate}`;
+
+    // Populate filter dropdowns
+    populatePriceListFilters();
+    filterPriceListItems();
+}
+
+function closePriceListDetail() {
+    document.getElementById('price-list-detail').style.display = 'none';
+    document.getElementById('price-list-cards').style.display = 'grid';
+    currentPriceList = null;
+    showGross = false;
+    document.getElementById('pl-vat-toggle').innerHTML = 'VAT &nbsp; Show Gross (incl. VAT)';
+    document.getElementById('pl-price-header').textContent = 'Price (EUR)';
+}
+
+function populatePriceListFilters() {
+    const items = currentPriceList.items;
+    const products = [...new Set(items.map(i => i.product))];
+    const fractions = [...new Set(items.map(i => i.waste_fraction).filter(Boolean))];
+    const containers = [...new Set(items.map(i => i.container_type).filter(Boolean))];
+    const speeds = [...new Set(items.map(i => i.service_speed).filter(Boolean))];
+    const resps = [...new Set(items.map(i => i.service_responsibility).filter(Boolean))];
+
+    document.getElementById('pl-filter-product').innerHTML =
+        '<option value="">All Products</option>' + products.map(p => `<option value="${p}">${p}</option>`).join('');
+    document.getElementById('pl-filter-fraction').innerHTML =
+        '<option value="">All Fractions</option>' + fractions.map(f => `<option value="${f}">${f}</option>`).join('');
+    document.getElementById('pl-filter-container').innerHTML =
+        '<option value="">All Containers</option>' + containers.map(c => `<option value="${c}">${c}</option>`).join('');
+    document.getElementById('pl-filter-speed').innerHTML =
+        '<option value="">All Speeds</option>' + speeds.map(s => `<option value="${s}">${getSpeedName(s)}</option>`).join('');
+    document.getElementById('pl-filter-resp').innerHTML =
+        '<option value="">All</option>' + resps.map(r => `<option value="${r}">${r}</option>`).join('');
+}
+
+function filterPriceListItems() {
+    const filterProduct = document.getElementById('pl-filter-product').value;
+    const filterFraction = document.getElementById('pl-filter-fraction').value;
+    const filterContainer = document.getElementById('pl-filter-container').value;
+    const filterSpeed = document.getElementById('pl-filter-speed').value;
+    const filterResp = document.getElementById('pl-filter-resp').value;
+
+    let items = currentPriceList.items.map((item, idx) => ({...item, _idx: idx}));
+    if (filterProduct) items = items.filter(i => i.product === filterProduct);
+    if (filterFraction) items = items.filter(i => i.waste_fraction === filterFraction);
+    if (filterContainer) items = items.filter(i => i.container_type === filterContainer);
+    if (filterSpeed) items = items.filter(i => i.service_speed === filterSpeed);
+    if (filterResp) items = items.filter(i => i.service_responsibility === filterResp);
+
+    // Calculate VAT multiplier for gross display
+    let vatMultiplier = 1;
+    if (showGross && currentPriceList.vat_rate) {
+        const vatPct = parseFloat(currentPriceList.vat_rate.replace('%', ''));
+        if (!isNaN(vatPct)) vatMultiplier = 1 + vatPct / 100;
+    }
+
+    const tbody = document.getElementById('pl-items-body');
+    tbody.innerHTML = items.map(item => {
+        const displayPrice = (item.price * vatMultiplier);
+        const vatLabel = showGross ? ' <span style="font-size:11px;color:#6b7280;">(incl. VAT)</span>' : '';
+        const hasComponents = item.components && item.components.length > 0;
+        const expandBtn = hasComponents
+            ? `<button class="expand-components" onclick="toggleComponentBreakdown(this)" title="Show component breakdown">&#9654;</button>`
+            : '';
+        const breakdownRow = hasComponents
+            ? `<tr class="component-breakdown-row" style="display: none;">
+                <td colspan="9" style="padding-left: 40px !important;">
+                    ${item.components.map(c => {
+                        const compDisplay = (c.price * vatMultiplier);
+                        return `<span style="margin-right: 16px;">${c.name} <span style="color: #9ca3af;">(${c.account})</span>: <strong>&euro;${compDisplay.toFixed(2)}</strong></span>`;
+                    }).join('')}
+                    ${showGross ? `<span style="margin-left: 8px; font-size: 11px; color: #6b7280;">(incl. VAT)</span>` : ''}
+                </td>
+            </tr>`
+            : '';
+        return `<tr>
+            <td><strong>${item.product}</strong></td>
+            <td>${item.waste_fraction ? `<span class="pill pill-fraction">${item.waste_fraction}</span>` : '<span style="color: #9ca3af;">&mdash;</span>'}</td>
+            <td>${item.container_type ? `<span class="pill pill-container">${item.container_type}</span>` : '<span style="color: #9ca3af;">&mdash;</span>'}</td>
+            <td>${item.service_speed ? `<span class="pill pill-speed">${getSpeedName(item.service_speed)}</span>` : '<span style="color: #9ca3af;">&mdash;</span>'}</td>
+            <td>${item.service_responsibility || '<span style="color: #9ca3af;">&mdash;</span>'}</td>
+            <td>${item.zone || '<span style="color: #9ca3af;">&mdash;</span>'}</td>
+            <td>${item.unit}</td>
+            <td style="text-align: right; font-weight: 600;">&euro;${displayPrice.toFixed(2)}${vatLabel}${expandBtn}</td>
+            <td>
+                <div style="display: flex; gap: 4px;">
+                    <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="showPriceRowForm(${item._idx})">Edit</button>
+                    <button class="btn btn-danger" style="padding: 4px 10px; font-size: 11px;" onclick="deletePriceRow(${item._idx})">Delete</button>
+                </div>
+            </td>
+        </tr>${breakdownRow}`;
+    }).join('');
+}
+
+// === Category Table ===
+function renderCategoryTable() {
+    const tbody = document.getElementById('category-table-body');
+    tbody.innerHTML = DATA.categories.map(c => {
+        const count = DATA.products.filter(p => p.category === c.name).length;
+        return `<tr>
+            <td><strong>${c.name}</strong></td>
+            <td><span class="badge ${c.badge}">${c.type_display}</span></td>
+            <td>${count}</td>
+            <td style="color: #6b7280; font-size: 13px;">${c.description || '—'}</td>
+            <td>
+                <div style="display: flex; gap: 4px;">
+                    <button class="btn btn-secondary" style="padding: 6px 14px; font-size: 12px;" onclick="showEditCategory('${c.name}')">Edit</button>
+                    <button class="btn btn-danger" style="padding: 6px 14px; font-size: 12px;" onclick="deleteCategory('${c.name}')">Delete</button>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+// === Waste Fraction Table ===
+function renderFractionTable() {
+    const tbody = document.getElementById('fraction-table-body');
+    tbody.innerHTML = DATA.waste_fractions.map(f => {
+        const barColor = f.recycling_percentage >= 80 ? '#10b981' : f.recycling_percentage >= 50 ? '#f59e0b' : '#ef4444';
+        const props = [];
+        if (f.hazardous) props.push('<span class="pill pill-hazardous">Hazardous</span>');
+        if (f.recyclable) props.push('<span class="pill pill-recyclable">Recyclable</span>');
+        return `<tr>
+            <td><strong>${f.name}</strong><span class="product-code">${f.code}</span></td>
+            <td style="color: #6b7280;">${f.name_en}</td>
+            <td><code style="font-size: 12px; background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${f.ewc_code}</code></td>
+            <td>
+                ${f.recycling_percentage}%
+                <span class="recycling-bar"><span class="recycling-bar-fill" style="width: ${f.recycling_percentage}%; background: ${barColor};"></span></span>
+            </td>
+            <td>${f.default_weight_kg_per_m3 ? f.default_weight_kg_per_m3 + ' kg/m³' : '<span style="color: #9ca3af;">&mdash;</span>'}</td>
+            <td>${props.length ? props.join(' ') : '<span style="color: #9ca3af;">&mdash;</span>'}</td>
+            <td><span class="pill pill-status-${f.status}">${f.status}</span></td>
+            <td>
+                <div style="display: flex; gap: 4px;">
+                    <button class="btn btn-secondary" style="padding: 6px 14px; font-size: 12px;" onclick="showEditFraction('${f.name}')">Edit</button>
+                    <button class="btn btn-danger" style="padding: 6px 14px; font-size: 12px;" onclick="deleteFraction('${f.name}')">Delete</button>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+// === Fraction Form ===
+let editingFraction = null;
+
+function showNewFraction() {
+    editingFraction = null;
+    document.getElementById('fraction-form-title').textContent = 'New Waste Fraction';
+    document.getElementById('fraction-form-submit').textContent = 'Create Fraction';
+    document.getElementById('frac-name').value = '';
+    document.getElementById('frac-name-en').value = '';
+    document.getElementById('frac-code').value = '';
+    document.getElementById('frac-ewc').value = '';
+    document.getElementById('frac-description').value = '';
+    document.getElementById('frac-recycling').value = '';
+    document.getElementById('frac-density').value = '';
+    document.getElementById('frac-status').value = 'active';
+    document.getElementById('frac-hazardous').checked = false;
+    document.getElementById('frac-recyclable').checked = false;
+    document.getElementById('fraction-form-modal').classList.add('active');
+}
+
+function showEditFraction(name) {
+    const f = DATA.waste_fractions.find(x => x.name === name);
+    if (!f) return;
+    editingFraction = f;
+    document.getElementById('fraction-form-title').textContent = 'Edit Waste Fraction';
+    document.getElementById('fraction-form-submit').textContent = 'Save Changes';
+    document.getElementById('frac-name').value = f.name;
+    document.getElementById('frac-name-en').value = f.name_en;
+    document.getElementById('frac-code').value = f.code;
+    document.getElementById('frac-ewc').value = f.ewc_code;
+    document.getElementById('frac-description').value = f.description || '';
+    document.getElementById('frac-recycling').value = f.recycling_percentage;
+    document.getElementById('frac-density').value = f.default_weight_kg_per_m3 || '';
+    document.getElementById('frac-status').value = f.status;
+    document.getElementById('frac-hazardous').checked = f.hazardous;
+    document.getElementById('frac-recyclable').checked = f.recyclable;
+    document.getElementById('fraction-form-modal').classList.add('active');
+}
+
+function closeFractionForm() {
+    document.getElementById('fraction-form-modal').classList.remove('active');
+    editingFraction = null;
+}
+
+function submitFractionForm() {
+    const name = document.getElementById('frac-name').value.trim();
+    if (!name) { alert('Fraction name is required.'); return; }
+
+    const fractionData = {
+        name: name,
+        name_en: document.getElementById('frac-name-en').value.trim(),
+        code: document.getElementById('frac-code').value.trim(),
+        ewc_code: document.getElementById('frac-ewc').value.trim(),
+        description: document.getElementById('frac-description').value.trim(),
+        recycling_percentage: parseInt(document.getElementById('frac-recycling').value) || 0,
+        default_weight_kg_per_m3: parseInt(document.getElementById('frac-density').value) || null,
+        status: document.getElementById('frac-status').value,
+        hazardous: document.getElementById('frac-hazardous').checked,
+        recyclable: document.getElementById('frac-recyclable').checked
+    };
+
+    if (editingFraction) {
+        const oldName = editingFraction.name;
+        Object.assign(editingFraction, fractionData);
+        if (oldName !== name) {
+            DATA.products.forEach(p => {
+                p.allowed_waste_fractions = p.allowed_waste_fractions.map(f => f === oldName ? name : f);
+                if (p.child_products) {
+                    p.child_products.forEach(cp => {
+                        cp.applicable_fractions = cp.applicable_fractions.map(f => f === oldName ? name : f);
+                    });
+                }
+            });
+            DATA.price_lists.forEach(pl => {
+                pl.items.forEach(item => {
+                    if (item.waste_fraction === oldName) item.waste_fraction = name;
+                });
+            });
+        }
+    } else {
+        DATA.waste_fractions.push(fractionData);
+    }
+    closeFractionForm();
+    renderAll();
+}
+
+function deleteFraction(name) {
+    const referencedByProduct = DATA.products.some(p => p.allowed_waste_fractions.includes(name));
+    const referencedByPrice = DATA.price_lists.some(pl => pl.items.some(i => i.waste_fraction === name));
+    if (referencedByProduct || referencedByPrice) {
+        alert(`Cannot delete "${name}" — it is referenced by products or price rows.`);
+        return;
+    }
+    if (!confirm(`Delete waste fraction "${name}"?`)) return;
+    const idx = DATA.waste_fractions.findIndex(f => f.name === name);
+    if (idx !== -1) DATA.waste_fractions.splice(idx, 1);
+    renderAll();
+}
+
+// === New Product Form ===
+let editingProduct = null;
+
+function showNewProduct() {
+    editingProduct = null;
+    document.getElementById('product-form-title').textContent = 'New Product';
+    document.getElementById('product-form-submit').textContent = 'Create Product';
+    const catSelect = document.getElementById('prod-category');
+    catSelect.innerHTML = '<option value="">Select category...</option>' +
+        DATA.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+
+    const fracGrid = document.getElementById('prod-fractions-grid');
+    fracGrid.innerHTML = DATA.waste_fractions.map(f =>
+        `<label class="checkbox-card">
+            <input type="checkbox" value="${f.name}" onchange="onProductSelectorsChange()">
+            <span class="pill pill-fraction">${f.name}</span>
+        </label>`
+    ).join('');
+
+    const contGrid = document.getElementById('prod-containers-grid');
+    contGrid.innerHTML = DATA.container_types.map(c =>
+        `<label class="checkbox-card">
+            <input type="checkbox" value="${c.name}" onchange="onProductSelectorsChange()">
+            <span class="pill pill-container">${c.name}</span>
+        </label>`
+    ).join('');
+
+    const intGrid = document.getElementById('prod-intervals-grid');
+    intGrid.innerHTML = EMPTYING_INTERVALS.map(i =>
+        `<label class="checkbox-card">
+            <input type="checkbox" value="${i}" onchange="updateIntervalCounter()">
+            <span class="pill pill-resp">${INTERVAL_LABELS[i]}</span>
+        </label>`
+    ).join('');
+
+    // Populate service speeds grid
+    const speedGrid = document.getElementById('prod-speeds-grid');
+    speedGrid.innerHTML = DATA.service_speeds.map(s =>
+        `<label class="checkbox-card">
+            <input type="checkbox" value="${s.code}">
+            <span class="pill pill-speed">${s.name} (${s.name_en})</span>
+        </label>`
+    ).join('');
+
+    document.getElementById('prod-name').value = '';
+    document.getElementById('prod-name-en').value = '';
+    document.getElementById('prod-code').value = '';
+    document.getElementById('prod-category').value = '';
+    document.getElementById('prod-status').value = 'active';
+    document.getElementById('prod-type').value = 'sellable';
+    document.getElementById('prod-default-account').value = '';
+    document.getElementById('prod-default-account-group').style.display = 'none';
+    document.getElementById('prod-portal').checked = true;
+    document.getElementById('prod-scale').checked = false;
+    document.getElementById('prod-hazardous').value = 'Ei';
+    document.getElementById('product-selectors-section').style.display = 'none';
+    document.getElementById('product-speeds-section').style.display = 'none';
+    document.getElementById('product-bom-section').style.display = 'none';
+    document.getElementById('sku-callout').style.display = 'none';
+    childProductsFormData = [];
+
+    document.getElementById('product-form-modal').classList.add('active');
+}
+
+function closeProductForm() {
+    document.getElementById('product-form-modal').classList.remove('active');
+}
+
+function onProductCategoryChange() {
+    const cat = document.getElementById('prod-category').value;
+    const showSelectors = (cat === 'Arjen palvelut*');
+    const showSpeeds = (cat === 'Lietepalvelut*');
+    document.getElementById('product-selectors-section').style.display = showSelectors ? 'block' : 'none';
+    document.getElementById('product-speeds-section').style.display = showSpeeds ? 'block' : 'none';
+    if (!showSelectors) {
+        document.getElementById('product-bom-section').style.display = 'none';
+        document.getElementById('sku-callout').style.display = 'none';
+    }
+    onProductSelectorsChange();
+}
+
+function toggleAllFractions(checked) {
+    document.querySelectorAll('#prod-fractions-grid input[type="checkbox"]').forEach(cb => { cb.checked = checked; });
+    onProductSelectorsChange();
+}
+
+function toggleAllContainers(checked) {
+    document.querySelectorAll('#prod-containers-grid input[type="checkbox"]').forEach(cb => { cb.checked = checked; });
+    onProductSelectorsChange();
+}
+
+function onProductSelectorsChange() {
+    const fractions = [...document.querySelectorAll('#prod-fractions-grid input:checked')].map(cb => cb.value);
+    const containers = [...document.querySelectorAll('#prod-containers-grid input:checked')].map(cb => cb.value);
+
+    document.getElementById('prod-fraction-counter').textContent = `${fractions.length} fraction${fractions.length !== 1 ? 's' : ''} selected`;
+    document.getElementById('prod-container-counter').textContent = `${containers.length} container${containers.length !== 1 ? 's' : ''} selected`;
+
+    const skuCount = Math.max(fractions.length, 1) * Math.max(containers.length, 1);
+    const callout = document.getElementById('sku-callout');
+    if (fractions.length > 0 && containers.length > 0) {
+        callout.style.display = 'flex';
+        document.getElementById('sku-callout-text').innerHTML =
+            `With ${fractions.length} fractions &times; ${containers.length} containers, this single product replaces up to <strong>${skuCount} SKU variants</strong> in the old model.`;
+    } else {
+        callout.style.display = 'none';
+    }
+
+    const prodType = document.getElementById('prod-type') ? document.getElementById('prod-type').value : 'sellable';
+    if (fractions.length > 0 && prodType === 'sellable') {
+        document.getElementById('product-bom-section').style.display = 'block';
+        renderChildProductsEditor(fractions);
+    } else {
+        document.getElementById('product-bom-section').style.display = 'none';
+    }
+
+    const intervalsSection = document.getElementById('prod-intervals-section');
+    if (intervalsSection) {
+        intervalsSection.style.display = fractions.length > 0 || containers.length > 0 ? 'block' : 'none';
+    }
+    updateIntervalCounter();
+}
+
+function toggleAllIntervals(checked) {
+    document.querySelectorAll('#prod-intervals-grid input[type="checkbox"]').forEach(cb => { cb.checked = checked; });
+    updateIntervalCounter();
+}
+
+function updateIntervalCounter() {
+    const count = document.querySelectorAll('#prod-intervals-grid input:checked').length;
+    const counter = document.getElementById('prod-interval-counter');
+    if (counter) counter.textContent = `${count} interval${count !== 1 ? 's' : ''} selected`;
+}
+
+function onProductTypeChange() {
+    const prodType = document.getElementById('prod-type').value;
+    const isComponent = prodType === 'component';
+    document.getElementById('prod-default-account-group').style.display = isComponent ? 'flex' : 'none';
+    document.getElementById('product-selectors-section').style.display = isComponent ? 'none' : document.getElementById('product-selectors-section').style.display;
+    document.getElementById('product-bom-section').style.display = isComponent ? 'none' : document.getElementById('product-bom-section').style.display;
+    document.getElementById('product-speeds-section').style.display = isComponent ? 'none' : document.getElementById('product-speeds-section').style.display;
+    if (isComponent) {
+        document.getElementById('prod-portal').checked = false;
+        document.getElementById('prod-scale').checked = false;
+    }
+}
+
+// === Child Products Editor ===
+let childProductsFormData = [];
+
+function renderChildProductsEditor(fractions) {
+    const editor = document.getElementById('prod-child-products-editor');
+    const componentProducts = DATA.products.filter(p => p.product_type === 'component');
+
+    if (childProductsFormData.length === 0) {
+        editor.innerHTML = `<div style="color: #9ca3af; font-size: 13px; padding: 16px; text-align: center;">No child products added yet. Click "+ Add Component" to add one.</div>`;
+        return;
+    }
+
+    editor.innerHTML = `
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead><tr>
+                <th style="padding: 8px; font-size: 12px; text-align: left;">Component Product</th>
+                <th style="padding: 8px; font-size: 12px; text-align: left;">Applicable Fractions</th>
+                <th style="padding: 8px; font-size: 12px; text-align: left; width: 100px;">Account</th>
+                <th style="width: 40px;"></th>
+            </tr></thead>
+            <tbody>
+                ${childProductsFormData.map((cp, idx) => {
+                    const compOptions = componentProducts.map(p =>
+                        `<option value="${p.id}" ${cp.product_id === p.id ? 'selected' : ''}>${p.name} (${p.code})</option>`
+                    ).join('');
+                    const fractionChecks = fractions.map(f =>
+                        `<label style="display:inline-flex;align-items:center;gap:4px;margin-right:8px;font-size:12px;">
+                            <input type="checkbox" style="width:auto;" value="${f}" ${cp.applicable_fractions.includes(f) ? 'checked' : ''}
+                                onchange="updateChildProductFractions(${idx})"> ${f}
+                        </label>`
+                    ).join('');
+                    return `<tr style="border-top: 1px solid #f3f4f6;">
+                        <td style="padding: 8px;">
+                            <select style="width:100%;padding:6px 8px;border:1px solid #d1d5db;border-radius:4px;font-size:13px;"
+                                onchange="updateChildProductSelection(${idx}, this.value)">
+                                <option value="">Select component...</option>
+                                ${compOptions}
+                            </select>
+                        </td>
+                        <td style="padding: 8px;">
+                            <div style="display:flex;flex-wrap:wrap;gap:4px;">${fractionChecks}</div>
+                            <label style="display:inline-flex;align-items:center;gap:4px;margin-top:4px;font-size:11px;color:#6b7280;">
+                                <input type="checkbox" style="width:auto;" ${cp.applicable_fractions.length === 0 ? 'checked' : ''}
+                                    onchange="toggleChildProductAllFractions(${idx}, this.checked)"> All fractions
+                            </label>
+                        </td>
+                        <td style="padding: 8px;">
+                            <input type="text" value="${cp.account || ''}" style="width:100%;padding:6px 8px;border:1px solid #d1d5db;border-radius:4px;font-size:13px;"
+                                onchange="childProductsFormData[${idx}].account=this.value">
+                        </td>
+                        <td style="padding: 8px;">
+                            <button onclick="removeChildProductRow(${idx})" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px;">&times;</button>
+                        </td>
+                    </tr>`;
+                }).join('')}
+            </tbody>
+        </table>`;
+}
+
+function addChildProductRow() {
+    childProductsFormData.push({ product_id: '', applicable_fractions: [], account: '' });
+    const fractions = [...document.querySelectorAll('#prod-fractions-grid input:checked')].map(cb => cb.value);
+    renderChildProductsEditor(fractions);
+}
+
+function removeChildProductRow(idx) {
+    childProductsFormData.splice(idx, 1);
+    const fractions = [...document.querySelectorAll('#prod-fractions-grid input:checked')].map(cb => cb.value);
+    renderChildProductsEditor(fractions);
+}
+
+function updateChildProductSelection(idx, productId) {
+    childProductsFormData[idx].product_id = productId;
+    const compProduct = DATA.products.find(p => p.id === productId);
+    if (compProduct && compProduct.default_account) {
+        childProductsFormData[idx].account = compProduct.default_account;
+    }
+    const fractions = [...document.querySelectorAll('#prod-fractions-grid input:checked')].map(cb => cb.value);
+    renderChildProductsEditor(fractions);
+}
+
+function updateChildProductFractions(idx) {
+    const row = document.querySelectorAll('#prod-child-products-editor tbody tr')[idx];
+    if (!row) return;
+    const checks = [...row.querySelectorAll('input[type="checkbox"][value]')];
+    childProductsFormData[idx].applicable_fractions = checks.filter(cb => cb.checked).map(cb => cb.value);
+}
+
+function toggleChildProductAllFractions(idx, allChecked) {
+    if (allChecked) {
+        childProductsFormData[idx].applicable_fractions = [];
+    } else {
+        const fractions = [...document.querySelectorAll('#prod-fractions-grid input:checked')].map(cb => cb.value);
+        childProductsFormData[idx].applicable_fractions = [...fractions];
+    }
+    const fractions = [...document.querySelectorAll('#prod-fractions-grid input:checked')].map(cb => cb.value);
+    renderChildProductsEditor(fractions);
+}
+
+function submitProductForm() {
+    const name = document.getElementById('prod-name').value.trim();
+    const code = document.getElementById('prod-code').value.trim();
+    if (!name || !code) { alert('Product name and code are required.'); return; }
+
+    const category = document.getElementById('prod-category').value;
+    const catObj = DATA.categories.find(c => c.name === category);
+    const type = catObj ? catObj.type : 'service';
+    const badgeMap = { service: 'badge-service', material: 'badge-material', additional: 'badge-additional' };
+    const displayMap = { service: 'Service Product', material: 'Material Product', additional: 'Additional' };
+
+    const productType = document.getElementById('prod-type').value;
+    const fractions = [...document.querySelectorAll('#prod-fractions-grid input:checked')].map(cb => cb.value);
+    const containers = [...document.querySelectorAll('#prod-containers-grid input:checked')].map(cb => cb.value);
+    const intervals = [...document.querySelectorAll('#prod-intervals-grid input:checked')].map(cb => parseInt(cb.value));
+    const speeds = [...document.querySelectorAll('#prod-speeds-grid input:checked')].map(cb => cb.value);
+
+    const cleanChildProducts = childProductsFormData.filter(cp => cp.product_id);
+
+    const commonFields = {
+        name: name,
+        name_en: document.getElementById('prod-name-en').value.trim(),
+        code: code,
+        category: category,
+        category_badge: badgeMap[type] || 'badge-service',
+        category_type: type,
+        type_display: displayMap[type] || 'Service Product',
+        status: document.getElementById('prod-status').value,
+        available_in_portal: document.getElementById('prod-portal').checked,
+        available_in_scale_system: document.getElementById('prod-scale').checked,
+        hazardous: document.getElementById('prod-hazardous').value,
+        product_type: productType,
+        allowed_waste_fractions: productType === 'component' ? [] : fractions,
+        allowed_container_types: productType === 'component' ? [] : containers,
+        allowed_emptying_intervals: productType === 'component' ? [] : intervals,
+        child_products: productType === 'component' ? [] : cleanChildProducts
+    };
+
+    if (speeds.length > 0) {
+        commonFields.allowed_service_speeds = speeds;
+    }
+
+    if (productType === 'component') {
+        commonFields.default_account = document.getElementById('prod-default-account').value.trim();
+    }
+
+    if (editingProduct) {
+        const oldName = editingProduct.name;
+        Object.assign(editingProduct, commonFields);
+        if (oldName !== name) {
+            DATA.price_lists.forEach(pl => {
+                pl.items.forEach(item => {
+                    if (item.product === oldName) item.product = name;
+                });
+            });
+        }
+    } else {
+        const prefix = productType === 'component' ? 'COMP' : 'GEN';
+        const maxNum = DATA.products.reduce((max, p) => {
+            if (!p.id.startsWith(prefix + '-')) return max;
+            const n = parseInt(p.id.replace(prefix + '-', ''));
+            return n > max ? n : max;
+        }, 0);
+        const newId = `${prefix}-${String(maxNum + 1).padStart(3, '0')}`;
+
+        DATA.products.push({
+            id: newId,
+            ...commonFields
+        });
+    }
+
+    closeProductForm();
+    childProductsFormData = [];
+    editingProduct = null;
+    renderAll();
+}
+
+function showEditProduct() {
+    if (!currentProduct) return;
+    editingProduct = currentProduct;
+    document.getElementById('product-form-title').textContent = 'Edit Product';
+    document.getElementById('product-form-submit').textContent = 'Save Changes';
+
+    const catSelect = document.getElementById('prod-category');
+    catSelect.innerHTML = '<option value="">Select category...</option>' +
+        DATA.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+
+    const fracGrid = document.getElementById('prod-fractions-grid');
+    fracGrid.innerHTML = DATA.waste_fractions.map(f =>
+        `<label class="checkbox-card">
+            <input type="checkbox" value="${f.name}" ${currentProduct.allowed_waste_fractions.includes(f.name) ? 'checked' : ''} onchange="onProductSelectorsChange()">
+            <span class="pill pill-fraction">${f.name}</span>
+        </label>`
+    ).join('');
+
+    const contGrid = document.getElementById('prod-containers-grid');
+    contGrid.innerHTML = DATA.container_types.map(c =>
+        `<label class="checkbox-card">
+            <input type="checkbox" value="${c.name}" ${currentProduct.allowed_container_types.includes(c.name) ? 'checked' : ''} onchange="onProductSelectorsChange()">
+            <span class="pill pill-container">${c.name}</span>
+        </label>`
+    ).join('');
+
+    document.getElementById('prod-name').value = currentProduct.name;
+    document.getElementById('prod-name-en').value = currentProduct.name_en || '';
+    document.getElementById('prod-code').value = currentProduct.code;
+    document.getElementById('prod-category').value = currentProduct.category;
+    document.getElementById('prod-status').value = currentProduct.status;
+    document.getElementById('prod-portal').checked = currentProduct.available_in_portal;
+    document.getElementById('prod-scale').checked = currentProduct.available_in_scale_system;
+    document.getElementById('prod-hazardous').value = currentProduct.hazardous;
+
+    document.getElementById('prod-type').value = currentProduct.product_type || 'sellable';
+    document.getElementById('prod-default-account').value = currentProduct.default_account || '';
+    onProductTypeChange();
+
+    childProductsFormData = (currentProduct.child_products || []).map(cp => ({
+        product_id: cp.product_id,
+        applicable_fractions: [...cp.applicable_fractions],
+        account: cp.account
+    }));
+
+    const intGrid = document.getElementById('prod-intervals-grid');
+    intGrid.innerHTML = EMPTYING_INTERVALS.map(i =>
+        `<label class="checkbox-card">
+            <input type="checkbox" value="${i}" ${(currentProduct.allowed_emptying_intervals || []).includes(i) ? 'checked' : ''} onchange="updateIntervalCounter()">
+            <span class="pill pill-resp">${INTERVAL_LABELS[i]}</span>
+        </label>`
+    ).join('');
+
+    // Populate service speeds grid
+    const speedGrid = document.getElementById('prod-speeds-grid');
+    const currentSpeeds = currentProduct.allowed_service_speeds || [];
+    speedGrid.innerHTML = DATA.service_speeds.map(s =>
+        `<label class="checkbox-card">
+            <input type="checkbox" value="${s.code}" ${currentSpeeds.includes(s.code) ? 'checked' : ''}>
+            <span class="pill pill-speed">${s.name} (${s.name_en})</span>
+        </label>`
+    ).join('');
+
+    onProductCategoryChange();
+
+    document.getElementById('product-form-modal').classList.add('active');
+}
+
+function deleteProduct() {
+    if (!currentProduct) return;
+    if (!confirm(`Delete product "${currentProduct.name}"? This will also remove all price rows referencing it.`)) return;
+    const name = currentProduct.name;
+    const idx = DATA.products.findIndex(p => p.id === currentProduct.id);
+    if (idx !== -1) DATA.products.splice(idx, 1);
+    DATA.price_lists.forEach(pl => {
+        pl.items = pl.items.filter(item => item.product !== name);
+    });
+    closeProductDetail();
+    renderAll();
+}
+
+// === Category Form ===
+let editingCategory = null;
+
+function showNewCategory() {
+    editingCategory = null;
+    document.getElementById('category-form-title').textContent = 'New Category';
+    document.getElementById('category-form-submit').textContent = 'Create Category';
+    document.getElementById('cat-name').value = '';
+    document.getElementById('cat-type').value = 'service';
+    document.getElementById('cat-description').value = '';
+    document.getElementById('category-form-modal').classList.add('active');
+}
+
+function showEditCategory(name) {
+    const c = DATA.categories.find(x => x.name === name);
+    if (!c) return;
+    editingCategory = c;
+    document.getElementById('category-form-title').textContent = 'Edit Category';
+    document.getElementById('category-form-submit').textContent = 'Save Changes';
+    document.getElementById('cat-name').value = c.name;
+    document.getElementById('cat-type').value = c.type === 'additional' ? 'additional' : c.type === 'material' ? 'material' : 'service';
+    document.getElementById('cat-description').value = c.description || '';
+    document.getElementById('category-form-modal').classList.add('active');
+}
+
+function closeCategoryForm() {
+    document.getElementById('category-form-modal').classList.remove('active');
+    editingCategory = null;
+}
+
+function submitCategoryForm() {
+    const name = document.getElementById('cat-name').value.trim();
+    if (!name) { alert('Category name is required.'); return; }
+
+    const type = document.getElementById('cat-type').value;
+    const badgeMap = { service: 'badge-service', material: 'badge-material', additional: 'badge-additional' };
+    const displayMap = { service: 'Service Product', material: 'Material Product', additional: 'Additional' };
+    const description = document.getElementById('cat-description').value.trim();
+
+    if (editingCategory) {
+        const oldName = editingCategory.name;
+        editingCategory.name = name;
+        editingCategory.type = type;
+        editingCategory.badge = badgeMap[type] || 'badge-service';
+        editingCategory.type_display = displayMap[type] || 'Service Product';
+        editingCategory.description = description;
+        if (oldName !== name) {
+            DATA.products.forEach(p => {
+                if (p.category === oldName) {
+                    p.category = name;
+                    p.category_badge = badgeMap[type] || 'badge-service';
+                    p.category_type = type;
+                    p.type_display = displayMap[type] || 'Service Product';
+                }
+            });
+        }
+    } else {
+        DATA.categories.push({
+            name: name, type: type, badge: badgeMap[type] || 'badge-service',
+            type_display: displayMap[type] || 'Service Product', description: description,
+            product_count: 0, schema_fields: 8
+        });
+    }
+    closeCategoryForm();
+    renderAll();
+}
+
+function deleteCategory(name) {
+    const count = DATA.products.filter(p => p.category === name).length;
+    if (count > 0) {
+        alert(`Cannot delete "${name}" — it has ${count} product(s). Move or delete them first.`);
+        return;
+    }
+    if (!confirm(`Delete category "${name}"?`)) return;
+    const idx = DATA.categories.findIndex(c => c.name === name);
+    if (idx !== -1) DATA.categories.splice(idx, 1);
+    renderAll();
+}
+
+// === Price List Form ===
+let editingPriceList = null;
+let editingPriceRow = null;
+
+function showNewPriceList() {
+    editingPriceList = null;
+    document.getElementById('pricelist-form-title').textContent = 'New Price List';
+    document.getElementById('pricelist-form-submit').textContent = 'Create Price List';
+    document.getElementById('pl-name').value = '';
+    populateMunicipalityDropdown('pl-municipality', '');
+    document.getElementById('pl-valid-from').value = '';
+    document.getElementById('pl-valid-to').value = '';
+    document.getElementById('pl-currency').value = 'EUR';
+    document.getElementById('pl-vat').value = '25.5%';
+    document.getElementById('pricelist-form-modal').classList.add('active');
+}
+
+function showEditPriceListMeta() {
+    if (!currentPriceList) return;
+    editingPriceList = currentPriceList;
+    document.getElementById('pricelist-form-title').textContent = 'Edit Price List';
+    document.getElementById('pricelist-form-submit').textContent = 'Save Changes';
+    document.getElementById('pl-name').value = currentPriceList.name;
+    populateMunicipalityDropdown('pl-municipality', currentPriceList.municipality);
+    document.getElementById('pl-valid-from').value = currentPriceList.validity_from;
+    document.getElementById('pl-valid-to').value = currentPriceList.validity_to;
+    document.getElementById('pl-currency').value = currentPriceList.currency;
+    document.getElementById('pl-vat').value = currentPriceList.vat_rate;
+    document.getElementById('pricelist-form-modal').classList.add('active');
+}
+
+function closePriceListForm() {
+    document.getElementById('pricelist-form-modal').classList.remove('active');
+    editingPriceList = null;
+}
+
+function submitPriceListForm() {
+    const name = document.getElementById('pl-name').value.trim();
+    if (!name) { alert('Price list name is required.'); return; }
+
+    if (editingPriceList) {
+        editingPriceList.name = name;
+        editingPriceList.municipality = document.getElementById('pl-municipality').value.trim();
+        editingPriceList.validity_from = document.getElementById('pl-valid-from').value;
+        editingPriceList.validity_to = document.getElementById('pl-valid-to').value;
+        editingPriceList.currency = document.getElementById('pl-currency').value.trim();
+        editingPriceList.vat_rate = document.getElementById('pl-vat').value.trim();
+        document.getElementById('pl-detail-name').textContent = editingPriceList.name;
+        document.getElementById('pl-detail-meta').textContent =
+            `${editingPriceList.municipality} | ${editingPriceList.validity_from} to ${editingPriceList.validity_to} | ${editingPriceList.currency} | VAT ${editingPriceList.vat_rate}`;
+        renderPriceListCards();
+        alert(`Price list "${name}" updated successfully!`);
+    } else {
+        const newPL = {
+            name: name, municipality: document.getElementById('pl-municipality').value.trim(),
+            validity_from: document.getElementById('pl-valid-from').value,
+            validity_to: document.getElementById('pl-valid-to').value,
+            currency: document.getElementById('pl-currency').value.trim(),
+            vat_rate: document.getElementById('pl-vat').value.trim(),
+            status: 'active', items: []
+        };
+        DATA.price_lists.push(newPL);
+        renderPriceListCards();
+        alert(`Price list "${name}" created successfully!`);
+    }
+    closePriceListForm();
+}
+
+// === Price Row Form ===
+function showPriceRowForm(editIndex) {
+    editingPriceRow = (editIndex !== undefined && editIndex !== null) ? editIndex : null;
+
+    const prodSelect = document.getElementById('pr-product');
+    prodSelect.innerHTML = '<option value="">Select product...</option>' +
+        DATA.products.map(p => `<option value="${p.name}">${p.name}${p.product_type === 'component' ? ' (component)' : ''}</option>`).join('');
+
+    const zoneSelect = document.getElementById('pr-zone');
+    zoneSelect.innerHTML = '<option value="">Select zone...</option>' +
+        DATA.zones.map(z => `<option value="${z.name}">${z.name}</option>`).join('');
+
+    const unitSelect = document.getElementById('pr-unit');
+    unitSelect.innerHTML = DATA.pricing_units.map(u => `<option value="${u.name}">${u.name}</option>`).join('');
+
+    const ctSelect = document.getElementById('pr-customer-type');
+    ctSelect.innerHTML = '<option value="">— (no filter)</option>' +
+        DATA.customer_types.map(ct => `<option value="${ct.name}">${ct.name_fi} (${ct.name})</option>`).join('');
+
+    document.getElementById('pr-components-group').style.display = 'none';
+    document.getElementById('pr-single-price-group').style.display = 'block';
+
+    if (editingPriceRow !== null) {
+        const item = currentPriceList.items[editingPriceRow];
+        document.getElementById('pricerow-form-title').textContent = 'Edit Price Row';
+        document.getElementById('pricerow-form-submit').textContent = 'Save Changes';
+        prodSelect.value = item.product;
+        onPriceRowProductChange();
+        document.getElementById('pr-fraction').value = item.waste_fraction || '';
+        document.getElementById('pr-container').value = item.container_type || '';
+        document.getElementById('pr-speed').value = item.service_speed || '';
+        document.getElementById('pr-resp').value = item.service_responsibility || '';
+        document.getElementById('pr-zone').value = item.zone || '';
+        document.getElementById('pr-customer-type').value = item.customer_type || '';
+        document.getElementById('pr-unit').value = item.unit;
+        document.getElementById('pr-price').value = item.price;
+
+        if (item.components && item.components.length > 0) {
+            document.getElementById('pr-components-group').style.display = 'block';
+            document.getElementById('pr-single-price-group').style.display = 'none';
+            renderComponentInputs(item.components, item.components.map(c => c.price));
+        } else {
+            updateComponentPricing();
+        }
+    } else {
+        document.getElementById('pricerow-form-title').textContent = 'Add Price Row';
+        document.getElementById('pricerow-form-submit').textContent = 'Add Price Row';
+        prodSelect.value = '';
+        document.getElementById('pr-fraction-group').style.display = 'none';
+        document.getElementById('pr-container-group').style.display = 'none';
+        document.getElementById('pr-speed-group').style.display = 'none';
+        document.getElementById('pr-resp-group').style.display = 'block';
+        document.getElementById('pr-resp').innerHTML =
+            '<option value="">Select...</option>' +
+            DATA.service_responsibilities.map(r => `<option value="${r.name}">${r.name}</option>`).join('');
+        document.getElementById('pr-zone').value = '';
+        document.getElementById('pr-customer-type').value = '';
+        document.getElementById('pr-unit').value = 'Per tyhjennys';
+        document.getElementById('pr-price').value = '';
+    }
+
+    document.getElementById('pricerow-form-modal').classList.add('active');
+}
+
+function closePriceRowForm() {
+    document.getElementById('pricerow-form-modal').classList.remove('active');
+    editingPriceRow = null;
+}
+
+function onPriceRowProductChange() {
+    const productName = document.getElementById('pr-product').value;
+    const product = DATA.products.find(p => p.name === productName);
+
+    const fractionGroup = document.getElementById('pr-fraction-group');
+    const containerGroup = document.getElementById('pr-container-group');
+    const speedGroup = document.getElementById('pr-speed-group');
+    const respGroup = document.getElementById('pr-resp-group');
+
+    if (product && product.allowed_waste_fractions && product.allowed_waste_fractions.length > 0) {
+        fractionGroup.style.display = 'block';
+        document.getElementById('pr-fraction').innerHTML =
+            '<option value="">Select fraction...</option>' +
+            product.allowed_waste_fractions.map(f => `<option value="${f}">${f}</option>`).join('');
+        document.getElementById('pr-fraction').onchange = onPriceRowFractionChange;
+    } else {
+        fractionGroup.style.display = 'none';
+        document.getElementById('pr-fraction').innerHTML = '<option value="">Select fraction...</option>';
+    }
+
+    if (product && product.allowed_container_types && product.allowed_container_types.length > 0) {
+        containerGroup.style.display = 'block';
+        document.getElementById('pr-container').innerHTML =
+            '<option value="">Select container...</option>' +
+            product.allowed_container_types.map(c => `<option value="${c}">${c}</option>`).join('');
+    } else {
+        containerGroup.style.display = 'none';
+        document.getElementById('pr-container').innerHTML = '<option value="">Select container...</option>';
+    }
+
+    if (product && product.allowed_service_speeds && product.allowed_service_speeds.length > 0) {
+        speedGroup.style.display = 'block';
+        document.getElementById('pr-speed').innerHTML =
+            '<option value="">Select speed...</option>' +
+            product.allowed_service_speeds.map(s => {
+                const speedObj = DATA.service_speeds.find(sp => sp.code === s);
+                return `<option value="${s}">${speedObj ? speedObj.name : s}</option>`;
+            }).join('');
+    } else {
+        speedGroup.style.display = 'none';
+        document.getElementById('pr-speed').innerHTML = '<option value="">Select speed...</option>';
+    }
+
+    respGroup.style.display = 'block';
+    document.getElementById('pr-resp').innerHTML =
+        '<option value="">Select...</option>' +
+        DATA.service_responsibilities.map(r => `<option value="${r.name}">${r.name}</option>`).join('');
+
+    updateComponentPricing();
+}
+
+function onPriceRowFractionChange() {
+    updateComponentPricing();
+}
+
+function updateComponentPricing() {
+    const productName = document.getElementById('pr-product').value;
+    const fraction = document.getElementById('pr-fraction').value;
+    const product = DATA.products.find(p => p.name === productName);
+    const componentsGroup = document.getElementById('pr-components-group');
+    const singlePriceGroup = document.getElementById('pr-single-price-group');
+
+    if (!product || !product.child_products || product.child_products.length === 0) {
+        componentsGroup.style.display = 'none';
+        singlePriceGroup.style.display = 'block';
+        return;
+    }
+
+    const childComps = fraction
+        ? getChildProductsForFraction(product, fraction)
+        : getAllChildProducts(product);
+
+    if (childComps.length > 0) {
+        componentsGroup.style.display = 'block';
+        singlePriceGroup.style.display = 'none';
+        renderComponentInputs(childComps);
+    } else {
+        componentsGroup.style.display = 'none';
+        singlePriceGroup.style.display = 'block';
+    }
+}
+
+function renderComponentInputs(components, existingPrices) {
+    const container = document.getElementById('pr-component-inputs');
+    container.innerHTML = components.map((c, i) => {
+        const price = existingPrices ? (existingPrices[i] || 0) : '';
+        return `<div class="comp-input-row">
+            <label>${c.name} <span class="comp-account">(${c.account})</span></label>
+            <input type="number" step="0.01" min="0" placeholder="0.00" value="${price}" data-comp-idx="${i}" onchange="recalcComponentTotal()" oninput="recalcComponentTotal()">
+        </div>`;
+    }).join('');
+    recalcComponentTotal();
+}
+
+function recalcComponentTotal() {
+    const inputs = document.querySelectorAll('#pr-component-inputs input[type="number"]');
+    let total = 0;
+    inputs.forEach(inp => { total += parseFloat(inp.value) || 0; });
+    document.getElementById('pr-components-total').innerHTML = `Total: &euro;${total.toFixed(2)}`;
+}
+
+function submitPriceRowForm() {
+    const product = document.getElementById('pr-product').value;
+    const unit = document.getElementById('pr-unit').value;
+    const componentsVisible = document.getElementById('pr-components-group').style.display !== 'none';
+
+    let price, components = undefined;
+
+    if (componentsVisible) {
+        const productObj = DATA.products.find(p => p.name === product);
+        const fraction = document.getElementById('pr-fraction').value;
+        const childComps = productObj
+            ? (fraction ? getChildProductsForFraction(productObj, fraction) : getAllChildProducts(productObj))
+            : [];
+        const inputs = document.querySelectorAll('#pr-component-inputs input[type="number"]');
+        components = [];
+        price = 0;
+        inputs.forEach((inp, i) => {
+            const compPrice = parseFloat(inp.value) || 0;
+            price += compPrice;
+            if (childComps[i]) {
+                components.push({ product_id: childComps[i].product_id, name: childComps[i].name, account: childComps[i].account, price: compPrice });
+            }
+        });
+        price = Math.round(price * 100) / 100;
+    } else {
+        price = parseFloat(document.getElementById('pr-price').value);
+    }
+
+    if (!product) { alert('Please select a product.'); return; }
+    if (isNaN(price) || price < 0) { alert('Please enter a valid price.'); return; }
+
+    const item = {
+        product: product,
+        waste_fraction: document.getElementById('pr-fraction').value || '',
+        container_type: document.getElementById('pr-container').value || '',
+        service_speed: document.getElementById('pr-speed').value || '',
+        service_responsibility: document.getElementById('pr-resp').value || '',
+        customer_type: document.getElementById('pr-customer-type').value,
+        zone: document.getElementById('pr-zone').value || '',
+        unit: unit,
+        price: price
+    };
+    if (components) item.components = components;
+
+    if (editingPriceRow !== null) {
+        currentPriceList.items[editingPriceRow] = item;
+    } else {
+        currentPriceList.items.push(item);
+    }
+
+    populatePriceListFilters();
+    filterPriceListItems();
+    renderPriceListCards();
+    closePriceRowForm();
+}
+
+function deletePriceRow(index) {
+    const item = currentPriceList.items[index];
+    if (!confirm(`Delete price row for "${item.product}"${item.waste_fraction ? ' / ' + item.waste_fraction : ''}${item.container_type ? ' / ' + item.container_type : ''}?`)) return;
+    currentPriceList.items.splice(index, 1);
+    populatePriceListFilters();
+    filterPriceListItems();
+    renderPriceListCards();
+    renderStats();
+}
+
+// === Price List Delete & Duplicate ===
+function deletePriceList() {
+    if (!currentPriceList) return;
+    if (!confirm(`Delete price list "${currentPriceList.name}"? This cannot be undone.`)) return;
+    const idx = DATA.price_lists.indexOf(currentPriceList);
+    if (idx !== -1) DATA.price_lists.splice(idx, 1);
+    closePriceListDetail();
+    renderPriceListCards();
+    renderStats();
+}
+
+function duplicatePriceList() {
+    if (!currentPriceList) return;
+    const copy = JSON.parse(JSON.stringify(currentPriceList));
+    copy.name = copy.name + ' (Copy)';
+    copy.municipality = '';
+    DATA.price_lists.push(copy);
+    renderPriceListCards();
+    renderStats();
+    showPriceListDetail(DATA.price_lists.length - 1);
+}
+
+// === Pricing Units CRUD ===
+let editingPricingUnit = null;
+
+function renderPricingUnitsTable() {
+    const tbody = document.getElementById('pricing-units-table-body');
+    if (!tbody) return;
+    tbody.innerHTML = DATA.pricing_units.map(u => `
+        <tr>
+            <td><strong>${u.name}</strong></td>
+            <td style="color: #6b7280;">${u.name_en || '—'}</td>
+            <td><code style="font-size: 12px; background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${u.code}</code></td>
+            <td><span class="pill pill-status-active">active</span></td>
+            <td>
+                <div style="display: flex; gap: 4px;">
+                    <button class="btn btn-secondary" style="padding: 6px 14px; font-size: 12px;" onclick="showEditPricingUnit('${u.code}')">Edit</button>
+                    <button class="btn btn-danger" style="padding: 6px 14px; font-size: 12px;" onclick="deletePricingUnit('${u.code}')">Delete</button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function showNewPricingUnit() {
+    editingPricingUnit = null;
+    document.getElementById('pricing-unit-form-title').textContent = 'New Pricing Unit';
+    document.getElementById('pricing-unit-form-submit').textContent = 'Create Unit';
+    document.getElementById('pu-name').value = '';
+    document.getElementById('pu-name-en').value = '';
+    document.getElementById('pu-code').value = '';
+    document.getElementById('pricing-unit-form-modal').classList.add('active');
+}
+
+function showEditPricingUnit(code) {
+    const u = DATA.pricing_units.find(x => x.code === code);
+    if (!u) return;
+    editingPricingUnit = u;
+    document.getElementById('pricing-unit-form-title').textContent = 'Edit Pricing Unit';
+    document.getElementById('pricing-unit-form-submit').textContent = 'Save Changes';
+    document.getElementById('pu-name').value = u.name;
+    document.getElementById('pu-name-en').value = u.name_en || '';
+    document.getElementById('pu-code').value = u.code;
+    document.getElementById('pricing-unit-form-modal').classList.add('active');
+}
+
+function closePricingUnitForm() {
+    document.getElementById('pricing-unit-form-modal').classList.remove('active');
+    editingPricingUnit = null;
+}
+
+function submitPricingUnitForm() {
+    const name = document.getElementById('pu-name').value.trim();
+    const code = document.getElementById('pu-code').value.trim();
+    if (!name || !code) { alert('Name and code are required.'); return; }
+
+    const unitData = { name: name, name_en: document.getElementById('pu-name-en').value.trim(), code: code };
+
+    if (editingPricingUnit) {
+        const oldName = editingPricingUnit.name;
+        Object.assign(editingPricingUnit, unitData);
+        if (oldName !== name) {
+            DATA.price_lists.forEach(pl => {
+                pl.items.forEach(item => { if (item.unit === oldName) item.unit = name; });
+            });
+        }
+    } else {
+        DATA.pricing_units.push(unitData);
+    }
+    closePricingUnitForm();
+    renderPricingUnitsTable();
+}
+
+function deletePricingUnit(code) {
+    const unit = DATA.pricing_units.find(u => u.code === code);
+    if (!unit) return;
+    const referenced = DATA.price_lists.some(pl => pl.items.some(i => i.unit === unit.name));
+    if (referenced) { alert(`Cannot delete "${unit.name}" — it is used in price rows.`); return; }
+    if (!confirm(`Delete pricing unit "${unit.name}"?`)) return;
+    const idx = DATA.pricing_units.findIndex(u => u.code === code);
+    if (idx !== -1) DATA.pricing_units.splice(idx, 1);
+    renderPricingUnitsTable();
+}
+
+// === Municipalities (read-only reference) ===
+function renderMunicipalitiesTable() {
+    const tbody = document.getElementById('municipalities-table-body');
+    if (!tbody) return;
+    const sorted = [...DATA.municipalities].sort((a, b) => {
+        const ca = parseInt(a.pjh_code) || 999;
+        const cb = parseInt(b.pjh_code) || 999;
+        if (ca !== cb) return ca - cb;
+        return a.name.localeCompare(b.name);
+    });
+    tbody.innerHTML = sorted.map(m => `
+        <tr>
+            <td><strong>${m.name}</strong></td>
+            <td><code style="font-size: 12px; background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${m.code}</code></td>
+            <td>${m.pjh_code !== '0' ? m.pjh_code : '<span style="color: #9ca3af;">&mdash;</span>'}</td>
+            <td><span class="pill pill-status-${m.status}">${m.status}</span></td>
+        </tr>
+    `).join('');
+}
+
+function populateMunicipalityDropdown(selectId, selectedValue) {
+    const select = document.getElementById(selectId);
+    select.innerHTML = '<option value="">Select municipality...</option>' +
+        DATA.municipalities.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
+    if (selectedValue) select.value = selectedValue;
+}
+
+// === Zones CRUD ===
+let editingZone = null;
+
+function renderZonesTable() {
+    const tbody = document.getElementById('zones-table-body');
+    if (!tbody) return;
+    tbody.innerHTML = DATA.zones.map((z, idx) => `
+        <tr>
+            <td><strong>${z.name}</strong></td>
+            <td>${z.zone_type}</td>
+            <td style="color: #6b7280; font-size: 13px;">${z.description || '—'}</td>
+            <td><span class="pill pill-status-${z.status}">${z.status}</span></td>
+            <td>
+                <div style="display: flex; gap: 4px;">
+                    <button class="btn btn-secondary" style="padding: 6px 14px; font-size: 12px;" onclick="showEditZone(${idx})">Edit</button>
+                    <button class="btn btn-danger" style="padding: 6px 14px; font-size: 12px;" onclick="deleteZone(${idx})">Delete</button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function showNewZone() {
+    editingZone = null;
+    document.getElementById('zone-form-title').textContent = 'New Zone';
+    document.getElementById('zone-form-submit').textContent = 'Create Zone';
+    document.getElementById('zone-name').value = '';
+    document.getElementById('zone-type').value = 'Zone';
+    document.getElementById('zone-description').value = '';
+    document.getElementById('zone-status').value = 'active';
+    document.getElementById('zone-form-modal').classList.add('active');
+}
+
+function showEditZone(idx) {
+    const z = DATA.zones[idx];
+    if (!z) return;
+    editingZone = idx;
+    document.getElementById('zone-form-title').textContent = 'Edit Zone';
+    document.getElementById('zone-form-submit').textContent = 'Save Changes';
+    document.getElementById('zone-name').value = z.name;
+    document.getElementById('zone-type').value = z.zone_type;
+    document.getElementById('zone-description').value = z.description || '';
+    document.getElementById('zone-status').value = z.status;
+    document.getElementById('zone-form-modal').classList.add('active');
+}
+
+function closeZoneForm() {
+    document.getElementById('zone-form-modal').classList.remove('active');
+    editingZone = null;
+}
+
+function submitZoneForm() {
+    const name = document.getElementById('zone-name').value.trim();
+    if (!name) { alert('Zone name is required.'); return; }
+
+    const zoneData = {
+        name: name, zone_type: document.getElementById('zone-type').value,
+        description: document.getElementById('zone-description').value.trim(),
+        status: document.getElementById('zone-status').value
+    };
+
+    if (editingZone !== null) {
+        const oldName = DATA.zones[editingZone].name;
+        DATA.zones[editingZone] = zoneData;
+        if (oldName !== name) {
+            DATA.price_lists.forEach(pl => {
+                pl.items.forEach(item => { if (item.zone === oldName) item.zone = name; });
+            });
+        }
+    } else {
+        DATA.zones.push(zoneData);
+    }
+    closeZoneForm();
+    renderZonesTable();
+}
+
+function deleteZone(idx) {
+    const zone = DATA.zones[idx];
+    if (!zone) return;
+    const referenced = DATA.price_lists.some(pl => pl.items.some(i => i.zone === zone.name));
+    if (referenced) { alert(`Cannot delete "${zone.name}" — it is referenced by price rows.`); return; }
+    if (!confirm(`Delete zone "${zone.name}"?`)) return;
+    DATA.zones.splice(idx, 1);
+    renderZonesTable();
+}
+
+// === Component Breakdown Toggle in Price List Table ===
+function toggleComponentBreakdown(btn) {
+    const row = btn.closest('tr');
+    const breakdownRow = row.nextElementSibling;
+    if (breakdownRow && breakdownRow.classList.contains('component-breakdown-row')) {
+        const isVisible = breakdownRow.style.display !== 'none';
+        breakdownRow.style.display = isVisible ? 'none' : 'table-row';
+        btn.innerHTML = isVisible ? '&#9654;' : '&#9660;';
+    }
+}
+
+// === Additional Services CRUD ===
+let editingAdditionalService = null;
+
+function renderDetailAdditional() {
+    const p = currentProduct;
+    const services = p.additional_services || [];
+
+    if (services.length === 0) {
+        document.getElementById('detail-additional').innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="font-size: 16px; font-weight: 600;">Additional Services</h3>
+                <button class="btn btn-primary" onclick="showNewAdditionalService()">+ Add Service</button>
+            </div>
+            <div style="background: #f9fafb; border: 1px solid #e5e7eb; padding: 40px; border-radius: 8px; text-align: center; color: #6b7280;">
+                No additional services defined for this product.
+            </div>`;
+        return;
+    }
+
+    const groups = {};
+    const triggerOrder = ['Automatic', 'Manual', 'Driver-Initiated'];
+    const triggerLabels = {
+        'Automatic': 'Automatic — System-applied charges',
+        'Manual': 'Manual — Customer service can add/remove',
+        'Driver-Initiated': 'Driver-Initiated — Driver records, office approves'
+    };
+    services.forEach((s, idx) => {
+        if (!groups[s.trigger_type]) groups[s.trigger_type] = [];
+        groups[s.trigger_type].push({ ...s, _idx: idx });
+    });
+
+    let html = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="font-size: 16px; font-weight: 600;">Additional Services (${services.length})</h3>
+            <button class="btn btn-primary" onclick="showNewAdditionalService()">+ Add Service</button>
+        </div>`;
+
+    triggerOrder.forEach(triggerType => {
+        if (!groups[triggerType]) return;
+        html += `<div class="service-group-title">${triggerLabels[triggerType]}</div>`;
+        groups[triggerType].forEach(s => {
+            const triggerClass = `trigger-${triggerType.toLowerCase().replace('-initiated', '')}`;
+            html += `
+                <div class="service-card service-card-${s.trigger_type}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 15px;">${s.name}</div>
+                            ${s.name_en ? `<div style="font-size: 12px; color: #6b7280; margin-top: 2px;">${s.name_en}</div>` : ''}
+                        </div>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <span class="trigger-badge ${triggerClass}">${s.trigger_type}</span>
+                            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="showEditAdditionalService(${s._idx})">Edit</button>
+                            <button class="btn btn-danger" style="padding: 4px 10px; font-size: 11px;" onclick="deleteAdditionalService(${s._idx})">Delete</button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 12px; display: flex; gap: 24px; font-size: 13px;">
+                        <div><span style="color: #6b7280;">Price:</span> <strong>&euro;${s.price.toFixed(2)}</strong></div>
+                        <div><span style="color: #6b7280;">Unit:</span> ${s.unit}</div>
+                    </div>
+                    ${s.description ? `<div style="margin-top: 8px; font-size: 13px; color: #6b7280;">${s.description}</div>` : ''}
+                </div>`;
+        });
+    });
+
+    document.getElementById('detail-additional').innerHTML = html;
+}
+
+function showNewAdditionalService() {
+    editingAdditionalService = null;
+    document.getElementById('additional-service-form-title').textContent = 'Add Additional Service';
+    document.getElementById('additional-service-form-submit').textContent = 'Add Service';
+    document.getElementById('as-name').value = '';
+    document.getElementById('as-name-en').value = '';
+    document.getElementById('as-price').value = '';
+    document.getElementById('as-trigger').value = 'Automatic';
+    document.getElementById('as-description').value = '';
+    document.getElementById('as-unit').innerHTML = DATA.pricing_units.map(u => `<option value="${u.name}">${u.name}</option>`).join('');
+    document.getElementById('additional-service-form-modal').classList.add('active');
+}
+
+function showEditAdditionalService(idx) {
+    const services = currentProduct.additional_services || [];
+    const s = services[idx];
+    if (!s) return;
+    editingAdditionalService = idx;
+    document.getElementById('additional-service-form-title').textContent = 'Edit Additional Service';
+    document.getElementById('additional-service-form-submit').textContent = 'Save Changes';
+    document.getElementById('as-name').value = s.name;
+    document.getElementById('as-name-en').value = s.name_en || '';
+    document.getElementById('as-price').value = s.price;
+    document.getElementById('as-trigger').value = s.trigger_type;
+    document.getElementById('as-description').value = s.description || '';
+    document.getElementById('as-unit').innerHTML = DATA.pricing_units.map(u => `<option value="${u.name}">${u.name}</option>`).join('');
+    document.getElementById('as-unit').value = s.unit;
+    document.getElementById('additional-service-form-modal').classList.add('active');
+}
+
+function closeAdditionalServiceForm() {
+    document.getElementById('additional-service-form-modal').classList.remove('active');
+    editingAdditionalService = null;
+}
+
+function submitAdditionalServiceForm() {
+    const name = document.getElementById('as-name').value.trim();
+    const price = parseFloat(document.getElementById('as-price').value);
+    if (!name) { alert('Service name is required.'); return; }
+    if (isNaN(price) || price < 0) { alert('Please enter a valid price.'); return; }
+
+    const serviceData = {
+        name: name, name_en: document.getElementById('as-name-en').value.trim(),
+        price: price, unit: document.getElementById('as-unit').value,
+        trigger_type: document.getElementById('as-trigger').value,
+        description: document.getElementById('as-description').value.trim()
+    };
+
+    if (!currentProduct.additional_services) currentProduct.additional_services = [];
+
+    if (editingAdditionalService !== null) {
+        currentProduct.additional_services[editingAdditionalService] = serviceData;
+    } else {
+        currentProduct.additional_services.push(serviceData);
+    }
+
+    closeAdditionalServiceForm();
+    renderDetailAdditional();
+    renderProductTable();
+}
+
+function deleteAdditionalService(idx) {
+    const services = currentProduct.additional_services || [];
+    const s = services[idx];
+    if (!s) return;
+    if (!confirm(`Delete additional service "${s.name}"?`)) return;
+    currentProduct.additional_services.splice(idx, 1);
+    renderDetailAdditional();
+    renderProductTable();
+}
+
+// === Container Types CRUD ===
+let editingContainerType = null;
+
+function renderContainerTypesTable() {
+    const tbody = document.getElementById('container-types-table-body');
+    if (!tbody) return;
+    tbody.innerHTML = DATA.container_types.map((ct, idx) => {
+        const features = [];
+        if (ct.has_wheels) features.push('<span class="pill pill-recyclable">Wheels</span>');
+        if (ct.has_lid) features.push('<span class="pill pill-fraction">Lid</span>');
+        if (ct.is_cylindrical) features.push('<span class="pill pill-container">Cylindrical</span>');
+        return `
+        <tr>
+            <td><strong>${ct.name}</strong></td>
+            <td style="font-family: monospace; font-size: 12px; color: #6b7280;">${ct.code || ''}</td>
+            <td>${ct.volume_liters} L</td>
+            <td>${ct.weight_kg != null ? ct.weight_kg + ' kg' : ''}</td>
+            <td>${ct.emplacement || ''}</td>
+            <td>${ct.material || ''}</td>
+            <td>${features.join(' ') || '<span style="color:#9ca3af;">—</span>'}</td>
+            <td><span class="pill pill-status-${ct.status}">${ct.status}</span></td>
+            <td>
+                <div style="display: flex; gap: 4px;">
+                    <button class="btn btn-secondary" style="padding: 6px 14px; font-size: 12px;" onclick="showEditContainerType(${idx})">Edit</button>
+                    <button class="btn btn-danger" style="padding: 6px 14px; font-size: 12px;" onclick="deleteContainerType(${idx})">Delete</button>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function showNewContainerType() {
+    editingContainerType = null;
+    document.getElementById('container-type-form-title').textContent = 'New Container Type';
+    document.getElementById('container-type-form-submit').textContent = 'Create Container Type';
+    document.getElementById('ct-name').value = '';
+    document.getElementById('ct-code').value = '';
+    document.getElementById('ct-volume').value = '';
+    document.getElementById('ct-weight').value = '';
+    document.getElementById('ct-emplacement').value = 'Surface';
+    document.getElementById('ct-material').value = 'Plastic';
+    document.getElementById('ct-has-wheels').checked = true;
+    document.getElementById('ct-has-lid').checked = true;
+    document.getElementById('ct-is-cylindrical').checked = false;
+    document.getElementById('ct-status').value = 'active';
+    document.getElementById('container-type-form-modal').classList.add('active');
+}
+
+function showEditContainerType(idx) {
+    const ct = DATA.container_types[idx];
+    if (!ct) return;
+    editingContainerType = idx;
+    document.getElementById('container-type-form-title').textContent = 'Edit Container Type';
+    document.getElementById('container-type-form-submit').textContent = 'Save Changes';
+    document.getElementById('ct-name').value = ct.name;
+    document.getElementById('ct-code').value = ct.code || '';
+    document.getElementById('ct-volume').value = ct.volume_liters;
+    document.getElementById('ct-weight').value = ct.weight_kg != null ? ct.weight_kg : '';
+    document.getElementById('ct-emplacement').value = ct.emplacement || 'Surface';
+    document.getElementById('ct-material').value = ct.material || 'Plastic';
+    document.getElementById('ct-has-wheels').checked = !!ct.has_wheels;
+    document.getElementById('ct-has-lid').checked = !!ct.has_lid;
+    document.getElementById('ct-is-cylindrical').checked = !!ct.is_cylindrical;
+    document.getElementById('ct-status').value = ct.status;
+    document.getElementById('container-type-form-modal').classList.add('active');
+}
+
+function closeContainerTypeForm() {
+    document.getElementById('container-type-form-modal').classList.remove('active');
+    editingContainerType = null;
+}
+
+function submitContainerTypeForm() {
+    const name = document.getElementById('ct-name').value.trim();
+    const code = document.getElementById('ct-code').value.trim();
+    if (!name) { alert('Container type name is required.'); return; }
+    if (!code) { alert('Container type code is required.'); return; }
+
+    const ctData = {
+        name: name, code: code,
+        volume_liters: parseInt(document.getElementById('ct-volume').value) || 0,
+        weight_kg: parseInt(document.getElementById('ct-weight').value) || 0,
+        emplacement: document.getElementById('ct-emplacement').value,
+        material: document.getElementById('ct-material').value,
+        has_wheels: document.getElementById('ct-has-wheels').checked,
+        has_lid: document.getElementById('ct-has-lid').checked,
+        is_cylindrical: document.getElementById('ct-is-cylindrical').checked,
+        status: document.getElementById('ct-status').value
+    };
+
+    if (editingContainerType !== null) {
+        const oldName = DATA.container_types[editingContainerType].name;
+        DATA.container_types[editingContainerType] = ctData;
+        if (oldName !== name) {
+            DATA.products.forEach(p => {
+                p.allowed_container_types = p.allowed_container_types.map(c => c === oldName ? name : c);
+            });
+            DATA.price_lists.forEach(pl => {
+                pl.items.forEach(item => { if (item.container_type === oldName) item.container_type = name; });
+            });
+        }
+    } else {
+        DATA.container_types.push(ctData);
+    }
+    closeContainerTypeForm();
+    renderAll();
+}
+
+function deleteContainerType(idx) {
+    const ct = DATA.container_types[idx];
+    if (!ct) return;
+    const referencedByProduct = DATA.products.some(p => p.allowed_container_types.includes(ct.name));
+    const referencedByPrice = DATA.price_lists.some(pl => pl.items.some(i => i.container_type === ct.name));
+    if (referencedByProduct || referencedByPrice) {
+        alert(`Cannot delete "${ct.name}" — it is referenced by products or price rows.`);
+        return;
+    }
+    if (!confirm(`Delete container type "${ct.name}"?`)) return;
+    DATA.container_types.splice(idx, 1);
+    renderAll();
+}
+
+// === VAT Toggle ===
+function toggleVatDisplay() {
+    showGross = !showGross;
+    const btn = document.getElementById('pl-vat-toggle');
+    btn.innerHTML = showGross ? 'VAT &nbsp; Show Net (excl. VAT)' : 'VAT &nbsp; Show Gross (incl. VAT)';
+    document.getElementById('pl-price-header').textContent = showGross ? 'Price (EUR, incl. VAT)' : 'Price (EUR)';
+    filterPriceListItems();
+}
+
+// === Escape key to close modals ===
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        if (document.getElementById('additional-service-form-modal').classList.contains('active')) { closeAdditionalServiceForm(); return; }
+        if (document.getElementById('container-type-form-modal').classList.contains('active')) { closeContainerTypeForm(); return; }
+        if (document.getElementById('zone-form-modal').classList.contains('active')) { closeZoneForm(); return; }
+        if (document.getElementById('fraction-form-modal').classList.contains('active')) { closeFractionForm(); return; }
+        if (document.getElementById('category-form-modal').classList.contains('active')) { closeCategoryForm(); return; }
+        if (document.getElementById('product-form-modal').classList.contains('active')) { closeProductForm(); return; }
+        if (document.getElementById('pricelist-form-modal').classList.contains('active')) { closePriceListForm(); return; }
+        if (document.getElementById('pricerow-form-modal').classList.contains('active')) { closePriceRowForm(); return; }
+        if (document.getElementById('pricing-unit-form-modal').classList.contains('active')) { closePricingUnitForm(); return; }
+        if (document.getElementById('product-detail').style.display === 'block') { closeProductDetail(); return; }
+    }
+});
+</script>
+
+</body>
+</html>

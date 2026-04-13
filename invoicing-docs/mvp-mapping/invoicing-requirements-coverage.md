@@ -19,7 +19,7 @@ This document tracks how each PD requirement across Invoicing 1–4 is covered i
 
 ---
 
-## Invoicing 1 (v11193 — due 22 May 2026)
+## Invoicing Release (v11436 — due 30 Oct 2026)
 
 ---
 
@@ -29,19 +29,130 @@ This document tracks how each PD requirement across Invoicing 1–4 is covered i
 
 **Where:** Operations → Billing Events → Event Detail (Details tab)
 
-**How:** Event detail screen displays all reporting fields required by the story. Fields are auto-resolved at event creation time — no manual input needed from the user.
+**My understanding:** Every billing event needs to carry a set of accounting and reporting labels — things like accounting account, cost centre, classification, municipality — so that accountants can do their job without filling anything in manually. The fields just need to exist on the event and be visible. How they get populated (manually or automatically) is handled by a later release (PD-289).
 
-| Field | Covered |
-|-------|---------|
-| Accounting account | ✅ "3001 — Waste Collection Revenue" |
-| Cost centre | ✅ Field present (shows — if not set) |
-| Resolved cost centre | ✅ Dynamic composite code e.g. "PR" |
-| Service responsibility / Classification | ✅ PRIVATE_LAW / PUBLIC_LAW |
-| Municipality | ✅ e.g. "MUN-02" |
-| Location / Receiving site | ✅ e.g. "LOC-002" |
-| Product / Waste type | ✅ e.g. "Waste Collection 240L" |
-| Vehicle + Driver | ✅ e.g. "DEF-789" / "anonymousUser" |
-| Origin | ✅ Badge e.g. "DRIVER" |
-| Project code | ✅ Field present (shows — if not set) |
+**How:** All required fields are present on the event detail screen. Fields show "—" when not set, which is expected behaviour.
+
+| Field | Status |
+|-------|--------|
+| Accounting account | ✅ |
+| Cost centre | ✅ |
+| Resolved cost centre | ✅ |
+| Classification (service responsibility) | ✅ |
+| Municipality | ✅ |
+| Location / Receiving site | ✅ |
+| Product / Waste type | ✅ |
+| Vehicle + Driver | ✅ |
+| Origin | ✅ |
+| Project code | ✅ (field exists, no value until PD-287 is implemented) |
+
+---
+
+### PD-297 — Billing event status information
+
+**Status:** ✅ Covered
+
+**Where:** Operations → Billing Events → List view (Status column) + Event Detail (status badge)
+
+**My understanding:** Every billing event must have a status that tells the invoicing user where it is in the process. Statuses update automatically as the event moves through the invoicing pipeline. PJH specifically requires that once an event is Sent, editing is locked.
+
+**How:** All required statuses are present and visible on the list and detail views. Editing is correctly locked on Sent and Completed events — no Edit button shown.
+
+**Statuses and how they change:**
+
+| Status | How it's set | Editable |
+|--------|-------------|---------|
+| In Progress | Automatically on event creation | ✅ Yes |
+| Sent | Automatically when FINVOICE transmitted to external system | ❌ Locked |
+| Error | Automatically when transmission fails or validation errors | ✅ Yes (fix and re-send) |
+| Completed | Automatically when external system confirms receipt | ❌ Locked |
+| Excluded | Manually by user via Exclude button | ✅ Can be reinstated |
+
+**Gap:** Error recovery flow — when an event has Error status, the user needs to fix the data and re-send. It is not yet confirmed whether a Retry/Re-transfer button exists for this flow.
+
+---
+
+### PD-283 — Manual creation of billing events
+
+**Status:** ✅ Covered
+
+**Where:** Operations → Billing Events → Create Billing Event form (+ New Event button)
+
+**My understanding:** Office users need to be able to create billing events manually for services that don't come from route management or any automated system — things like land rent, expert work, equipment rental. The user selects a product and the prices should auto-populate based on that product's default prices.
+
+**How:** The Create Billing Event form covers all required fields. The invoicing module has its own `products` table in the DB (separate from the main WasteHero platform) seeded with 15 products and their default prices. When a user selects a product from the dropdown, Waste Fee, Transport Fee and Eco Fee auto-populate from the product's defaults. The user can still override prices manually.
+
+| Requirement | Status |
+|-------------|--------|
+| Select product from catalogue | ✅ |
+| Prices auto-populate on product selection | ✅ (from invoicing module's own products table) |
+| Manual price override allowed | ✅ |
+| All required event fields present | ✅ (see PD-299) |
+| Financial allocations per product (accounting, VAT, cost centre) | ⏳ Handled by PD-289 |
+| Events logged same as automated events | ✅ |
+
+**Note:** The invoicing module maintains its own `products` table that mirrors product and pricing data. This is intentional — the invoicing module is a standalone BE/FE and cannot directly access the main WasteHero platform's products and pricing data.
+
+---
+
+### PD-277 & PD-318 — Manual editing of events / Editing billing events
+
+**Status:** ✅ Covered
+
+**Where:** Operations → Billing Events → Edit Billing Event form + Audit Trail tab
+
+**My understanding:** Office users need to be able to correct mistakes on billing events before invoices are generated. Every change must be logged with a mandatory reason. These two stories are linked and share the same edit screen — PD-277 covers correcting individual field data, PD-318 covers excluding/including events from invoicing runs.
+
+**How:** The edit form allows updating all key fields. Accounting, classification and VAT fields are correctly shown as read-only. A mandatory "Reason for Edit" field is required before saving. The Audit Trail tab shows every change with timestamp, user, field, previous value, new value and reason.
+
+| Requirement | Status |
+|-------------|--------|
+| Edit date, product | ✅ |
+| Edit pricing (waste, transport, eco fee) | ✅ |
+| Edit quantity and weight | ✅ |
+| Edit customer, municipality, vehicle, driver | ✅ |
+| Edit contractor, direction, shared collection % | ✅ |
+| Read-only accounting/VAT/classification fields | ✅ |
+| Mandatory reason for edit | ✅ |
+| Audit trail — timestamp, user, field, before/after, reason | ✅ |
+| Filterable audit trail by user, field, date | ✅ |
+| Editing locked on Sent/Completed events | ✅ (no Edit button shown) |
+
+---
+
+**Status:** ✅ Covered
+
+**Where:** Operations → Billing Events → Event Detail (Details tab) + Create Billing Event form
+
+**My understanding:** This story defines what a billing event is and what data it must contain. It's the core data model for the entire invoicing module — every other story builds on top of it.
+
+**How:** All required fields are present on the event detail screen. The create form covers the manually entered fields. VAT amounts, totals, accounting account, cost centre, and classification are handled by PD-289.
+
+| Field | Status |
+|-------|--------|
+| Date | ✅ |
+| Product / Service name | ✅ |
+| Waste price | ✅ |
+| Transport price | ✅ |
+| Eco fee | ✅ |
+| Quantity | ✅ |
+| Weight | ✅ |
+| VAT 0% / VAT 24% | ✅ |
+| Net amount / Gross amount | ✅ |
+| Registration number / Vehicle | ✅ |
+| Accounting account | ✅ |
+| Cost centre + Resolved cost centre | ✅ |
+| Free-text comment | ✅ |
+| Customer number | ✅ |
+| Contractor | ✅ |
+| Load / unloading location | ✅ |
+| Event identifier | ✅ (system generated) |
+| Classification / Service responsibility | ✅ |
+| Origin | ✅ (system set: MANUAL / DRIVER) |
+| Direction | ✅ |
+| Municipality | ✅ |
+| Shared collection group % | ✅ |
+| Non-billable flag | ✅ |
+| Project | ✅ (shows — until PD-287 implemented) |
 
 ---

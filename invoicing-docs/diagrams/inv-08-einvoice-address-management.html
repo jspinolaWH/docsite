@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>E-Invoice Integration & Billing Address Management</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 20px; background: #f9fafb; }
+        .container { max-width: 1600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h1 { margin-top: 0; color: #111827; }
+        .subtitle { color: #6b7280; margin-bottom: 30px; }
+        .mermaid { background: white; }
+        .side-panel { display: flex; flex-direction: column; gap: 14px; }
+        .info-box { border-radius: 10px; padding: 16px; border: 1px solid; }
+        .info-box.blue { background: #eff6ff; border-color: #3b82f6; }
+        .info-box.amber { background: #fffbeb; border-color: #f59e0b; }
+        .info-box.green { background: #f0fdf4; border-color: #059669; }
+        .info-box.red { background: #fef2f2; border-color: #ef4444; }
+        .info-box h3 { margin-top: 0; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+        .info-box.blue h3 { color: #1e40af; }
+        .info-box.amber h3 { color: #92400e; }
+        .info-box.green h3 { color: #065f46; }
+        .info-box.red h3 { color: #991b1b; }
+        .info-box p, .info-box li { font-size: 12px; line-height: 1.7; margin: 0; }
+        .info-box.blue p, .info-box.blue li { color: #1e40af; }
+        .info-box.amber p, .info-box.amber li { color: #92400e; }
+        .info-box.green p, .info-box.green li { color: #065f46; }
+        .info-box.red p, .info-box.red li { color: #991b1b; }
+        ul { padding-left: 16px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Scenario 8: E-Invoice Integration & Billing Address Management</h1>
+    <p class="subtitle">Customer orders e-invoicing via their bank — WasteHero receives it via integration, updates open invoices. Property manager changes mid-year — reminders go to the new address. (PD-107, PD-282, PD-281)</p>
+
+    <div style="display: grid; grid-template-columns: 1fr 340px; gap: 30px; align-items: start;">
+        <div class="mermaid">
+graph TD
+    START([Customer Takes Action]) --> TYPE{What triggered<br/>the change?}
+
+    TYPE --> EINV_ORDER[Customer orders e-invoicing<br/>at their bank — e.g. Nordea]
+    TYPE --> EINV_CANCEL[Customer cancels<br/>e-invoice order at bank]
+    TYPE --> ADDR_CHANGE[Property manager changes<br/>New billing address in WasteHero]
+    TYPE --> MANUAL_ADD[Office manually adds<br/>or edits e-invoice address<br/>PD-282: Integration may be wrong]
+
+    subgraph EINV_FLOW["E-Invoice Order Flow (PD-107)"]
+        EF1[Bank sends order data to<br/>invoice operator e.g. Ropo / Maventa]
+        EF2[PD-107: WasteHero receives<br/>integration message once per day<br/>Contains: invoice reference, customer number]
+        EF3[WasteHero matches message<br/>to correct customer record<br/>Two identifiers can be used for matching]
+        EF4_ON[Customer e-invoice order starts:<br/>Billing channel → E-invoice<br/>E-invoice address added to customer record<br/>Change logged]
+        EF4_OFF[Customer e-invoice order cancelled:<br/>Billing channel → Paper invoice<br/>E-invoice information removed<br/>Change logged]
+    end
+
+    EINV_ORDER --> EF1 --> EF2 --> EF3 --> EF4_ON
+    EINV_CANCEL --> EF1
+    EF4_ON --> SYNC
+    EF4_OFF --> SYNC
+
+    subgraph MANUAL_FLOW["Manual Override (PD-282)"]
+        MF1[Office updates e-invoice address manually]
+        MF2[PD-282: Mark field as 'do not overwrite'<br/>Integration updates will NOT replace<br/>this manually set address]
+        MF3[Useful when integration<br/>systematically delivers wrong address]
+    end
+
+    MANUAL_ADD --> MF1 --> MF2 --> MF3 --> SYNC
+
+    subgraph ADDR_FLOW["Billing Address Change (PD-281)"]
+        AF1[New billing address saved in WasteHero<br/>WasteHero = master system for billing data]
+        AF2[PD-281: Address automatically synced<br/>to external invoicing system via API<br/>integration interface]
+        AF3[New address applied to:<br/>All OPEN invoices for this customer<br/>All pending payment reminders]
+        AF4[Use case: Property manager changes<br/>Reminders must go to new manager B<br/>not old manager A]
+    end
+
+    ADDR_CHANGE --> AF1 --> AF2 --> AF3 --> AF4 --> SYNC
+
+    SYNC[All updates synchronised<br/>WasteHero is single source of truth] --> RESULT
+
+    RESULT --> OUT1[Next invoicing run:<br/>Uses updated billing channel<br/>and correct address]
+    RESULT --> OUT2[Open invoices already transferred<br/>to external system:<br/>Updated with new address]
+    RESULT --> OUT3[Reminders sent to<br/>correct address from update date]
+
+    OUT1 & OUT2 & OUT3 --> DONE([Customer receives invoices<br/>through correct channel<br/>at correct address])
+
+    style EINV_FLOW fill:#eff6ff,stroke:#3b82f6
+    style MANUAL_FLOW fill:#fef3c7,stroke:#f59e0b
+    style ADDR_FLOW fill:#f0fdf4,stroke:#059669
+    style EF4_ON fill:#dcfce7,stroke:#059669
+    style EF4_OFF fill:#fee2e2,stroke:#ef4444
+    style MF2 fill:#fef3c7,stroke:#f59e0b
+    style DONE fill:#dcfce7,stroke:#059669,stroke-width:3px
+        </div>
+
+        <div class="side-panel">
+            <div class="info-box blue">
+                <h3>PD-107 — Integration flow</h3>
+                <p>The route for Kiertokapula: Customer bank (Nordea) → Ropo → WasteHero. Messages include invoice notifications, e-invoice orders, direct payment orders, and acceptance proposals. Changes arrive once per day.</p>
+            </div>
+
+            <div class="info-box amber">
+                <h3>PD-282 — Manual override protection</h3>
+                <p>When the integration systematically returns the wrong e-invoice address (e.g. intermediary data error), the office can manually enter the correct address and mark it with a "do not overwrite" flag. Future integration updates skip this field.</p>
+            </div>
+
+            <div class="info-box green">
+                <h3>PD-281 — Address as master data</h3>
+                <p>WasteHero is the authoritative source. When a property management company changes in February, the new billing address updated in WasteHero is pushed immediately to the external invoicing system and applied to all open invoices and reminders — ensuring the new manager receives all correspondence.</p>
+            </div>
+
+            <div class="info-box red">
+                <h3>Risk if not handled</h3>
+                <p>Without address sync: payment reminders sent to old property manager who is no longer responsible. Customer disputes. Without e-invoice channel update: customer receives paper invoice despite having set up e-invoicing at their bank — generates customer service contacts and paper invoice surcharge disputes.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { useMaxWidth: true, htmlLabels: true } });
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Credit Invoice Flow</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 20px; background: #f9fafb; }
+        .container { max-width: 1600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h1 { margin-top: 0; color: #111827; }
+        .subtitle { color: #6b7280; margin-bottom: 30px; }
+        .mermaid { background: white; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Scenario 5: Credit Invoice Flow</h1>
+    <p class="subtitle">Two real cases — a customer who has already paid vs one who hasn't — showing partial and full crediting, re-invoicing, and the full audit trail. (PD-269, PD-275)</p>
+
+    <div class="mermaid">
+graph TD
+    START([Invoice Already Sent to Customer]) --> DISPUTE{Customer<br/>Dispute Type?}
+
+    DISPUTE -->|Case A: Customer already paid<br/>Incorrect charge discovered| CASEA
+    DISPUTE -->|Case B: Customer not yet paid<br/>Wrong customer / wrong quantity| CASEB
+
+    subgraph CASEA["Case A — Paid Invoice, Incorrect Charge"]
+        CA1[Review original invoice in WasteHero<br/>PD-306: Retrieve invoice image from<br/>external system via integration]
+        CA2[Identify incorrect line items<br/>e.g. billed weekly emptying<br/>when bi-weekly was agreed]
+        CA3[PD-269: Create FULL or PARTIAL credit note<br/>Add credit text visible to customer<br/>Add internal comment with reason]
+        CA4[FINVOICE credit note generated<br/>Assigned number of original invoice<br/>Sent to external invoicing system]
+        CA5[Overpaid amount refunded to customer<br/>Credited transactions visible in<br/>customer transaction history]
+    end
+
+    CA1 --> CA2 --> CA3 --> CA4 --> CA5
+
+    subgraph CASEB["Case B — Unpaid Invoice, Wrong Customer"]
+        CB1[PD-275: Create credit note for<br/>original incorrect invoice<br/>Original invoice + credit note remain<br/>visible on previous customer]
+        CB2[PD-275: Copy events from original invoice<br/>No need to re-enter all event details manually<br/>Events copied with all original data intact]
+        CB3[Transfer copied events to correct customer<br/>Or to same customer with corrected data]
+        CB4[New invoice generated for correct customer<br/>FINVOICE formatted and sent]
+        CB5[System shows clearly:<br/>What was credited from old customer<br/>What was invoiced to new customer]
+    end
+
+    CB1 --> CB2 --> CB3 --> CB4 --> CB5
+
+    CASEA_BATCH[Batch crediting also supported<br/>PD-269: If multiple invoices need credits<br/>run a batch credit note process]
+    CASEA --> CASEA_BATCH
+
+    CA5 & CB5 & CASEA_BATCH --> AUDIT[Full audit trail maintained<br/>PD-275: Before/after visible in system<br/>Who, what, when, why — all logged]
+
+    AUDIT --> DONE([Customer transaction history updated<br/>Accounting correctly reconciled<br/>Both original and credit invoice in system])
+
+    style CASEA fill:#fff7ed,stroke:#f97316
+    style CASEB fill:#eff6ff,stroke:#3b82f6
+    style CA3 fill:#fef3c7,stroke:#f59e0b
+    style CB1 fill:#fef3c7,stroke:#f59e0b
+    style CA4 fill:#dcfce7,stroke:#059669
+    style CB4 fill:#dcfce7,stroke:#059669
+    style DONE fill:#dcfce7,stroke:#059669,stroke-width:3px
+    style AUDIT fill:#e0e7ff,stroke:#6366f1
+    style CASEA_BATCH fill:#f3f4f6,stroke:#9ca3af
+    </div>
+</div>
+<script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { useMaxWidth: true, htmlLabels: true } });
+</script>
+</body>
+</html>

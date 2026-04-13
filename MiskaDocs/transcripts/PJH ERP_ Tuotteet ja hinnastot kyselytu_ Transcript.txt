@@ -1,0 +1,332 @@
+PJH ERP. Tuotteet ja hinnastot kyselytunti
+Fri, Feb 6, 2026
+
+1:13 - Unidentified Speaker
+Moro.
+
+1:15 - Unidentified Speaker
+No niin, mikrofonikin auki, niin heti helpotetaan.
+
+1:29 - Unidentified Speaker
+Joo.
+
+1:31 - Unidentified Speaker
+Joo.
+
+1:33 - Unidentified Speaker
+Otetaan niin.
+
+1:37 - Rami Aalto
+Hello, hello. Hello. Hyvät saman tien ratsaa.
+
+1:48 - Miska Sulander
+Joo, mennään asiaan. Sulla on joku kysymys patterista valmisteltuna.
+
+2:00 - Rami Aalto
+Hyvin pienimuotoinen.
+
+2:06 - Rami Aalto
+Mä tehtiin pyläri pylärini Excelin ja mä yritin tehdä niistä. Sitten sun selostuksesta. Hyvin pitkälti sitä. Linjaavan tuon tuota linjaavan niinku malli systeemiin ja sitten käytiin sitä vähän lävitte eli täällä on niinku tuotteesta mallia ja hinnastosta malli. Sitten läjä muuttui ja mitä sieltä käyttiin. Mutta käytiin tätä porukalla läpi ja mietittiin sitten näitä kysymyksiä justiinsa että tota niin toi oli nyt toi Juttu oli semmonen uusi niillä on varmaan joku oma hallintansa.
+
+3:08 - Miska Sulander
+Ne on tavallaan tavallaan ne on niinku erään tyyppisiä tuotteita. Joita voisit koota niinkun kokonaisuuksiksi. Et et niinku se miten se tietokantatasolla menee niin se on tuote siinä missä missä niinkun missä niinkun niinku Tuotekokonaisuuskin on. Joo.
+
+3:31 - Rami Aalto
+Eli käytännössä sitten se menee, kun puhutaan komponenttien tietojen määrästä, niin se on sitten ihan samaa sarjaa, että sinne sitten määritellään tiettyjä asioita.
+
+3:44 - Miska Sulander
+Niin, sinne määritellään tiettyjä asioita. Että se, mitkä siellä nyt on pakollisia kenttiä ja pakollisia asioita, niin sitä mä en nyt taas pysty heittämään. Vähän niin sanotusti fleksibiliteettiikin. Joo. Että mitä, kyllä sille nyt varmaan niinku nimi ainakin täytyy olla.
+
+4:06 - Unidentified Speaker
+Niin.
+
+4:07 - Miska Sulander
+Nimi, nimi, nimi, nimi tyyppi, kategoria. Ehkä on niinku semmosii, semmosii mut esimerkiks low, low koodii ei välttämätt niinku sit taas oo jollain käsittelymaksulla, käsittelymaksukomponentilla itsessään.
+
+4:21 - Unidentified Speaker
+Joo.
+
+4:22 - Rami Aalto
+Ja siis tota, Jos nyt ajatellaan vaikka ekaa läjää tuossa ja se, että siellä olisi kolme komponenttia, yksi tyhjennys maksaa vaikka sen neljä euroa, niin se, että kaksi euroa menee keräyspalveluilla ja euro käsittely- ja europerusmaksuun, niin pystytäänkö niitä jakamaan jollain tavalla se, että kuinka paljon nämä vai meneekö se. Sano heti, jos tulee sellainen olo, Nyt en puhu asioita, joita pitäisi puhua.
+
+4:55 - Miska Sulander
+Niillä komponenteilla voi olla oma hinta. Oma hintansa, josta se tuotteen sitten taas voi muodostua se sekajätäastien paketin hinta.
+
+5:06 - Rami Aalto
+Okei, joo.
+
+5:07 - Miska Sulander
+Eli se on sitten niin kuin simple math. 2 plus 1 plus 1 on 4.
+
+5:16 - Rami Aalto
+Joo. Eli sitten se tulee ihan tuolla...
+
+5:22 - Miska Sulander
+Mietitään, että sinulla on palveluvastuulle A, sinulla on yksi hinta. Hinta keräyspalvelua käsittelymaksulle ja perusmaksulle. Palvelumaksulle B, sinulla on toinen hinta. Vaikka se keräyspalvelu olisi sama, sama vaikka jäte jaekin olisi ihan täysin sama niin sitten toisella palveluvastuulla se hinta on eri kuin toisella palveluvastuulla.
+
+6:02 - Rami Aalto
+Joo. Joo joo kyllä.
+
+6:04 - Miska Sulander
+Ja se on nyt tavallaan se on niin kuin vielä sanotaanko näin että se tavallaan siinä viimeisessä mallissa koska tämä on semmoista, mitä ei ihan out of the box ole ollut saatavilla viime keväänä.
+
+6:25 - Miska Sulander
+Tämä tavallaan tuotteen räjäytys.
+
+6:27 - Miska Sulander
+Sen takia mulla ei ole livenä näkyvissä vielä teille missään sitä uutta, koska se on semmoinen, mitä me oikeasti nyt itse testataan ja käytetään meidän state ja stagingeissa, niin tavallaan siis se käyttöliittymä, mistä mä laitoin ne screenshotit, niin se oli semmoinen edellinen versio siitä, mikä meillä oli, mutta siitä saa kyllä kiinni, että mitä se tarkoittaa käytännössä. Sitä on toki iteroitu tässä jo, sitä designiä tässä kuukauden aikaa hiukan lisää. Se on hiukan vielä tavallaan, kun menin tuosta listaa eteenpäin, kun vahingossa lukasin, niin se, että tuotteella ei välttämättä ole niitä niin sanottuja hinta-attribuutteja itsessään. Eli palveluvastuu ei niinkään välttämättä ole sillä tuotteella, vaan se palveluvastuu voi olla sillä hinnalla. Ja sitten, jos tuotteella ei ole hintaa jollekin tuote ei ole saatavilla sellaiselle asiakkaalle. Se, että niitä samoja attribuutteja tavallaan ylläpidettäisiin hinnassa ja tuotteessa, niin se olisi ihan jäätävän työlästä myöskin. Tämä on aika kompleksi. Ei ole ollut mitenkään helppoa tuossa syksyllä. Syksyllä kun me niinku suoraan sanottuna kun tätä tätä hammaa on pyöritelty pyöritelty et okei et et miten tästä saa semmosen että tätä voi myös käyttää niin ei ollut helppo ongelma sanotaanko näin joo joo tää on just se että miten tota niin miten saadaan niinku se ymmärrys ensin meille että me pystytään joo viemään tätä ajatusta eteenpäin, niin tässä on justiinsa sitten pientä hakemista. On, on. Mutta siis ainakin tästä korkealla tasolla ainakin kun katsoo nyt tätä ihan, niin kyllä tässä tavallaan on se ydin ainakin ymmärretty, että miten toimitsee tai toimii.
+
+9:03 - Rami Aalto
+Lähinnä ajattelin, että jos ajattelin tuoteattribuutteja, että minulla on tuote, mikä se sitten onkaan. Käytännössä nämä ovat enemmän ehkä sellaisia tai varsinkin tuo, että sitä ei varsinaisesti kuulu tänne.
+
+9:30 - Miska Sulander
+Low-code on sitten taas, mä näen sen raportointiin ja vaatimustenmukaisuuteen liittyvänä tekijänä, mutta palveluvastuu on silleen, ja sama vaarallinen jäte on semmoinen enemmän sääntöjuttu, mutta palveluvastuu on ollut mulle ainakin alusta asti se yksi niistä core-komponenteista, mitkä ohjaa niitä tuotteita. Hintoja ja palveluiden saatavuuksia. Voi olla, että olen ymmärtänyt sen väärin. Toivottavasti en enää tässä vaiheessa joudun korjaamaan ajattelua, mutta kuitenkin.
+
+10:09 - Rami Aalto
+Joo, ja siis tuohan on sellaisia, mitä yleisesti ottaen, mitä meillä on oltu huolissaan, niin kyllä se, että saadaanhan me sitten, että kun me jotain tuotetta nyt myydään tuosta ja siitä tulee jonkinlainen raha, että se on jossain määritelty, että mihin se raha menee. Tulee laskentatunnisteita ja kirjanpito- tilit tänne esitteen, mutta onko ne sitten ihan vain sellaisia...
+
+10:39 - Miska Sulander
+Miten laskentatunnisteet ja kirjanpito- tilit käytännössä menevät? Onko se tuotekohtaista vai jos meillä on nyt yksi tuote ja eri palveluvastuita, niin menevätkö ne eri kirjanpito- tilille palveluvastuuteen?
+
+10:53 - Rami Aalto
+Minun mielestä ne menevät erikirjanpito- tileille sitten, että se olisi nimenomaan hinnaston päästä ehkä enemmän.
+
+11:02 - Miska Sulander
+Sitten se on saatava sinne hinnaston päähän tai sitten siinä pitää olla joku, siinä pitää olla sitten joku logiikka.
+
+11:13 - Rami Aalto
+Joo. Ja siis tämähän on, kun olen tästä nyt lähdetty miettimään sitä just niitä tuotteita nyt sit rakennettaisiin näihin edespäin ja se, että tuotekategoriat, se on ihan ok, mutta sitten tämä kysymys, että onko tuotekategorialla, voiko sillä olla oma tai niin kuin eri määrittelyjä, että mitkä kentät tulee näkyviin vai onko se niin kuin kaikille sama.
+
+11:41 - Miska Sulander
+Kyllä se lähtökohtaisesti ne kentät on samat, mitkä siellä on näkyvissä. Aika fleksi tai siis no aika Aikalennostakin voidaan tässä nyt vielä miettiä oikeasti sitä, että tarviiks olla tuotekategorialla semmoinen tavallaan mahdollisuus, että sä voit määrittää mitkä kentät milläkin kategorialla on pakollisia kenttiä. Että se lomake näyttäisi joka tuotteella eriltä, niin se on vähän utopiaa ja turhaa kompleksisuutta, mutta semmoisen kenttien validaation, dynaamisen kenttävalidaation teko voisi niin kuin tulla kysymykseen. Ehkä en mä tiedä onko se, meneekö se nyt johonkin vaatimuksen skouppiin, minkään vaatimuksen skouppiin edes. En muista.
+
+12:32 - Rami Aalto
+Todennäköisesti ei mene, kun tätä ei ole ajateltu niin kuin semmoisena.
+
+12:37 - Miska Sulander
+Niin, niin sit mä sanoisin niin kuin tässä kohtaa, että ne kentät on samat. Ja validaatiokin on sama. Meillä on siellä jotain järjestelmän toiminnalle pakollisia kenttiä ja sitten oput on valinnaisia. Se on vähän tavallaan pyöräytettävä. Mutta totta kai jos semmoista kenttävalidaatioa haluaisit jatkokehityksenä, niin rahaa saa ja hevosilla pääsee. Mutta siinä on mahdollisuuksia ja voi olla, että me todetaan itse, että okei, että se on järkevämpää ja sitten se tulee sinne ajassa X. Ihan luonnostaan. Mutta vaikea sanoa kahden, kolmen vuoden päähän. Tai edes vuoden päähän silleen, koska koko aika kuitenkin kehitys kehittyy, vaikka tämä käyttöönottoprojekti on käynnissä, niin tuo ei ole enterprise softa, niin se elää sitten kuitenkin jollain tavalla omaa elämäänsä. Omaa elämäänsä myös sitten siellä taustalla.
+
+14:09 - Unidentified Speaker
+Joo.
+
+14:10 - Unidentified Speaker
+Tämä tilikartta, no sit...
+
+14:13 - Unidentified Speaker
+Joo, laskentatunnista, kirjanpidotilit.
+
+14:15 - Miska Sulander
+Mitä tämä tilikartta tarkoittaa? Halutaanko siis joku listat kirjanpidon tileistä ylläpitää Waste WasteHero?
+
+14:26 - Rami Aalto
+Tämä on semmoinen, mikä on aikaisemmin ollut kysymyksenä. Että kun nyt meillä kirjanpitosovelluksessa on käytännössä se tilikartta, että minne mikäkin tuote menee, minkä kirjanpitotilille mitäkin menee, ja niissä ne alvitsee, että onko se semmoinen, mikä saadaan erillisenä tänne tyyliin, joku tämmöinen puuvalikko, tai se, että sitten kun ruvetaan valittamaan noita kirjanpitotiliä sitten tuonne on se sitten niinku tonne hinnastoon taikka sitten tuotteeseen niin se että ne ei oo niinku näppäiltävää dataa vaan jostain niinku valikoitavaa dataa jostain listasta.
+
+15:10 - Miska Sulander
+Mitenköhän tää, tääkin on taas, mä en viitsi nyt sanoa tähän oikeestaan mitään, koska sit jos mä heitän jotain mikä on niinku out of scope vaatimuksista niin sit mä joudun itse ongelmiin.
+
+15:23 - Rami Aalto
+Joo ja siis se, se että nää on niinkun, tää on kans sellaset mä en tätä kysymyslistaa kattonut ollenkaan siihen, että mitä on vaadittu ja mitä on sellaisia, mitkä mahdollisesti menee silleen, kun ei sitten kai halua lähteä siihen scope creep meininkin.
+
+15:41 - Miska Sulander
+No ei halua, näin meidän kesken, vaikka toi robotti tuossa kuunteleekin, että tämä on tavallaan semmoista molempipuolista, se on niin helposti menee semmoiseksi vänkäämiseksi, että joo, tämä on sovittu ja tämä on vaatimuksessa, mutta tätä ei ole vaatimusta. Mä niin kuin näkisin vaan, että me haluttais toimittaa toimiva sovellus siihen tarpeeseen, mikä teillä on tai jäteyhtiöillä on, mutta tietysti kun tämä kuva on niin iso, niin sitten se on välillä.
+
+16:16 - Miska Sulander
+Tulee se byrokratiakin vastaan.
+
+16:18 - Miska Sulander
+Mä nyt nopeasti nappaan tohon toiseen näyttöön noi meidän vaatimukset. Katsotaan, tuleeko siellä joku otsi. Mikko tais olla edes joku vastaan, että jos siellä olisi joku semmonen, joka voisi tuohon vastata. Mutta mä en muista tuohon. Varmaan se, että kirjanpidon tilitieto pitää pystyä tuotteelle lisäämään, niin sen mä muistan. Mutta se, että ei meillä varmaan mitään semmoista vaatimusta ole, että sitä tilikarttaa pitäisi pystyä ylläpitämään Waste Heroes.
+
+16:50 - Rami Aalto
+Todennäköisesti ei. Ja siis sehän on se, että me on Ainakin meidän osalta on jo todettu, että tilikartan varsinainen ylläpito on kuitenkin kirjapitosovelluksessa.
+
+17:02 - Miska Sulander
+Joo, totta kai se ylläpito olisi. Mutta se, että saisi... Totta kai se olisi helpompaa, että sulla olisi drop down. Ja ne arvot olisi määritelty jossain. Joo. Eikä sitten niin. Että tota... Että ne pitäisi saada tai sun pitäisi kirjoittaa se. No en mä tiedä, kirjanpidon tilit, niillä taitaa joku numerokoodi olla ainakin, että sun pitäisi koodi kirjoittaa ja sit se validointi on ihan täysin mahdotonta totta kai, koska jos se on vaan tekstikenttä. No tota täytyy vähän miettiä, että miten ois jollain tavalla ehkä se tilikartan saaminen, mutta voisi olla jonkunlaisella metatietokentällä. En muista, onko tuotteille sellaista logiikkaa, sellaista metatietokenttää olemassa, että voisi antaa listan arvoja. Ja sitten se olisi drop down. Mutta ainakin jos ja kun me nyt koko ajan mietitään asioita uudestaan ja kehitytään, niin ehkä tästä vaan nousee tarpeellinen, että se voisi olla tarpeellinen asia, että lisäkentät eivät olisi aina tekstimuotoisia tai numeromuotoisia, koska niitä nyt Useammalle entiteetille. Joo.
+
+18:51 - Rami Aalto
+Tuossa tuota vaatimus 3.4.17 siinä puhutaan tästä jonkin verran lähinnä sillä, että sama tuote pitää pystyä asentamaan ja ohjaamaan eri tileille ja kustannuspaikoille. Joo. Tämä on niinku tällään siihen. Joo. No joo.
+
+19:15 - Miska Sulander
+Meist on Based on price list or region. Eli se tulee sieltä hinnastosta. Sinne pitää pystyä lisäämään oikea kirjanpidon tili. Vaatimuksessahan ei kerro, että sanotaan mitään muuta. Puhuta muuta kuin kustannuspaikasta.
+
+19:47 - Rami Aalto
+Joo, se ei ihan mee tohon noin, tuosta pitää katsoa vähän. Ja siis tämä just se ajatus tästä, että niin kuin hinnastossa, hinnastosäännöissä on niin kuin se, että tässä on niitä attribuutteja nämä kun osuu kohdalle, niin niistä lasketaan niitä vähän niin kuin pisteitä, että korkeammat pisteet voittaa ja ja sen mukaan menee joku hinta, niin sitten tuotteella on, tuotteella tai sille tuotteen kohteella, eikö se niin, että jos pistetään 240 sekaita astia paketti ja se laitetaan tuotteeksi oma kotitaloon, niin se yhdistelmä tulee sieltä, että oma kotitalo kertoo, että se on tuommoinen kiinteistötyyppi ja tuommoinen kunta.
+
+20:40 - Miska Sulander
+kiinteistötyypillä on teille väliä. Senkään ei ole pakko olla niin, että se on. Mutta siis kiinteistötyyppi voi olla yksi hinnanmääritystekijä. Siinä mallissa, mikä nyt tämänhetkisessä ympäristössä on, niin siinähän mallissa se on. Se on se ehkä tärkein... Tärkein, sanotaanko, tärkein hintaan määrittävä tekijä. On se nimenomaan se kiinteistötyyppi. Sitten on kysymys myös siinä, että miten niitä paritetaan. Meillähän asiakkaalla on se palveluvastuu.
+
+21:30 - Rami Aalto
+Mutta ei kiinteistöllä ole palveluvastuuta.
+
+21:35 - Miska Sulander
+Sopimusko Sopimuskohtaisesti palveluvastuu voidaan yliajaa. Jos minulla on kesämökki ja omakotitalo, niin kesämökin palvelut voidaan yliajaa toiselle palveluvastuulle. Vaikka minun asiakkuuden alla palveluvastuu olisi jotain muuta. Koska asiakas ja kiinteistö ovat eri entiteetit. Palveluvastuuto on ainakin vaadittu, ei kiinteistö.
+
+22:11 - Unidentified Speaker
+Joo.
+
+22:12 - Rami Aalto
+Mietin, onko tuossa kiinteistössä mitään sellaista, mikä ohjaa sitä hintaa.
+
+22:20 - Miska Sulander
+No se alue, lokaatio, fyysinen lokaatio voi ohjata hintaa. Me ollaan myös laajennettu ihan silleen, että pystyy tai siis on tarkoitus ollut, että pystytään laajentamaan tämä niin, että se ei välttämättä mene pelkällä kuntakoodilla. Voi toki olla kuntakoodi myös siinä hintaohjaavana tekijänä. Se on yksinkertaisin, mutta se voi olla myös ihan kartalle piirretty alue. Jos nyt johonkin kortteliin tulee eri hinta, niin se pitäisi teoriassa olla mahdollista, että se alue piirretään kartalle ja sitten se alue, annetaan hintakomponenttina. Jos se kiinteistö sit osuu koordinaateiltaan sinne rajatun alueen sisään, niin sit se saa hinnanäköisesti. Tälleen tämä nousi ehkä esiin. Nannen kanssa mä juttelin myös tästä jossain kohtaa jo ennen joulua. Vähän niin kuin mä halusin testata meidän ajatuksiin ja sparriin on juuri tuo tavallaan noin maantieteelliset alueet. Täällä Saaristossa, Turussa tulee kysymykseen varmaan ehkä vahvemmin kuin muualla, mutta kuitenkin. Se on myös semmoinen mahdollinen tekijä, joko siis kuntakoodi tai sitten ihan kartalla piirretty alue, mutta totta kai ainakin teillä teillä siinä kunnallisen vastuuhinnastossa, niin ne oli kunnittain, kunnittain ne hinnat aika vahvasti näytti olevan. Niin sitten on ihan turhaa ylläpitää mitään kartta.joukkoa missään, että jos se on niin helppo, niin sitten ei ruveta piirtelemään mitään alueita kartalle käsin. Ellei niitä alueita sitten, no urakoitsija-alueet, nyt varmaan pystytään tuomaan koordinaattidatan. Silleen mä toivon ja ymmärsin, koska niitä on muuten aika vaikea ylläpitää, ellei sitä saada niitä urakka-alueita, jos niitä ei saada koordinaatteina. Joo, mä olen ainakin ymmärtänyt, että saadaan. Joo, ja näin mäkin ymmärsin Karin IRA-kommentista tai jostain Teams-kommentista, että missä muodossa, niin on se, että miten se muoto saadaan puljettua tonne meidän tietokantaan, niin sitä mä en ole ahtenut vielä miettiä, mutta eiköhän tekniikka nyt siihen pysty.
+
+25:06 - Rami Aalto
+Niin, joo.
+
+25:07 - Miska Sulander
+Tota, toi on meillä noussut esiin toi, tota niin, omakustannehinnan laskenta.
+
+25:14 - Rami Aalto
+Eikö se omakustannehinta nyt tarkoittanut siis käytännössä sitä, että mitä te maksatte Urakoitsijan maksatus on vielä, mutta sitten meillä on tällaisia, että jos me nyt vuokrataan jotain tai edelleen vuokrataan vaikka jotain, en mä tiedä jäteastia tai tällaista, niin me maksetaan sitä kymppikuussa ja laskutetaan sitä kaksikymppiä kuussa, että se näkyy siellä.
+
+25:47 - Miska Sulander
+Tämä oli siis sellainen. Minkälaisilla tuotteilla on omakustannehintaa olemassa? No siis onks se niinku yleisimmällä tuotteella vai keräyspalveluilla?
+
+25:57 - Rami Aalto
+Kyllä meillä haluttais niinku palveluille kanssa, keräyspalveluillekin se.
+
+26:01 - Miska Sulander
+Mutta onks se omakeskustannehinta, riippuuko se, mistä se niinku riippuu? Voiks se riippuu urakoitsijasta?
+
+26:09 - Rami Aalto
+Se voi riippua urakoitsijasta, se voi riippua siitä urakka-alueesta, se voi riippua sitten niinku käsittelystä mitä siihen tehdään että jos meillä se jatkokäsittely sille jätteelle, niin mihin se viedään käsittelyyn, niin se voi riippua siitä. Siinä oli jonkin asteinen litania kaikenlaista. Tämä tuli siis meillä ihan kysymykseen, vaan koska tätä ei ole missään kohtaa, tämä ei ole mun käsittääkseni vaatimuksessa mitenkään. Neljä muuta yhtiötä on hoitanut, tai siis mekin ollaan tähän mennessä hoidettu laskeminen jossain muualla järjestelmä ulkopuolella, niin tämäkin oli lähinnä semmoinen, että onko tuolla sellaista. No ei sitä kyllä autosta epoksi ole. Niin.
+
+27:04 - Miska Sulander
+Sitten me pistetään, että ei tota niin. Mutta tota. Mietit vaan tässä nyt. Niin kuin ei silleen silleen että se olisi todellista todellista tai välttämättä virallista sanotaan näin niin niin et olisiko tolle joku helppo tapa niin kuin lisätä se esimerkiksi sinne hinnaston puolelle että et sit niillä niin kuin jos siellä on hinnalle tietyt komponentit niin sitten niillä samalla niillä tietyillä komponenteilla se omakustainen hinta olisi olisi sitten jollekin tuotteelle joku sama tai joku niin kuin x määrä euroja.
+
+27:48 - Rami Aalto
+Niin siis sitä mä just ajattelisin tuossa että onko semmoista semmoista mahdollisuutta esimerkiksi. Tämä nyt sitten just tiis että jos hinnastosäännössä on yksi hinta niin se hinta on se mikä laskutetaan asiakkaalle jos siinä on toinen hinta niin onko se sitten ikään kuin että no tämän verran tämä maksaa meiltä.
+
+28:08 - Miska Sulander
+Se ei tavallaan olisi mitään muuta kuin Tavallaan toinen. Se ei olisi hinnalle mitään muuta kuin toinen kenttä, jossa on toinen arvo. Ei se tavallaan konseptina ole sen hankalampi, jos voidaan vain olettaa, että jos meillä on tietyt... Jos se oletus on se, että samoilla parametreilla, joilla on yksi asiakashinta, niin on joku omakustannehinta. Se ylläpito on niinku kestävää ja järkevää niin siis ei se välttämättä sit oo ton vaikeampi juttu.
+
+28:46 - Rami Aalto
+Se kunhan se ei mene sellaiseen että se yksi yksi asiakkaalle lähtevä hinta että kuinka monesta eri hinnasta sen pitää sitten koostua. Jos on yhtäkkiä silleen että siinä pitää olla se yksi asiakkaalle näkyvä hinta ja 20 eri hinta hintaa mikä niinku meille meille päin näkyy ja niillä pitää olla, että mikä hinta tämä on, mikä hinta tämä on ja mihin kohtaa tilikarttaa, kustannuspaikkaa tämä menee, niin silloinhan se on niin kuin silloin menee niin kuin yhden hinnan sisäinen hinta, että silloin niin kuin hinnastosäännön sisällä on hinnastosääntö. Se menee ehkä vähän liian pitkälle.
+
+29:36 - Miska Sulander
+Se menee ehkä vähän liian pitkälle. Tätä täytyy vähän miettiä. Ja ehkä piirtää auki. Tehdään muistiinpano tästä ja näyttää niitä myös jollekin muualle.
+
+29:50 - Rami Aalto
+Joo. Toihan on se, että sitä käytettäisiin nimenomaan vain raportoinnissa. Joo. Raportoinnissa, että saataisiin reaaliaikaisempaa dataa siitä. Että kun se nyt on aikaisemminkin tehty tuolla ulkopuolella, niin jonkinlainen systeemi siihen on olemassa jo. Mutta totta kai aina kätevämpi se, että jos näkee jollain kivalla dashboardilla, näkee suoraan, että toi tilanne, mikä meillä on.
+
+30:17 - Miska Sulander
+Niinpä, jep. Joo, totta kai se olisi niin kuin prosessi- ja liiketoimintan kannalta, se olisi tosi järkevää, että olisi yksi järjestelmä, missä se... Tieto sitten olisi saatava. Mutta täytyy laittaa mietintämys päälle. Että olisiko se niin kuin silleen pienellä kikkailulla mahdollista.
+
+30:42 - Rami Aalto
+Joo ja se, että mikä siinäkin on sitten sellainen, mikä on se tapa, millä me saataisiin peruskuvi on sieltä niin kuin tehty jos meitä kiinnostaa niin kuin vaikka kate eurot toki astian tyhjennys maksaa niin kuin asiakkaalle neljä euroa ja me maksetaan sitten kaksi ja puoli ja sitten tota niin sen sen hinnan mukaan niin katsotaan vaan katsotaan vaan että tota niin dashboardiin et jee jee rahaa tulee ton verran katetta niin tota niin niin ehkä se on sitten jossain tilanteessa riittävän mutta Jos oikein tarkkaan mennään johonkin juttuihin, niin sitten ei varmastikaan ihan suoraan ole. Mutta joo, jos te mietitte, niin asia on hyvä, että katsotaan.
+
+31:44 - Miska Sulander
+Joo. Joo, en mä tästä tällä aikataululla pysty sanomaan varmaksi. Pitää ratkaisua. Joo.
+
+31:54 - Rami Aalto
+Katsotaan mikä toi on semmoinen, että se tulee sitten jossain kohtaa siellä.
+
+32:02 - Unidentified Speaker
+Joo.
+
+32:03 - Rami Aalto
+Tommonen kysymys muuten tän listan ulkopuolelta. Urakoitsijamaksatukset. Onko ne näitte hinnastojen kautta vai onko ne ihan jostain muualta?
+
+32:15 - Miska Sulander
+Ajatus oli vähän silleen, että meillä on tuote. Niin sillä tuotteella on kaksi hinnastoa. Sillä on se asiakashinnasto ja sillä on se urakoitsijahinnasto. Siellä voi olla samoja komponentteja tai eri komponentteja, mutta kuitenkin, että se on tavallaan kaksipuolinen se hinnasto, jos ajattelee visuaalisesti. Se on konseptina tosi se, miten niitä hintoja määritellään, niin se on tosi samanlainen tietty sitten. Pitää vielä kerätä katsomaan ne attribuutit, että millaisia attribuutteja siellä tarvitaan.
+
+33:01 - Unidentified Speaker
+Tarvitaanko erilaisia?
+
+33:03 - Unidentified Speaker
+Joo.
+
+33:04 - Miska Sulander
+Jummalla kummalla pätkii nyt.
+
+33:08 - Rami Aalto
+Se on varmastikin minä luulisin. Katsotaan, minulla on tuolla. Olen yrittänyt tällaista itselle. Täällä on selvinnyt slideshow-systeemiä, mikä vähän toivottavasti avaa. Tänne olin justiinsa sitten merkinnyt. Urakoitsijahinnastoon, että se on tuolla tuotteessa kiinni.
+
+33:49 - Miska Sulander
+Joo, se on sellainen. Elää omaa elämäänsä.
+
+33:53 - Rami Aalto
+Joo, ja tässä mä myös pistän, että omakustannushinnasto on erilleen, mutta se ei sitten välttämättä toimi niin.
+
+34:04 - Miska Sulander
+No se ei välttämättä toimi niin. Voihan semmoista omakustannuhinnastoa totta kai ylläpitää, ylläpitää sellaisena haamuna siellä, mutta se ei kyllä kannata.
+
+34:18 - Rami Aalto
+Mielestäni se tulee lähtökohtaisesti.
+
+34:20 - Miska Sulander
+Lähtökohtaisesti meillä on asiakashinnasta, tai meillä on hinnasto ja urakoitsijahinnasto. Ja se hinnasto on oikeasti semmoinen, minkä perusteella ne hinnat tulee asiakkaille. Ja se logiikka on siinä hinnastossa kiinni, että miten se hinta määräytyy. Ei siellä oikein mahdollisesti pitää mitään haamua myöskään, koska se haamu vaikuttaisi niihin hintoihin, koska on piikkaa rakennettu sinne järjestelmään niin.
+
+34:50 - Rami Aalto
+Joo, no se on ihan hyvä. Tämä on melkein oikein, mutta tuota saa sitten vähän. Mä ajattelin, että mä päivitän tätä sitä mukaan, kun mulla tietoo se ymmärrys lisääntyy.
+
+35:05 - Miska Sulander
+Mutta muuten tämä kyllä summaa ajatuksen ja sen hierarkian. Mitä se menee?
+
+35:13 - Unidentified Speaker
+Joo.
+
+35:14 - Rami Aalto
+Ei mulla oikeastaan sen isompia tää nyt selventää asioita tässä. Toi kohta on viikonloppu ja kaikki ne asiat unohtuu hetkeksi.
+
+35:31 - Miska Sulander
+Ei pääse unohtumaan.
+
+35:33 - Rami Aalto
+Oh no.
+
+35:35 - Miska Sulander
+Tässä on kaikenlaista menee. Mulla on tää projekti, mut mä oon sit taas myös huono sanoo ei ja muuta. Meillä on varmaan sama kuuluisa norjalainen asiakas, jolle käytettiin referenssinä. En tiedä onko sama asiakas oikeesti. En tiedä sen enempää tarinaa siitä, koska meillä on sit ihan eri ihmiset, jotka noi tarjoukset siitä käy ja laskee, mutta kuitenkin siinäkin saa konsultoida tuossa migraatiohommassa. Ei tässä oikein töitä pääse unohtamaan tällä hetkellä.
+
+36:16 - Rami Aalto
+No se on sinällään hyvä, että on töitä ja sitten taas toisaalta niin kuorman tasaus on ihan mielenkiintoista. Niin se on totta.
+
+36:27 - Miska Sulander
+Se on oma juttu se sitten kanssa. Kyllä. Pikkulinnat lauloi myös, että sä olit hakenut meille töitä mutta mä en tiedä siitäkään.
+
+36:38 - Rami Aalto
+Olin mä käynyt klikkaamassa sitä Apply-systeemiä, että mä saan sen hakulomakkeen auki. Sä et ole oikeasti kiinnostunut.
+
+36:48 - Miska Sulander
+No siis sinällään.
+
+36:50 - Rami Aalto
+Mua pikkasen kiinnostaa, mutta sitten taas toisaalta se roolit on ollut tähän mennessä vähän sellaisia, että mulla kun ei ole jätehuollon taustaa, osaamista ja toisaalta mä en ole devaja jne. Mä oon semmonen käsiheiluttelija, mä en tiedä kuinka paljon teillä on niitä.
+
+37:13 - Miska Sulander
+Eiks niitä jokaiseen organisaatioon löydy? Kyllä niitä yleensä löytyy joo.
+
+37:18 - Rami Aalto
+No sinällään se on ne pro juttu on se, että mä oon puoliks norjalainen, että mä osaan auttavasti norjaa jo. Jätä sieltä puolen sanasta toinen yhtään. Mä olen kaksoiskansalainen jopa. Aijaa, okei.
+
+37:35 - Miska Sulander
+Selvä.
+
+37:36 - Rami Aalto
+Joo, eikä kyllä...
+
+37:37 - Miska Sulander
+Mä ainakin henkos pidän sut mielelläni PJH on puolella. Ainakin tänne ensimmäisen käyttöön ottaa projekti ajan, koska sillä tuntuu, että yhteistyö toimii.
+
+37:50 - Rami Aalto
+Joo, tää on ollut ihan mielenkiintoista tekemistä kyllä tässä. Mä vähän luulen, että... Mä vähän luulen, että täällä on pari sellaista kasaa, mitä vaatii semmoista jatkuvaa kasaamista. Täällä on muutama kasa, jotka leviää ja aika lailla nopsaa, jos ei täällä ole rauhoitteluissa.
+
+38:19 - Miska Sulander
+Joo. Vähän vahva sama. Joo. Sama täällä.
+
+38:24 - Rami Aalto
+Mutta joo, se on semmoisella. Ei mitään, kiitoksia näistä. Mä poisen näillä.
+
+38:32 - Miska Sulander
+Jos tosta oli hyötyä.
+
+38:34 - Miska Sulander
+Mä otan tosta muistiinpanot noista vähän niin kuin ehkä avoimista ja semmoisista, ei vaatimuksissa suoraan lukevista, mutta naistu häviytyistä.
+
+38:45 - Rami Aalto
+Joo. Ja siis vähän katsoa kans. Ja sitten tosiaan pidetään vähän silleen, pidän näitä vähän silleen mielessä, kun me ruvetaan miettimään näitä. Tuotteita vähän enemmän, että osaa näitä sitten selittää oikein.
+
+39:03 - Miska Sulander
+Joo, heittää kysymyksiä Teamsin välityksellä. Vähän huonosti. Kyllä puhelimeen tulee ilmoitukset, mutta muuten tämä Linuxin paristo ja Teams ei oikein sovi yhteenkaan hyvin. Ne välillä tuppaa hukkumaan.
+
+39:22 - Rami Aalto
+Joo, ei mitään Mä heittelen jos tulee jotain kysymyksiä. Hyvä. Ei muuta kuin työn iloa.

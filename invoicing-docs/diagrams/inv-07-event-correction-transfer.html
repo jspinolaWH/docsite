@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Event Correction & Transfer</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 20px; background: #f9fafb; }
+        .container { max-width: 1600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h1 { margin-top: 0; color: #111827; }
+        .subtitle { color: #6b7280; margin-bottom: 30px; }
+        .mermaid { background: white; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Scenario 7: Event Correction & Transfer</h1>
+    <p class="subtitle">Three cases: wrong customer (unbilled), wrong price (unbilled), and wrong customer (already invoiced). Shows the full correction path for each. (PD-276, PD-344, PD-319, PD-275, PD-364)</p>
+
+    <div class="mermaid">
+graph TD
+    DISCOVER([Error Discovered in Events]) --> TYPE{What type<br/>of error?}
+
+    TYPE --> CASE1[Case A: Events assigned<br/>to wrong customer<br/>NOT yet invoiced]
+    TYPE --> CASE2[Case B: Prices wrong<br/>on unbilled events<br/>NOT yet invoiced]
+    TYPE --> CASE3[Case C: Events already invoiced<br/>to wrong customer<br/>Invoice already sent]
+    TYPE --> CASE4[Case D: Service responsibility<br/>wrong on unbilled events]
+
+    subgraph CORRECT_A["Case A — Transfer Unbilled Events (PD-276 / PD-344)"]
+        A1[New resident moved in Jan 1<br/>Notifies waste company on Mar 1<br/>Jan–Feb events on old resident]
+        A2[Office transfers Jan–Feb events<br/>line by line to new customer<br/>Old customer record preserved]
+        A3[System logs: who transferred,<br/>when, why — full audit trail<br/>PD-276: Only authorised staff can transfer]
+        A4[New customer correctly billed<br/>for services from Jan 1]
+    end
+    CASE1 --> A1 --> A2 --> A3 --> A4
+
+    subgraph CORRECT_B["Case B — Retroactive Price Correction (PD-319)"]
+        B1[Jan 2025: Price increase applied<br/>but container fee accidentally skipped]
+        B2[PD-319: Select date range Jan 1–Jan 31<br/>Select affected products<br/>Apply +3% correction]
+        B3[System recalculates all unbilled events<br/>in selected period for selected products<br/>Only unbilled — already invoiced events untouched]
+        B4[Correction logged: user, timestamp,<br/>reason, events affected]
+        B5[Feb invoices generated with<br/>corrected Jan prices]
+    end
+    CASE2 --> B1 --> B2 --> B3 --> B4 --> B5
+
+    subgraph CORRECT_C["Case C — Transfer Already-Invoiced Events (PD-275)"]
+        C1[Invoice for Jan–Feb sent to Customer X<br/>Customer X: 'I moved out Dec 31']
+        C2[PD-275: Create credit note for Customer X<br/>Original invoice + credit note<br/>remain visible on Customer X]
+        C3[Copy events from original invoice<br/>No manual re-entry needed<br/>All event data preserved]
+        C4[Transfer copied events to Customer Y<br/>new resident from Jan 1]
+        C5[New invoice for Customer Y generated<br/>System shows clearly what was<br/>credited from X and invoiced to Y]
+    end
+    CASE3 --> C1 --> C2 --> C3 --> C4 --> C5
+
+    subgraph CORRECT_D["Case D — Retroactive Service Responsibility Change (PD-364)"]
+        D1[Commercial property incorrectly assigned<br/>municipal service responsibility<br/>Should be market-based]
+        D2[PD-364: Set correction start date<br/>System identifies all unbilled events<br/>from that date forward]
+        D3[Service responsibility updated<br/>on all affected pending events<br/>Issued invoices NOT changed]
+        D4[Audit trail: user, timestamp,<br/>events affected, reason]
+    end
+    CASE4 --> D1 --> D2 --> D3 --> D4
+
+    A4 & B5 & C5 & D4 --> DONE([All corrections applied<br/>Audit trail complete<br/>Accounting remains intact])
+
+    style CORRECT_A fill:#eff6ff,stroke:#3b82f6
+    style CORRECT_B fill:#fff7ed,stroke:#f97316
+    style CORRECT_C fill:#f5f3ff,stroke:#6366f1
+    style CORRECT_D fill:#f0fdf4,stroke:#059669
+    style C2 fill:#fef3c7,stroke:#f59e0b
+    style DONE fill:#dcfce7,stroke:#059669,stroke-width:3px
+    </div>
+</div>
+<script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { useMaxWidth: true, htmlLabels: true } });
+</script>
+</body>
+</html>

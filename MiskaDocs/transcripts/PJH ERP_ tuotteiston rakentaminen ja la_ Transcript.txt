@@ -1,0 +1,494 @@
+PJH ERP: tuotteiston rakentaminen ja laaditun excelin läpikäynti
+Wed, Mar 4, 2026
+
+0:02 - Amir Hassan
+Huomenta, Sanna.
+
+0:04 - Amir Hassan
+Huomenta, Miska.
+
+0:05 - Miska Sulander
+Hyvää huomenta.
+
+0:07 - Amir Hassan
+Hei, pari asiaa tähän tuotteiston mockupin liittyen.
+
+0:12 - Amir Hassan
+Käyn ne läpi nyt aamulla, koska ne liittyvät vaatimuksiin. Voi olla, että tulee kysymyksiä, joihin emme pysty vastaamaan. Järjestetään vaikka ensi viikolla follow-up-palaveri. Käydään nyt alusta vasten läpi, ja jos tulee lisää kysyttävää, niin käydään ne sitten ensi viikon läpi.
+
+0:38 - Sanna Ruosaari
+Sopiko näin? Nyt meidän piti käydä sitä Excel läpi.
+
+0:44 - Sanna Ruosaari
+Niin, mä puhun seuraavasta.
+
+0:46 - Miska Sulander
+Okei. Joo, tää oli vaan heads up siihen daily ja kymppiin alkaen.
+
+0:53 - Sanna Ruosaari
+Joo, eli siis jos kympiltä alkavassa palaverissa tulee jotakin muu huomioita, niin sovitaan huomioiden läpikäynnille uusi palaveri. Kyllä, kyllä. Päästään kuitenkin alkuun tästä. Käsitellään sen tuossa kohta, kun me saadaan loppu BGH-porukka vielä tuolta linjalle.
+
+1:13 - Amir Hassan
+Sitten vielä, kun kaikki tulevat mukaan, niin me kerrotaan, miten tämä product-pricelistä tuotteistojen hinnasto toteutetaan tässä sitä julkaisun osalta.
+
+1:26 - Unidentified Speaker
+Joo.
+
+1:26 - Amir Hassan
+Täällä on kyllä nyt ihan oikeasti aurinkoinen päivä Lappeenrannassa. Onko Tampereella yhtä aurinkoista?
+
+1:36 - Sanna Ruosaari
+Ei saa enää lunta. Kyllä aurinko paistaa.
+
+1:41 - Unidentified Speaker
+Kyllä.
+
+1:41 - Unidentified Speaker
+Ui.
+
+1:42 - Amir Hassan
+Jopa täälläkin paistaa aurinko.
+
+1:45 - Miska Sulander
+Ehkä se johtuu siitä, että Naantali on tuossa lähes naapurissaan.
+
+1:53 - Miia Saviahde
+Kyllä se aurinko paistaa risukasaankin välillä.
+
+1:57 - Amir Hassan
+No niin.
+
+1:59 - Miska Sulander
+Heitän ehkä itse vähän liikaa turkulaisena vettä myllyyn tähän Turku-Tampereen keskusteluun. Niinpä, niinpä.
+
+2:08 - Unidentified Speaker
+Sen takia voi kuittaa takaisin.
+
+2:11 - Unidentified Speaker
+Mikrofoni on käynyt.
+
+2:13 - Unidentified Speaker
+Kyllä määrä on ihan älytön silleen, miten joku tekee.
+
+2:22 - Amir Hassan
+Huomenta, Miia. Huomenta, Päivi.
+
+2:24 - Unidentified Speaker
+En ehtinyt sanoa.
+
+2:26 - Conference Room (Päivi Kaarne) - Speaker 3
+Huomenta. Täytyy vielä vähän ääniä säätää. Me ollaan täällä neukkarissa. Tämä nyt ei sitten ihan kuulu niin kuin pitäisi.
+
+2:38 - Unidentified Speaker
+Hetki pieni.
+
+2:39 - Amir Hassan
+Tämä on ihan asiasta kommenteen.
+
+2:42 - Amir Hassan
+Mä sain tietää, että on olemassa semmoinen Malt Book nimenen some. Tämä on aika hurjaa. Multbook on some-alusta, jossa AI-agentit käyvät keskenään keskusteluja.
+
+3:02 - Unidentified Speaker
+Oikeasti.
+
+3:02 - Amir Hassan
+Ihmiset saavat olla siellä seuraajina, eivät saa kommentoida, mutta AI-agentit keskustelevat kaikista optimoinnista tietoisuuteen ja uskontoon. En tiedä, onko tämä niin, että niitä ohjataan, ihminen antaa niillä prompteja, että käykää keskustelemaan tästä asiasta, vai onko ne ihan oikeasti keskustelemassa keskenään. Tämä on vähän niin kuin...
+
+3:35 - Miska Sulander
+Nyt kun avasin tämän etusivun, niin teen kyllä ihan samalla tavalla, näyttää aika himmeeltä.
+
+3:43 - Miska Sulander
+Antaa alla.
+
+3:44 - Miska Sulander
+Joo, jos mennään asiaan.
+
+3:46 - Sanna Ruosaari
+Päivittäjät äänestivät. Meille kuuluu hyvin tänne päin.
+
+3:50 - Conference Room (Päivi Kaarne) - Speaker 3
+Kuuluuko meidän ääni sinne päin? Ainakin sun ääni kuuluu.
+
+3:54 - Sanna Ruosaari
+Otatko pöydän päästä joku vielä keskikirjoituksena? Täällä ollaan. Kuuluu. Miss Kalle ja Mirja tiedoksi, että mä olen saanut myöskin fluissa ja mä rajasin ongelman. Mä en lähtenyt toimistolle tartuttaa joku loppuporukkaa. Normaalistihan me ollaan kaikki keskiviikkoisin peljillä. Sinä kuulostit, Sanna, aika fluensaselta alkuviihdosta. Joo, ei sitä ole yhtään paremmin kuulunut, mielestäni vieläkään.
+
+4:22 - Amir Hassan
+Mutta tämän ollaan.
+
+4:24 - Sanna Ruosaari
+Kiitos, kyllä tämä tästä. Hei, meillä on nyt aiheena tämä meidän tuotteistoekseli. Tuossa jo todettiin, että kympiltä ihmitellään sitä mock-upia, mutta nyt täytyisi tätä tuotteistoekseliä selkeyttää. Me ollaan tehty jotain, ja nyt me tarvittaisiin waste-herobiaa, palautetta tästä meidän rakennelmasta, että onko tämä oikean suuntainen. Ja vielä ennen kuin annan puheenvuoron, niin todettakoon, että tässä on nyt siis käyty keskustelua Miska ja Ramin kanssa keskinäisesti, ja saatu palautetta ja todettu puutteita. Ongelma tässä on se, että Rami on nyt jonkin aikaa pois, ja se keskustelu on käyty keskinäisesti, jolloin tämä meidän lopputuotteistotiimi on tipahtanut ulkopuolelle, ja tätä vältämme jatkossa. Sen takia me olemme tässä nyt kaikki. Mikä teidän näkemys tästä meidän tekeleestä on nyt?
+
+5:14 - Miska Sulander
+Mä oon kattanut tämän läpi, mutta mä haluaisin nyt ensin kuulla, koska tosiaan olen Ramin kanssa käynyt tämän, se ei ollut näin laaja silloin vielä siinä vaiheessa, lähellekään kun me käytiin se, tai siitä on pari viikkoa ish, niin haluatteko te nopeasti käydä tämän sillä tavalla, kuka pystyy käymään tämän läpi, tai useampi ihminen sillä tavalla, mitä tässä nyt on tehty teidän näkemyksen mukaan ennen kuin lähden antaa palautetta tai lähden käymään läpi. Eli semmoinen pieni check up ensin sieltä, että mikä se haju on ja sitten otetaan sen jälkeen puheenvuoro meidän puolelta. Koska kyllä mä tätä rakennetta tavallaan pystyn tulkitsemaan ja lukemaan, mutta haluaisin jonkun verran ehkä niin kuin sieltä ensin kuullaan, että mikä se on se tämänhetkinen tilanne ja niin sanotusti ymmärrys, varsinkin nyt, kun Rami on jäänyt siis tästä pois. Että nyt tiedetään, mistä puhutaan niin edespäin.
+
+6:22 - Sanna Ruosaari
+Käytiin tätä samaa kysymystä sisäisesti läpi viime viikolla. Mä toivon, että nyt sieltä ottaa joku tästä tuotteista torkasta puheenvuoro ja käy tilanteen läpi Veistirolle uudestaan. Minä voin olla äänestänyt.
+
+6:38 - Conference Room (Päivi Kaarne) - Speaker 1
+Sano se sieltä.
+
+6:40 - Unidentified Speaker
+Minun alkuun, täydentäkää sitten.
+
+6:42 - Conference Room (Päivi Kaarne) - Speaker 1
+Me olemme pyrkineet tähän, kun oli puhetta, että tuodaan tähän jotain erityyppisiä tuotteita, mitä meillä on nyt käytössä. Tuo sarake koostuu nyt tuosta, kun on valittu joku jäte astiatyyppi ja sitten astiakoko, niin siitä koostuu tuo tuotesarake, eli siinä näkyy sekä etäastian tyhjennys esimerkiksi ensimmäisellä rivillä, ja se ottaa siihen sen astiakoon mukaan, eli nähdään tuotteessa, eli mikä laji ja mikä koko on tyhjennyksessä. Ja siellä ensimmäisessä sarakeissa on vielä se, että se on se tyhjennyspalvelu kyseessä, eli siellähän on sitten näitä että erityyppisiä on kuljetuspalvelua ja on lisäpalvelua ja hyvityksiä, mitä kaikkea siinä on yritetty katsoa, että minkälaisia tyyppejä meillä tämmöisiä on, mitä on käytössä. Ja sitten tosiaan joko se jätelajintaikka, jos vielä scrollaat sinne alaspäin, niin näkyy myös sitten näitä, on lietettä ja pistävää ja vintävää, mitä näitä nyt on, mitä on yritetty vähän erityyppisiä sinne saada. Sitten on sitten näitä astiatyyppejä, no sinne on myös laitettu sitten näitä lietesäiliöitäkin, eli siellä on sitten hinta-astia, on lietesäiliö, on jätesäkkiä, esimerkiksi tämmönen niin isäpalvelu tavallaan jätessäkin, mutta siinä nyt on vain esimerkkinä sitten näitä perustämmöisiä tyyppejä, mitä siellä on käytössä. No sitten on näitä astiakokoja, eli siinä on taas määritelty, eli jos sitä klikkaa siitä esimerkiksi astiakoon kohdalle, niin siinä pystyy valkkaamaan, siinä tulee se pieni kolmio siihen nähtäville, eli sen takia me ollaan koitettu katsoa siihen, että tavallaan pystyy valkaamaan tuosta listasta semmoisen, mitä meillä on käydössä. Sitten tuossa listassa näkyy tuo yksi esine, kaksi esine, kolme esine, että ne on nyt esimerkiksi noita repsikkanoutoja, mitä meillä on määritelty, sitten on syväkerähessäilijöitä ja tämmöisiä Sitten kun mennään sitä listaa alaspäin vielä, niin siellähän on meillä sitten ihan fyysihesti alaspäistä listaa, niin pois sitten noista lietteistä tosiaan, niin niistähän ei ole astiakokoa, koska ne tulee sieltä jostain, mistä tuleekahan, kun me ei tiedetä, koska kuljettajahan merkkaa sitten sen lietteen määrän, mikä siellä on tyhjennetty, eli sitähän ei pysty tuohon laittamaan muuta kuin oletuskokoon, mikä säiliöllä on. Mutta se, mikä tulee asiakkaalle laskutettavaksi, niin sehän on taas se, mitä kuljettaja mökkaa. Palveluvastuukentässä meillä on pyritty katsoa, onko se kuntavastuuta vai onko se toissijasta vai jotain muuta. Eli siinä näkyy tuommoinen sarake. Urakka-alue. Siinähän tässä nyt näkyy, että ollaan siihen katsottu. Tuo 0,1 on taakka 0,6, mitä nämä nyt menee kunnittain. Mutta se, että pitäisikö se olla jotain muuta, en tiedä. Mutta siinä vastaavasti seuraava sarake on kuitenkin taas kuntatieto. Se on aika selkeä. Sitten tulee vyöhyke. Meillä ei ollut oikein tietoa, mikä on nyt tämä vyöhyke, mutta onko se sitten näitä, mikä meillä on nyt esim. Lietteessä on se tietty vyöhyke, mutta sekin on tavallaan kuntarajoitteinen, mutta näihin me ei nyt ole laitettu mitään. Tuotekoodi. Joo, siinä on ruksi. Jos me tarvitaan joku tuotekooli, mutta sitäkään, että miten se muodostuu, ei meillä ole tässä mallissa tietoa, että miten se muodostuu. Sitten käsittelytapa. Tuossa nyt on koitettu miettiä sitä, että joku seka-jätekin menee tammervoimaan, ja sitten lietteen taas menee johonkin jäteveden puhdistamolle. Ja sitten mitä tällainen olisi esikäsiteltävää, esim. Jos on ihan tällaista noutopalvelua kyseessä. Ja vastaanottopiste, Tarasteijärvi, tai sitten justiin tuo Tammervoima, jos sitä skrollaa alaspäin, niin siellä näkyy selitteissä vielä minkä jäteveden puhdistamoisen ottaa vastaan. Ja samaten näistä pistävistä, viltävistä menee varmaan ja muuta. Näitä pyritty siihen nyt katsomaan esimerkkejä. Sitten oikeastaan lopusta en oikein pysty itse varmaan, jos joku Miia pystyy sieltä lannoilta. Antaa ehkä enemmän niihin muihin vastausta. Joo.
+
+12:43 - Miia Saviahde
+Eli käytännössä tähän on siis tunnistettu attribuutteja, mitä tuossa Miska laittoi esimerkkejä ja kertoi, niin sitten se lista jatkuu tuonne eteenpäin. Siinä on sitten käsittelyn tuotteita ja vaarallisen tuotteita ja mielestäni siellä oli kuljetuksenkin attribuutteja tunnistettu sitten sinne loppuun. Eli Rami on ruvennut tähän koostaa Sitten niitä kaikkia meidän tuotteen takana olevia eri attribuutteja. Ne on tavallaan tässä taulukossa.
+
+13:16 - Conference Room (Päivi Kaarne) - Speaker 2
+Meillähän on tuotteita, joilla tuo vastaanottopaikka voi olla määritelty tuolla. Mutta suurin osa tuotteista tulee ajonhallinnasta se vastaanottopaikka. Eli on monta vastaanottopaikkaa muoville, kartongille, lietteille. Se ei ole välttämättä kiinni siitä, mistä kunnasta se pyhienetään, sen kunnan kutserille, että se tulee sieltä kuljettajan kuittauksesta ja ajanhallinnasta, mihin se vastaanottuu.
+
+13:51 - Conference Room (Päivi Kaarne) - Speaker 1
+Kun ei tiedetä, miten se tuotteistosi ja veistelun puolella toteutuu, niin esimerkiksi Täällä on noita lietepalveluita määritelty, niin onko se lietetyhjennys vai palvelukokonaisuus, eli jos menee sinne vaikka vähän vasemmalle ja alaspäin, niin missä näkyi niitä muutama lieteesimerkki siinä, ja vielä vasempaan sinne sitä listaa alkuunpäin, niin siellä on muun muassa Yhdessä kohtaa olen laittanut kommentin, jossa lukee umpisäilyä ja saustussäilyä. Me ei tiedetä sitä, onko se tietty tuote vai onko se palvelukokonaisuus. Sen takia tässä on yksi kohta, liitytyhjennyspalvelu, joka sisältää sen liitytyhjennyksen ja käsittelyn. Mutta miten se täällä tosiaan ui tuotteistossa, Meillä ei ollut siitä tarvempaa tietoa.
+
+15:04 - Conference Room (Päivi Kaarne) - Speaker 2
+Ja tuossa lietetyhennyspalvelussa, niin sehän sisältää sen lietteen ja sitten ne kuljetusmaksutyypit, mitä on sitten useille eri, riippuen siitä, että on kuljetusmaksu 1-6 kutioja. Joo, se koostuu niin monesta osatekijästä.
+
+15:22 - Conference Room (Päivi Kaarne) - Speaker 1
+Niin, se on todennäköisesti laustyhennys, säännöllinen täsmätyhennys, ja nämäkin vaikuttavat.
+
+15:28 - Conference Room (Päivi Kaarne) - Speaker 2
+ja niitä tuotteita, just nimenomaan ne kuljetusmaksotyypit ja sitten ne lietetyypit, että ne on niitä tuotteita, mutta ne sisältyy, jos toi on niinku paketti, toi lietytyhiennyspalvelu, niin ne sisältyy, ja sitten siellä vielä niitä eri...
+
+15:46 - Conference Room (Päivi Kaarne) - Speaker 1
+Tässä on todettu saada vähän erityyppisiä näitä esiin, että mitä täällä nyt voi olla, ja tässä ei todellakaan ole mikään tuohon kattalalista vieläkään, mutta on hyvin erityyppisiä yritetty saada tähän esiin.
+
+16:04 - Miska Sulander
+On joo, mun mielestä se tässä on nyt hyvä myös meillä jo tässä vaiheessa, että tässä on paljon erilaisia esimerkkejä, että ei tosiaan pelkästään noista astiantyyppisiä vaan oikeasti kaikesta muista myös. Mia, sanoisitko vielä ennen kuin aloitan mun monologini? Joo, siihen ajattelin vielä sanoa, että kun kysyit, että mitä me ollaan tehty, niin tämä siis on nyt se lopputulos.
+
+16:40 - Miia Saviahde 1
+Ja silloin tuolla alhaalla, kun on noita välilehdet, niin vähän kuin menee vasemmalle, niin siellä on ne vihreällä olevat, niin kuin VHL, VH on mallit, mitä VH on nyt, niin Rami on siis yrittänyt katsoa, että miten me saataisiin tätä kusellaan ylöspäin. Miten me saataisiin tavallaan meidän tuotteita tähän malliin sovitettua. Sitten tässä on nämä kysymykset, mitä te kävitte silloin läpi teidän palaverissa. Se on se, mitä Rami on yrittänyt, että me ollaan käyty läpi keräyksen puolella ja käsittelyn puolella, että mitä meillä niitä on ne attribuutit ja mitä me tarvitaan. Saada sitä tavallaan tähän teidän malliin toimimaan, mutta meillä esimerkiksi tuo komponentit oli epäselvyys silloin, mihin tuli sitten vastaus siinä teidän palaverissa, mutta sen takia se on vasta tuo listataso, että kun se rakenne on vielä hyvin epäselvä.
+
+17:36 - Miska Sulander
+Joo, ja toi listataso on siis ihan ok nyt tässä kohtaa vielä. Mä nappaan, mulla on täällä sama ekseli auki, niin mä nappaan näytöjä on, niin on helpompi puhua ja ohjata samaan aikaan. Otas toi Teamsi toiseen näyttöön, että näen myös teidän kasvot, ettei tarvitse puhua haamuille. Sitä tekee muutenkin ihan tarpeeksi. Tuolta. Minun mielestä tämä on edelleen niin kuin sanoin Ramille silloin kun me käytiin läpi. Suunta oli silloin oikea, suunta on edelleen oikea. Seuraava kysymys on ehkä se. Tähän on itse asiassa tämmöinen kommentti. Mitäköhän tämä tarkoittaa? Ei vaikuta hintaan. Mutta mikä ei vaikuta hintaan? Se olisi ollut minun kysymys seuraavaksi, että pystyttäisikö seuraavana hommana tästä iteroimaan. Niin, että mitkä on niitä nimenomaan hintaan vaikuttavia asioita tässä tuotteessa. Eli mikä tässä olisi tavoitteena, niin olisi erottaa ne tuotteeseen liittyvät asiat tuotteen hintaan liittyvistä ja vaikuttavista asioista.
+
+19:35 - Unidentified Speaker
+Saattekin?
+
+19:36 - Sanna Ruosaari
+Taitaa olla kirjattu tuonne, eikö ole?
+
+19:40 - Miska Sulander
+Joo, minulla on tämmöinen tähti, mutta sitten haluaisin...
+
+19:45 - Sanna Ruosaari
+Tuotekoodi, joka ei vaikuta hintaan.
+
+19:48 - Miska Sulander
+Niin, se on semmoinen, minkä haluaisin haastaa, että onko se ainoa asia, mikä ei vaikuta hintaan. Ei pidä paikkaansa. Niin. Sitä ajattelin, koska esimerkiksi Voisin kuvitella, että siirtoasiakirja ei välttämättä vaikuta tuotteen hintaan. Tai kirjanpidon tili. Ei ole niin sanotusti hintakomponentti. Voidaan käyttää termiä kuin hintakomponentti. Tai hintamuuttuja. Jompikumpi. Koska mikä se logiikka on. Miten tätä ajatellaan? Olen toivottavasti yrittänyt tätä jossain selittää tai käydä läpi. Meillä on tuote. Sovitaan, että se on sekajätäastian tyhjennys, joka on tuote. Siihen hintaan vaikuttaa jätelaji, astiatyyppi, minkä kokonen astia se on, mikä palveluastuu. Missä se astia tyhjennetään jne. Että yksinkertaisimmillaan se tuote voi olla tai jätelaji voi olla ehkä siellä tuottajalla, koska sitten siihen tulee sen jätelajin kautta varmasti muita asioita. Mutta tavallaan, että jos ajatellaan sekajäteastiaan tyhjennystä yhtenä tuottajana, niin sitten meillä voi sekajäteastian tyhjennystuotteelle meillä voi olla eri hintoja riippuen sitten siitä astiankoosta, palveluvastuusta, jne. Eli osa asioista tavallaan on siellä tuotteen alla, mutta osa on sitten hintamuuttujina sillä tuotteella hinnastossa. Tämä on niin kuin Vaikea selittää sanoin. Ehkä se mockup, mikä sitten käydään läpi tuossa kymmeneltä, niin ehkä vähän avaa sitä. Se ei ole todellakaan täydellinen tietenkään edelleenkään se työ tai malli. Mutta kuitenkin, että siinä on ero meidän näkökulmasta, mitkä on siellä tuotteella, mitkä on hinnalla tai hinnassakin. Että sinne tuotteistoon ei tule tuhansia tuotarivejä, joissa ainoa ero on esimerkiksi vaantojasti ja koko, mutta sitten siellä on sekajäteen tyhjennystuotteilta monta. Tämä malli tuottaa sen, että olisi helpompi hallita niitä hinnastoja ja hintoja. Koska ne on ehkä se dynaamisempi ja vuosittain muuttuva asia, kun sitten taas tuotteet ehkä on ne, jotka pysyvät vähän staattisempaan vuodesta toiseen. Että joo, tulee lisää tai tulee uusia, mutta sitten ne hinnat kuitenkin oletettavasti jätettäksä, niin kuin on esimerkiksi aikalailla vuosittain ja olen kuullut vähän juttua, että päivittäminen on aikamoinen työmaa joka syksy, niin että päästäisiin tuommoisista jutuista niin sanotusti eroon. Seuraava homma mielestäni olisi se, että tähän merkittäisi selkeästi ne tuotteet, tässä kohtaa nyt tuotteen komponentit, jotka vaikuttaa hintaan. Tämä tapa merkitä on aivan oikea ja aivan hyvä, mutta se olisi se seuraava steppi. Sitten me voidaan erottaa ne tuotteen komponentit siitä, tuotteen hintakomponentista, jotka vaikuttaa siihen hintaan.
+
+24:21 - Conference Room (Päivi Kaarne) - Speaker 3
+Minä varmaan putosin jo kärryltä, mutta kun Rämi selitti sitä, justiin yritti selittää sitä meille, että kun tuo sekajäteastion tyhjennys on tavallaan jo tuote, mutta kun se tuote sisältää, vähintäänkin se kolme, on se kuljetus, on se käsittelyosuus ja sitten on se perusmaksuosuus. Tavallaan niitä hinnastoelementtejä, mutta nyt menee pikkasen itselle varmaan vähän sekaisin justiin se, että joo, hintaan vaikuttavat tekijät, joo, mutta sitten kun tässä taulukossa ei ole tavallaan niitä tuotetasoja sitten näin tarkasti, että...
+
+25:03 - Miska Sulander
+Onko niillä niinku tuotetasoilla? Tai onko sillä edes merkitystä, minun saa itse varmaan niin silläkään ei välttämättä ole merkitystä, koska sen tuotteen alla voi olla kuljetusmaksu, perusmaksu, käsittelymaksu siinä tuotteessa. Ne voisivat myös riippua teoriassa siitä, niistä hintaelementeistä. Ne voi myös ajatella erillisenä tuotteina, joista sitten se varsinainen tuote kasataan. Jos on tarpeen eritellä ne ja jos on tarpeen eritellä niiden hintoja sitten tuollaisella tarkemmalla tasolla, Jos nyt ajatellaan, että meillä on sekaajatteen tyhjennykselle 140 litranen astia paikassa X, niin meillä on sille hinta, joka koostuu perusmaksusta, käsittelymaksusta ja kuljetusmaksusta. Sitten kun me mennään vaikka Tampereelta Barkanoon, niin siellä muuttuuko perusmaksu, muuttuuko käsittelymaksu, muuttuuko Kuljetusmaksu.
+
+26:37 - Conference Room (Päivi Kaarne) - Speaker 3
+Kuljetusmaksu muuttuu, eli tällä periaatteella juurikin.
+
+26:43 - Miska Sulander
+Eli perusmaksu pysyy samana ja käsittelymaksu pysyy samana. Eli toisin sanoen meillä voi teoriassa olla jopa semmoinen tuote, että meillä on sekajätteelle. Sekäjäteastian tyhjennykselle meillä on perusmaksutuote, jolla ei ole hintakomponenttia, joka määrittää sen, että mitä se maksaa missäkin kunnassa, jos se pysyy samana. Mutta sitten meillä on kuljetusmaksutuote, joka liittyy tähän samaan sekäjäteastian tyhjennykseen. Sillä on hintakomponentti, joka on se sijainti. On se sitten kuntakoodi tai maantieteellisesti rajattu alue, se ei ole väliä, mutta nyt fyysinen lokaatio on tässä helppo esimerkki. Sitten meillä voi olla sille tuotteen osalle ne eri hinnat sit sijainnista. Ja sit kun sekajäteastea tyhjennetään Parkanossa, niin tiedetään, että sopimuksella on tämä hinta, ja jos se tyhjennetään Tampereella, niin sit tiedetään, että sillä on tämä hinta. Eli edelleenkin tässä voisi jopa osaa näistä, jotta voidaan jatkaa tätä dialogia niin jopa avata tähän tai mä tiedän ehkä se on niin kuin helpompaa. Helpompaa tota sitten onko täällä. Täällä ei ole mitään mutta ehkä tehdä jopa uuden välilehden. Johon. Vielä sitten vaikka pilkkoa. Ihan vaan sen takia vaikka nyt tästä tämmöiset esimerkit, muutama esimerkki. Nyt puhutaan vaan siis näistä nyt näistä tyhjennyspalveluista, mut pilkkoa niinku tämmöset. No mä käytän nyt tuotekokonaisuutta ehkä, tai niinku palvelua, palvelutuotepakettia, mä en tiedä mikä on niinku hyvä termi, mut pilkkoo tää, lyödä tähän alle, ottaa tosta rivin, lyödä tuohon alle kuljetusmaksun, perusmaksun ja sitten tässä käsittelymaksun ja sitten vähän niin kuin avata sitä, että mitkä asiat niiden hintaan vaikuttaa ja sitten tavallaan, mitkä vaikuttaa siihen kokonaishintaan. Mä en tiedä, meneekö tämä nyt liian vaikeaksi. Se voi olla, että menee Ajatteleko itsekin tätä liian hankalasti?
+
+29:54 - Conference Room (Päivi Kaarne) - Speaker 3
+Se koostuu vain kuitenkin. Mutta kuitenkin.
+
+29:59 - Conference Room (Päivi Kaarne) - Speaker 2
+Oliko niin ajateltu viimeksi, kun olen ollut kuullua urakoitsijan hinnastosta, että se on oma hinnastonsa? Tässä on nyt attribuuttia. Siellä on tuo urakka-alue, mutta näitähän siis esimerkiksi Tampereella 247 sekajäteastiella on vielä vaikka kuinka monta eri urakka-aluetta, millä on eri kuljetushinnat, niin ajatellaanko...
+
+30:28 - Miska Sulander
+Ajatellaan, sitä ajatellaan, niin kuin urakoitsijahinnastoa ajatellaan. Mä ajattelen tämän vähän niin kuin semmosena kaksipuolisena, jossa tuote on niin kuin keskellä, sit siellä on se asiakashinnasto. Toisella puolella ja urakoitsijahinnasta toisella puolella. Ja tavallaan me voidaan kytkeä siihen samaan tuotteeseen monta asiakashintaa, monta urakoitsijahintaa ja sitten ne elää siellä niin kuin omaa elämäänsä sitten niillä urakka-alueilla. Eli tavallaan siihen asiakashintaan jos se urakka-alue ei asiakashintaan vaikuta, niin me ei tarvita sitä urakka-aluekomponentteja.
+
+31:18 - Conference Room (Päivi Kaarne) - Speaker 2
+Joo, sitä mä ajattelinkin, että sitä ei varmaan tässä tarvi, että se on sitten oma palaisensa, kun se ei vaikuta tähän.
+
+31:29 - Miska Sulander
+Mutta tavallaan siis sen urakoitsijahinnaston, jos nyt lyhyt hyppy siihen, niin sen voi ajatella tavallaan tämmöisenä ihan samanlaisena.
+
+31:38 - Unidentified Speaker
+Joo, kyllä.
+
+31:40 - Miska Sulander
+Samanlaisena kokonaisuutena attribuutteja. Ne attribuutit voivat olla eri attribuutteja kuin tässä. Ja osittain varmaan onkin. On joo, on aika paljon eri.
+
+31:51 - Conference Room (Päivi Kaarne) - Speaker 2
+Ja siinä on paljon vähemmän, se on paljon yksinkertaisempi. Siinä on vaan periaatteessa attribuuttina se urakka-alue. Ja kaikki samat tuotteet eri urakka-alueilla vaan.
+
+32:02 - Miska Sulander
+Niin, kyllä. Niin sitten me voidaan kytkeä niihin tuotteihin ne urakka-aluehinnat, että me tiedetään, millä urakka-alueella tyhjennys on tehty, mihin urakka-alueeseen se tyhjennys kuuluu. Sitten me saadaan oikea urakoitsijahinta. Me tiedetään, mitä te maksatte. Me tiedetään, mitä asiakas maksaa. Tai siis te tiedätte. Sitten tiedetään myös, mitä siihen jää väliin. Se on se tosi yksinkertaistettuna ja suoraviivaistettuna se ajatus. Ajatustas. Eikä sitä mun mielestä oikein muuten voi niin kuin edes tehdä järkevästi. Tai saa haastaa, mutta se on mielipide. Sitten tulee tarpeeksi joustava ja tarpeeksi sellainen, että pitäisi sopia aika moneen tilanteeseen ja hankintarenkaankin. Hankintarenkaakin sisällä jo niin sanotusti kaikkea kaikille. Mun mielestä se seuraava tärkein steppi tässä on se, että ottaisiin ne asiat, mitkä vaikuttaa oikeasti hintaan. Sitten tavallaan meidän vastustetaan lopullinen jako siitä, mikä on sen tuotteen ominaisuus ja mikä on joko yksittäisen hinnan tai kokonaisen hinnaston ominaisuus. Kaikki vaikuttaa siihen, mikä hinta sille asiakkaan sopimukselle pitäisi tulla tai mitä sille pitäisi ehdottaa tai mikä sen pitäisi olla. Palvelulla sopimuksella.
+
+33:59 - Unidentified Speaker
+Sanna.
+
+34:00 - Unidentified Speaker
+Semmoinen kysymys.
+
+34:02 - Sanna Ruosaari1
+Me käytiin tuossa äsken meidän sisäisessä viikressä keskustelua noista työnkuluista, mikä me jokunen viikko saatiin tehtäväksi määrittää eri tuotteiden työnkulut.
+
+34:17 - Miska Sulander
+Mites me otetaan ne työnkulut huomioon Onkohan tämä semmoinen, pystyttekö avaamaan työnkulut tämmöiseen formaattiin?
+
+34:33 - Sanna Ruosaari
+Voin näyttää sulle kohta, miten tehtävän annan. Pistän tähän muistiin, että täytyy erotella.
+
+34:44 - Miska Sulander
+Jos nopeasti vielä, Sanna kirjoittaa siellä noutin. Täällähän nyt on mun käsittääkseni myös tavallaan se hinta. Se on ihan OK, että näihin tavallaan hinnat on nyt tässä riveillä tai samoilla riveillä. Ja tämmöinen tapa on ehkä oikea siinä, kun me luodaan tuotteista isona massana, niin on oikea tapa viedä loppuviimeksi asioita, vaikka ne tässä olisi jokainen omalla rivillään. Se voi olla oikea tapa viedä niitä sisään ohjelmallisesti. Se on ihan ok, että nämä on täällä, mutta just se, että mun mielestä tässäkin pitää nyt muistaa ja nähdä se, että okei, että nämä on hintoja tai hinnannussia tai sitten täällä on niin kuin, no niin. Silleen, että nämä ei varsinaisesti ole semmoisia attribuutteja. Nämä loput ei lihavoidu täällä mitkä vaikuttaa hintaan tai mihinkään vaan. Ne näyttää olevan tommosia mihin eri hintoja tallennetaan.
+
+36:13 - Conference Room (Päivi Kaarne) - Speaker 3
+Joo, koska tässä Tämä oli alun perin se omakustannushinta tai se laskenta tässä mukana. Nuo ei ole varmaan niitä, mitä siihen liittyviä komponentteja olisi, mutta sehän nyt oli se, että sitä ei ole siellä vaatimuksissa sitä kuolta, mutta ne on varmaan tosiaan tuossa sillä tavalla. Kuitenkin.
+
+36:44 - Unidentified Speaker
+Joo.
+
+36:46 - Miska Sulander
+Okei Sanna, sulla on seuraava puheenvuoro ja esitysvuoro.
+
+37:00 - Sanna Ruosaari
+Joo. Me saatiin taannoin tehtävä. Dokumentoidaan niiden tuotteiden kohdalle, joiden osalta tarvitaan erityisiä työnkulkuja. Millaisia työnkulut ovat tuotteittain, tuotettyyveittäin? Millaisessa muodossa te ajattelitte, että me dokumentoidaan nämä työnkulut? Millasta te odotitte?
+
+37:29 - Miska Sulander
+En enää muista, mitä odotin tai mitä olen silloin ajatellut. Mutta mä näkisin, että ehkä jonkunnäköinen sanallinen selite plus jonkunnäköinen graafinen esitys voisi olla helpoin. Mä annoin tehtävänantoa nyt meillä.
+
+37:52 - Sanna Ruosaari
+Tämä on kaikissa näissä neljässä tunnistetussa samanlainen. Esimerkkinä on tässä nyt vaarallisten jätteiden työnkulujen määrittelyyn. En täytyisi määritellä, millaisia ne työnkulut ovat, ja lopputuloksena toivon myöskin graafista esitystä työnkulusta. Olen pyytänyt nykytilankuvauksen tähän alla. Tähän se on vaarallisten jätteiden osalta tehty tupakkiaskin kanteen, mutta sitten olen pyytänyt, että kuvataan se tulevaisuuden tahtotila vaarallisten jätteiden tilaustoimitusprosessista. Tästä työnkulusta tulisi olla Kuvattuna prosessin tarkoitus ja mikä nyt vaarallisten jätteiden osalta on poikkeavaa muista tilaustoimitusprosesseista. Työvaiheet ja niiden järjestys. Päätyspisteet ja poikkeukset. Tällä tarkoitan nyt sitä, että meillä lähtee tehtävä tilauksesta ajonhallintaan. Haluaisin siihen väliin tietovirran ja sitten, että se päätyy ajonhallintaan. Ajonhallinnasta lähtee tietovirta ja se päätyy laskutukseen. Sisällöt ja tietovirrat täytyisi kuvata siihen. Meillä on jo kertaalleen Janni, joka on siis projektitiivissä, hän on laatinut näistä lavapalveluista, repsikkanoudoista tällaisen tavoitetilan, ja olen laittanut sen esimerkkinä, että tällaista laatikkoleikkiä minä toivoisin, mutta toivooko tällaista myös WasteHero WasteHero?
+
+39:21 - Miska Sulander
+Joo, toivoo ehdottomasti. Ja toivoo mielellään semmoisessa muodossa, että se ei ole tuollainen screenshot vaan, että se olisi sitten joku PowerPoint tai joku, mitä mä voin muokata, että mä voin kääntää sen myös englanniksi. Että ei mun tarvitsisi sitä koko kuvaa niinkun lähteä piirtämään itse uudestaan. Jos se vain onnistuu toimittamaan niin silleen yksi työvaihe välistä. Tää näyttää hyvältä. Hyvältä ja kuvaavalta.
+
+39:53 - Sanna Ruosaari
+Tällennetään tonne meidän logistiikka striimiin. Siellä on ja PowerPoint tai Word lienee helpoin.
+
+40:00 - Miska Sulander
+Työkalu ei tässä nyt lähetä hitistenen sen enempää. Ei, ei, mutta kuhan tätä kuvaa voi itse muokata. Joo. Silleen, että pystyy kääntämään asian myös niin, että meillä muutkin osapuolet, kun meidän suomalaiset, voi sitä lukea.
+
+40:18 - Sanna Ruosaari
+Sitten kysymys, eli tämä tehtäväranto oli OK. Sitten kysymys numero kaksi. Me tunnistettiin, että mistä kaikista me tämä työnkulku kirjataan auki. Minä ajattelin, että vaan niistä, jotka jotenkin poikkeaa meidän massasta. Meidän massaa ja peruskaura on se, että me tyhjennetään pönttöjä ja hoidetaan tätä jätehuoltoa. Tokkopa me näitä työnkulkuja lähdetään kirjaamaan auki?
+
+40:48 - Miska Sulander
+Ei, ei tarvitse kirjata auki. Sitten jos siellä on jotain oikeasti spesiaalia jollain tuoteryhmällä tai jollain jätejakeella tai jollain muulla tai siis oikeasti spesiaalia. Tässä nyt meillä on lietetty hyönykset, repsikkanoudat, vaaralliset jättäjät. Tämä suunta on Mutta jos nyt puhutaan biojättäjästiän tyhjennyksestä tai sekajättäjästiän tyhjennyksestä, niin se on pitkälti sitten sitä peruskauraa. Joo.
+
+41:28 - Sanna Ruosaari
+Ja nyt sitten kun tuossa käytiin äsken keskustelua, sieltä nostettiin niin reippala tahdilla niitä erilaisia tapauksia esiin, että minun sormet ei pysynyt enää lainkaan mukana, niin voisiko sieltä nyt joku kuvata, meillä oli sieltä poikkeus astiavaihto ja sun muita. Kun me pohdittiin sitä, että mikä tekee nyt siitä spesiaalin, vaikka ne menee ajolistalle kuitenkin, mutta jos se tilaustapa tai joku muu kutkin kirjaamistapa on eri, niin tekeekö se siitä spesiaalin, vai mikä tekee?
+
+42:11 - Miska Sulander
+Mitä täytyy tuoda?
+
+42:13 - Miska Sulander
+Esimerkiksi astiavaihto. Mä kuvittelisin, että puolitäyttää astiaa tai täyttää astiaa on hankala vaihtaa. Niin jos tehdään semmoinen tilaus kuin astianvaihto, niin tuleeko siitä myös ensin edellisen astian tyhjennystapahtuma ennen kuin se astia voidaan vaihtaa?
+
+42:37 - Conference Room (Päivi Kaarne) - Speaker 2
+Se on se astian tyhjentäjä, joka sen vaihtaa. Kuka sitä tyhjentää? Että ne viedään pakettiautolla ja vaihdetaan nämä astiat, eikä sinne roska-autoon sitä astiaa saa.
+
+42:52 - Miska Sulander
+Ei, mutta nimenomaan, että onko joku asia, joka huolehtii siitä, että kun se menee se astiaan vaihtava pakettiauto henkilöineen paikalle vaihtaa astiaa, että se astia ei ole täynnä.
+
+43:07 - Conference Room (Päivi Kaarne) - Speaker 2
+Ei, niitä haetaan täynnäkin, mutta vaihdetaan, jos ei tyhjentää.
+
+43:12 - Miska Sulander
+Toki pystytään laittamaan raspaasta vaihtotilaukseen aina seuraavat tyhjennyspäivä- tai viikkoja päivätasolla, koska tätä on toivottavasti esitetty, että niitä ei olisi täytänä hirveästi hauskaa, niin meillä on tämmöinen... Me laitetaan kohtaan...
+
+43:26 - Conference Room (Päivi Kaarne) - Speaker 4
+Niin, laitetaan itse asiassa se link, ja sitten itse asiassa se vaihto, niin sieltä tiedetään, että mikä se tilanne sitten on.
+
+43:35 - Miska Sulander
+Ei, ei, se on ihan niin kuin... Tätä se voi olla tyhjä puoli, puoli täynnä.
+
+43:42 - Miska Sulander
+Kyllä, mutta tavallaan, että onko tuossa tapauksessa esimerkiksi työnkulku semmoinen, että se pyritään ajoittamaan sitten se vaihto mahdollisimman lähelle edellistä tyhjennystä? Tai tuleeko siitä automaattisesti jonkunnäköinen ekstra tyhjennys? Tämä oli vain esimerkki. Ei. Pointti ei ollut, että tuleeko vai eikö tule, mutta onko siinä jotain spesiaalia. Tämmöisiä tapauksia haluaisin. Ja tässä on niitä tapauksia, neljä kappaletta, missä on jollain tavalla semmoinen... Joko tolleen poikkeava työkulku tai sitten just se, että tiedon pitää liikkua jotakin eri tavalla. Tämä on poikkeava siinä asti ja vaiheessa, ettei ne ole mitään säännöllisiä.
+
+44:40 - Conference Room (Päivi Kaarne) - Speaker 2
+ja ne tehdään aina tilauksena, ne tulostetaan sen kuluvan päivän listalle, joka sitten siirtyy aina niin kauan ne tekemättömät tehtävät tulevaisuuteen. Meillä voi olla vaikka puolen vuoden päästä jonkun asti, että käydään kesäkuussa vaihtamassa, ja sitä näin jo sinne listalle laitetaan, ja se vaan siirtyy aina sen tekemätön. Niin sen verran se poikkeaa, ja sitten se poikkeaa myös sen verran, että tässä varmaan tulee sitten se joku linkitys näissä astioissa, sinne astiavarastoon, että se vähentää sitä saldoa tai lisää, tai mä en tiedä, että miten, nämä astiathan liittyy myös astiavarastoon, että mitä vaihdetaan, ja paljonko sinne tulee uusia astioita, ja paljonko sieltä lähtee, ja...
+
+45:24 - Sanna Ruosaari
+Eli toki sanoin, nämä on siis kaikki nämä tällaiset meidän, nämä on niinku tilausohjautuvia tuotteita. Mitään ei tapahdu, ellei asiakaspalvelu ole perustejärjestelmään syöttänyt. Eli perus ERP-kielellä meillä on tilausohjautuvia tuotteita, jotka on näitä, mitkä tapahtuu, kun soitan, ja sitten meillä on niin sanotusti varasto-ohjautuvia tuotteita, jotka on sitä meidän suurta massaa, mitä me käsitellään siellä koko ajan, tämä peruskeräyspalvelut.
+
+46:00 - Miska Sulander
+Tässä kohtaa Mä edelleen, kyllä mä melkein sen astianoudunkin tähän nyt kuvaisin. Mitä tapahtuu, mihin se vaikuttaa se astianouto? Niin, että on semmoinen kokonaiskuva siitä, että mikä se on se prosessi. Ja just tää, että se voi olla puoli vuotta se yksi astianoutotapahtuma siellä, kunnes se sit joskus tehdään, niin tääkin on ihan tarpeellinen tieto tietää. Että se ei ole semmoinen tapahtuma tai semmoinen tilaus, joka automaattisesti tehdään heti, kun se sinne paukahtaa sinne listalle.
+
+46:42 - Conference Room (Päivi Kaarne) - Speaker 1
+Tuossa astianoudossa on hyvä esimerkki.
+
+46:45 - Sanna Ruosaari
+Siinä on yhteys nyt sinne varastoon. Kun tehdään sitä astianoudon työnkulkua, niin yksi laatikko täytyy olla sellainen, että kun meille tulee tilausasiakas, soittaa ja minä laitan sinne jonkun tilauksen järjestelmään. Se tekee varauksen meidän varastoon siten, että se on korvamerkinnyt, että puolen vuoden päästä minun täytyy toimittaa yksi. Älä myy välistä. Ja sitten kun minä teen sen toimituksen, niin taas sieltä tulee varastoon tapahtuma, että se ottaa sen, kun se kuski nappaa sen tehtävän työlle, se käy ottamassa sen varastosta sen astian, niin se tekee varastoon tapahtuman, että se poistaa sen sieltä saldolta. Ja sen sitten asiakkaalle. Niin siinä täytyy tulla yhteys varastotoimintoihin meille.
+
+47:31 - Conference Room (Päivi Kaarne) - Speaker 2
+Kyllä, tästähän on se palaveri, missä Janne oli mukana, kuka meillä vastioista vastaa ja varastojutusta. Janne oli silloin mukana siinä palaverissa, ja siellä on listoja, vai toimitteko siellä vain Jussi, että missä on niitä jotain astia.
+
+47:52 - Sanna Ruosaari
+Ne löytyy kyllä kaikki, mitä on. Mutta jos me nyt mennään astian vaihtoon, siis se yksi, astian vaihdon työnkulku.
+
+48:06 - Unidentified Speaker
+Tai astiatoimitus.
+
+48:07 - Sanna Ruosaari
+Minulla menee vielä jatkokysymys, minä teen otsikon itselleni varmiksi. Kuka tämän tekee, tämmöisen työnkulun?
+
+48:18 - Conference Room (Päivi Kaarne) - Speaker 2
+Se on Janne. Vähän hoitaa, mutta mennäänkö Heidi sitten? Niin, samaa kautta kuin jo näin tässä Projekti Teams.
+
+48:28 - Sanna Ruosaari
+Pistän tämän Heidille, teen tämän loppuun tehtävän kohta. Minulla on vielä jatkokysymys Veisti, Rauni. Nyt kun me käsiteltiin äsken tuota tuotetta, meidän Excel, merkitäänkö me siihen jotenkin, että tiettyihin tuotteisiin liittyy joku massasta poikkeava tilaustoimitusketju? Joo, tehdään niin.
+
+48:50 - Miska Sulander
+Sen ei tarvitse, se voi olla joku värikoodi, jolla on selite. Eli voisiko se silloin olla vai... Tai sitten tuossa kun on repsikkanouto, niin sen voisit jopa ehkä laittaa johonkin rivin loppuun johonkin tuote sarakkeen soluun, että meiltä löytyy täältä tämä työnkulku kuvattuna jirasta. Nyt esimerkiksi, niin sitten niitä tietoja on helpompi hakea ja yhdistellä. Tai sitten ihan näin. Se voi olla ihan vaan niin, että sä nyt laitat siihen Siihen laittaa vain sen linkin. Jos siinä on linkki siinä solussa, niin oletetaan, että sillä on joku spesiaalityön kulku. Tehdään näin. Sitten se on ehkä selkeintä. Ei tarvitse mitään muuta. Jos se on tyhjä, peruskauraa. Jos ei, niin katso lisää paikastaaksi. Jes. Miia.
+
+50:10 - Unidentified Speaker
+Miia Mutela.
+
+50:12 - Sanna Ruosaari
+Mulle ei ole tähän kysymyksiä, vaan toiseen kysymykseen tähän Excel liittyen.
+
+50:18 - Miia Saviahde 1
+Oliko jollain vielä tähän työnkulkuun?
+
+50:22 - Conference Room (Päivi Kaarne) - Speaker 4
+No mä ehkä kysyisin vielä siis, että kun nyt tuohon tuli toi työnkulkulinkki, niin se, että siellä on esimerkiksi sitten tämmöiset, ja voit mennä tasaisesti, mutta esimerkiksi asiakkaalle maksettavat hyvitykset tietyistä jätelajeista ja tietyillä keräysvälineillä noudattavista, niin tehdäänkö esimerkiksi tämmöisistä myös työnkulku?
+
+50:54 - Miska Sulander
+Mitäs nämä hyvitykset toimii?
+
+50:58 - Conference Room (Päivi Kaarne) - Speaker 4
+Nämä toimivat tällä hetkellä nyt niin, kun vastaanottoterminaalissa saadaan kuukausittain raportti, niin ne painot syötetään manuaalisesti asiakkaan tapahtumiin. Sille on oma tuote hyvitykselle.
+
+51:19 - Conference Room (Päivi Kaarne) - Speaker 2
+Se on tonnia kohti hyvitystuhattakiloa, että siihen määrään tietysti laitetaan.
+
+51:27 - Conference Room (Päivi Kaarne) - Speaker 2
+Jos se on 380 kiloa, Ja tämä hyvitys sitten vaikuttaa mihin sen jälkeen?
+
+51:42 - Miska Sulander
+Eli se on siis käytännössä se on tuota, jolla on miinusmerkkinen hinta.
+
+51:59 - Sanna Ruosaari
+Halutaanko me siis, käsitelläänkö me tällä tavalla tosiaan hyvitykset myöskin waste-hiraus?
+
+52:09 - Miska Sulander
+Ehkä tehdään nyt sen hyvityksen suhteen niin, että avatkaa se nykyinen tapa, ja sitten katsotaan. Koska tästä 60 sekunnin pikaselityksestä, pikaläpikäynnistä, niin ei ehkä vielä pysty antaa sitä viimeistä vastausta. Jos nyt ajatellaan niin, että kun teillä on se hyvitys, on vaan nykyään erillinen tuotteensa, niin tehdään niin, että lisäätte sen tuonne tuotelistaan, ja teette sillä sen työnkulun, jos sillä on joku, niin kuin sanotaan. Se on lisätty.
+
+53:02 - Conference Room (Päivi Kaarne) - Speaker 4
+No niin, no niin.
+
+53:04 - Conference Room (Päivi Kaarne) - Speaker 4
+Se on lisätty, että haluaako oli sillä vaiheessa, että kun sekin on tämmöinen erikoisuus, niin että siitäkin tehdään sitten tämä työnkuva.
+
+53:14 - Miska Sulander
+Joo, niin tekee siitä sen työnkulun tai sen prosessikulun, että miten se toimii, ja sitten päästään siihen kiinni.
+
+53:22 - Unidentified Speaker
+Joo.
+
+53:22 - Miska Sulander
+Kiinni sitten sillä. Eli käytännössä jos asiakas on tuonut jäteasemalle XRN jonkunnäköistä jätettä ja maksanut sen siellä, niin se vähennetään sitten jostain. Vai mikä ajatus tästä? Tähän hyvitykseen liittyen vielä, että jos minä asiakkaana tuon määrän x tietyn tyyppistä jätettä jäteasemalle ja maksan sen siellä, niin se hyvitetään mulle jossain. Onko tää se prosessi?
+
+54:25 - Unidentified Speaker
+Ei.
+
+54:25 - Conference Room (Päivi Kaarne) - Speaker 4
+Tää on esimerkiksi, jos haetaan asiakas kerää pahvipuristimeen pahvia, niin pahvista maksetaan sen painon mukaan hyvitystä. Tai sitten pahvipuristin muovipaalit, pahvipaalit. Ne on oikeastaan nää neljä. Sitten on metallista, maksetaan vielä myöskin hyvitystä. Mut sen asiakaskunta on Ehkä yhden käden sormissa laskettavissa.
+
+54:53 - Miska Sulander
+No mutta anyway, eli siis...
+
+54:55 - Conference Room (Päivi Kaarne) - Speaker 2
+Me otetaan sellaisia tuotteita, mitkä ei tuu meidän oviin toimipisteisiin. Eli ne ei mene materiaalportin kautta. Meidän käsittelypää ei ota näitä vastaan, vaan me haetaan puristin asiakkaalta ja tyhjennetään se pahvi toiselle toimijalle, ja asiakas saa siitä pahvin painosta hyvityksensä. Se joutuu maksamaan sitä puristimen kuljetuksesta, se on oma tyyppiinsä. Hyvitystä siitä pahvista, paljonko sitä siellä on ollut.
+
+55:23 - Miska Sulander
+Okei, eli niin sanotusti kierrätyksestä palkitaan?
+
+55:26 - Conference Room (Päivi Kaarne) - Speaker 2
+Kyllä, ja nämä tulee meille Excel, nämä kierrät noista toisista toimipisteistä, nämä painotiedot tästä pahvista ja muovista, sähköpostilla nyt. Ei varmaan tarvitse mitään integraatiota niiden toisien toimijoiden kanssa tehdä tuonne ohjelmaan, vaan olisiko se sitten ajonhallinnassa, että se kuljettaja sitten jotenkin syöttää sen painon, että sinne tulee se hyvitystyyppi sille tehtävälle, ja kuljettaja kuittaa, niin syöttää sen painon.
+
+55:56 - Miska Sulander
+Kyllä mä melkein sanoisin, että toi on se, toi on se niin kuin, näin niin kuin intuitiolla, että toi ois se prosessi ja työnkulku, että me tiedetään, että meillä on, no meillä on nyt se puristimätyhjennys on niin kuin tuotettu, Siihen kuuluu kuljetus ja hyvitys. Hyvityksellä hinta on miinusmerkkinen ja painoperusteinen.
+
+56:25 - Unidentified Speaker
+Kyllä.
+
+56:26 - Conference Room (Päivi Kaarne) - Speaker 2
+Kun normaalissa puristimen tyhjennyksissä, missä on sekäjätettä, siihen kuuluu kuljetus ja jäte. Jätehän tulee meidän vastaanottopaikasta, MP. Se jätteen osuus ja sen hinta. Ja sitten se kuljetus tulee ajonhallinnasta, kun se huittaa sen tyhjennetyksi kuljettaja, niin sieltä tulee se kuljetuksen osuus ja sitten se jätteen osuus tulee sieltä käsittelypäästä.
+
+57:03 - Sanna Ruosaari
+Joo. Kelle mä tämän taskaan? Laita sekin mulle, Heidille. Onko näille joku deadline, koska minä olen liipassut 27.3. Ehkä me voidaan pitää se, ellei halua sitä tehdä tosi paljon aikaisemmin.
+
+57:31 - Miska Sulander
+Se riippuu varmaan teidänkin resursseihin. 27.3. Tässä on tietää, että teillä on varmasti lasi kaikilla koko ajan täynnä ja täällä on meilläkin kaikilla lasi koko ajan täynnä, niin emme kannata ruveta siinä mielessä laittamaan noita dediksiä, kun tiedetään, että tässä pyörii CRM ja tuotteet ja ajohallinta ja kaikki päällekkäin, niin tehdään niin, että se deadline on Lisätin Excel sarakkeen, että kun niitä työnkulkuja on määritelty, niin laittaa tähän linkin siihen dokumenttiin.
+
+58:13 - Sanna Ruosaari
+Hyvin todennäköisesti meillä on siellä nyt, kun täällä on joku repsikka yksi esine, kaksi esine, kolme esinettä, niin työnkulku on tismalleen sama.
+
+58:25 - Miska Sulander
+Eli ei tarvitse lähteä joka nitkaukselle omaa työnkulkua. Ei. Ei tarvitse. Ja sen linkin voi sit kopioida ihan vaan sen takia niihin kaikkiin mun mielestä, että saa sen kuvaan, että kun se ei oo niinku tossa kuljetuspalvelut esimerkiksi, niin niillä kuljetuspalveluilla ei ole yhtä samaa työnkulkua, vaan siellä on nyt sit esimerkiksi repsikan auto ja vaarallisen jätteen auto, niin niillä on eri työnkulut. Niin jos sillä on työnkulku, vaikka siellä olisi sama työnkulku, laittaa sen linkin sinne. Vaikka linkki olisi sama. Kyllä. Jes. Okei, onko tuota... Vielä on vielä käsi ylhäällä.
+
+59:09 - Sanna Ruosaari
+Vanhastaan pystyssä vai onko lisäasia?
+
+59:12 - Miska Sulander
+Mä en päässyt vielä kysymään, kun mä annoin työkulun jatkaa tässä välissä.
+
+59:19 - Miia Saviahde 1
+Totta. Kysynkö mä joskus toisten? Kysy nyt. Nyt me ollaan tässä.
+
+59:25 - Miska Sulander
+Mä menisin muutenkin ehdottaa, jos aloitetaan viikli vaikka viis yli, niin ettei hakea lasin vettä ja muut.
+
+59:33 - Miia Saviahde 1
+Aika sama porukka.
+
+59:34 - Miia Saviahde 1
+Tässä tauluassa, missä attribuutti on, niin se on toi Ramin kysymys, että attribuuteille on vastaavuus hinnaston valitsimissa, niin sä oot vastannut, että hinnaston, kiinteistön, asiakkaan ja sopimuksen tiedoissa vastaavuus, ja sitä Rami on ruvennut tuossa ykkösrivillä tekee, niin pitäisikö meidän jatkaa että missä se vastaavuus on.
+
+59:54 - Unidentified Speaker
+Voitko toistaa, Pätkäs, kesken lauseen?
+
+59:57 - Miska Sulander
+Okei. Eli tuossa B1.
+
+59:59 - Miia Saviahde 1
+Rami on ruvennut työstä, että missä attribuutti on. Se on kysynyt sulta, että attribuuteilla on vastaavuus hinnaston valitsemissa. Tai tämä on kysymys, että onko. Ja sinä olet sanonut, että attribuuteilla on vastaavuus hinnaston, kiinteistön, asiakkaan ja sopimuksen tiedoille. On vastaavuus, koska me ollaan tässä nyt mietitty kaikki tuoteattribuutteja, niin pitäisikö meidän tuohon ykkösriville jatkaa tuota työstä, että missä on se vastaavuus sitten näille tuotetyypeille? Koska tässähän ei ole mietitty esimerkiksi sitä hinnastoasiaa vielä, mitä sinä siinä kysyit, että nyt voidaan rupeaa raksiin niitä, mutta pitäisikö meidän noita muitakin asioita tehdä?
+
+1:00:44 - Miska Sulander
+Joo, kyllä, pitäisi. Onko se sellainen, että se tulee joka tapauksessa jossain kohtaa, että siitä nyt hyötyy tässäkin kohtaa rupea tekemään? Kyllä se tulee jossain kohtaa. Se tulee siinä kohtaa vastaan, kun meillä pitää olla joku tapa, millä ehdottaa niitä tuotteita, saatavilla olevia tuotteita ja palveluita, tietylle asiakkaalle käyttöliittymässä. Siis että okei, että nämä tuotteet on mahdollista tämän asiaan, tälle asiakkaalle asettaa, niin siinä se tulee kysymykseen, koska siihen liittyy se asiakas, siihen liittyy mahdollisesti kiinteistön sijainti, myöskin se tuote, niin se on se, mikä kokoaa vähän niin kuin koko palaapeli, niin on hyvä jatkaa sitä, tai tarpeellisesti. Amir. Joo, nyt ollaan... Anteeksi.
+
+1:01:52 - Amir Hassan1
+Edutan, että peruutaan seuraavaan, jos mahdollisesti keskitytään tähän rauhassaan. Siirrytään tämä vaikka ensi viikolla, koska tämä on tosi tärkeä siihen, että saadaan hyvä yhteisymmärrys, jos tämä sopii teille.
+
+1:02:10 - Unidentified Speaker
+Mikä perutaa?
+
+1:02:11 - Unidentified Speaker
+Anteeksi?
+
+1:02:11 - Unidentified Speaker
+Miten me ollaan perunnassa?
+
+1:02:14 - Amir Hassan1
+Seuraava läpi...
+
+1:02:15 - Amir Hassan
+Anteeksi, olen palvelusekiväinen. Ehdotan, että me perutaan tämän seuraavan läpikäyntiin, mockupin läpikäyntiin, ja keskitytään nyt tähän rauhassa, koska aika on jo ylittynyt.
+
+1:02:29 - Sanna Ruosaari
+Kyllä me halutaan se mockupi käydä läpi.
+
+1:02:33 - Miska Sulander
+Ja se piti käydä tuossa weeklyssä ylipäätään.
+
+1:02:38 - Miska Sulander
+Jatketaanko tämä, koska Markus odottaa sinne seuraavassa jo.
+
+1:02:43 - Sanna Ruosaari
+Markus on täällä jo mukana, mutta me poistutaan tästä palaverista. Pidetään minuutin diopaussi, haetaan kahvia, ja tullaan kohta meidän viiklin, jos me käydään läpi loput.
+
+1:02:57 - Miska Sulander
+Kiitos. Moikka. Meillä on taas...
+
+1:03:00 - Miska Sulander
+Ei niin kuin ressiä, niin sanotusti.
+
+1:03:04 - Conference Room (Päivi Kaarne) - Speaker 3
+Kyllä me pärjäämme. Tästä poistumme.
+
+1:03:06 - Miska Sulander
+Kyllä, ja aloitetaan weekly kymmentyli. 5 minuuttia 15 sekuntia, nähdään kohta.

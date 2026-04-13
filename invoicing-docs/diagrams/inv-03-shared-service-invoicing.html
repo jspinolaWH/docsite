@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Shared Service Invoicing</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 20px; background: #f9fafb; }
+        .container { max-width: 1600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h1 { margin-top: 0; color: #111827; }
+        .subtitle { color: #6b7280; margin-bottom: 30px; }
+        .mermaid { background: white; }
+        .example-box {
+            background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px;
+            padding: 20px; margin-top: 24px;
+        }
+        .example-box h3 { margin-top: 0; color: #1e40af; font-size: 15px; }
+        .split-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+        .split-table th { background: #dbeafe; color: #1e40af; padding: 8px 12px; text-align: left; }
+        .split-table td { padding: 8px 12px; border-bottom: 1px solid #e5e7eb; color: #1e40af; }
+        .split-table tr:last-child td { border-bottom: none; }
+        .warn-box { background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; padding: 12px; margin-top: 12px; font-size: 13px; color: #92400e; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Scenario 3: Shared Service Invoicing</h1>
+    <p class="subtitle">Four neighbours share one bio-waste container — costs split by percentage, invoiced separately. Mid-year a 5th joins retroactively. (PD-280, PD-279)</p>
+
+    <div style="display: grid; grid-template-columns: 1fr 380px; gap: 30px; align-items: start;">
+        <div class="mermaid">
+graph TD
+    START([Shared Bio-waste Container<br/>4 Neighbours — Jan billing period]) --> SETUP
+
+    subgraph SETUP["Setup: Property Group (PD-280)"]
+        PG[System creates a Property Group<br/>Properties: A, B, C, D linked together<br/>Service: Bio-waste container emptying]
+        SHARES[Shares defined per participant<br/>Must total exactly 100%<br/>Default: equal split]
+    end
+
+    SETUP --> CHECK1{Total shares<br/>= 100%?}
+    CHECK1 -->|No — system warns| WARN1[System Warning:<br/>PD-280: Total must equal exactly 100%<br/>Cannot proceed until corrected]
+    WARN1 --> SHARES
+
+    CHECK1 -->|Yes| EVENTS[Emptying events recorded<br/>Jan–Apr: 4 emptyings at €40 each<br/>= €160 total service cost]
+
+    EVENTS --> DIST1
+
+    subgraph DIST1["Distribution Jan–Apr: 4 Payers (PD-280)"]
+        D1A[Neighbour A: 25% = €40]
+        D1B[Neighbour B: 25% = €40]
+        D1C[Neighbour C: 25% = €40]
+        D1D[Neighbour D: 25% = €40]
+    end
+
+    D1A & D1B & D1C & D1D --> CHANGE[May 1: New Resident Moves In<br/>Neighbour E joins the shared service<br/>PD-279: Retroactive addition from May 1]
+
+    CHANGE --> RETRO[System redistributes all events<br/>from May 1 forward<br/>AND any events within specified date range<br/>5-way equal split applied retroactively]
+
+    RETRO --> DIST2
+
+    subgraph DIST2["Distribution May–Dec: 5 Payers (PD-279)"]
+        D2A[Neighbour A: 20% = €32]
+        D2B[Neighbour B: 20% = €32]
+        D2C[Neighbour C: 20% = €32]
+        D2D[Neighbour D: 20% = €32]
+        D2E[Neighbour E: 20% = €32]
+    end
+
+    D2A & D2B & D2C & D2D & D2E --> INVOICE[Invoice Generation<br/>Each subscriber gets individual invoice line<br/>Shows: service + their % share + total cost]
+
+    INVOICE --> INVDETAIL[Each invoice line contains:<br/>Service: Bio-waste emptying<br/>Subscriber share: 20%<br/>Total service cost: €160<br/>Amount invoiced to this subscriber: €32]
+
+    INVDETAIL --> DONE([5 Separate Invoices Sent<br/>Total collected = €160<br/>100% of service cost covered])
+
+    style SETUP fill:#eff6ff,stroke:#3b82f6
+    style DIST1 fill:#f0fdf4,stroke:#059669
+    style DIST2 fill:#d1fae5,stroke:#059669,stroke-width:2px
+    style WARN1 fill:#fee2e2,stroke:#ef4444
+    style RETRO fill:#fef3c7,stroke:#f59e0b
+    style DONE fill:#dcfce7,stroke:#059669,stroke-width:3px
+        </div>
+
+        <div>
+            <div class="example-box">
+                <h3>📘 PD-280: Invoice line content</h3>
+                <p style="font-size: 13px; color: #1e40af; margin-bottom: 10px;">Each subscriber's invoice must show:</p>
+                <table class="split-table">
+                    <tr><th>Field</th><th>Value</th></tr>
+                    <tr><td>Service</td><td>Bio-waste emptying</td></tr>
+                    <tr><td>Subscriber share</td><td>20%</td></tr>
+                    <tr><td>Total service cost</td><td>€160</td></tr>
+                    <tr><td>This subscriber's share</td><td>€32</td></tr>
+                    <tr><td>VAT</td><td>Per PJH: 0% VAT not allowed for mixed waste</td></tr>
+                </table>
+            </div>
+
+            <div class="warn-box">
+                ⚠️ <strong>PD-280 validation:</strong> If any subscriber is not allocated a share, the system notifies the invoicing user. If total shares ≠ 100% (even by 0.01%), the system blocks invoicing and alerts the user to correct the allocation.
+            </div>
+
+            <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 12px; margin-top: 12px; font-size: 13px; color: #065f46;">
+                <strong>✓ PD-279: Dynamic redistribution</strong><br><br>
+                When Neighbour E joins in May, the system re-generates events for the new period. The total service cost is always fully distributed — 100% collected across all periods. No manual recalculation needed.
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    mermaid.initialize({ startOnLoad: true, theme: 'default', flowchart: { useMaxWidth: true, htmlLabels: true } });
+</script>
+</body>
+</html>
