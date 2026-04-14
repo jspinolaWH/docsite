@@ -95,6 +95,51 @@ This document tracks how each PD requirement across Invoicing 1–4 is covered i
 
 ---
 
+### PD-276 — Transfer of unbilled events
+
+**Status:** ✅ Covered
+
+**Where:** Operations → Billing Events → Event Detail → Transfer button (modal)
+
+**My understanding:** If a billing event has been assigned to the wrong customer or wrong location, office users need to be able to move it to the correct one before it gets invoiced. Two scenarios: wrong customer (e.g. new resident moved in but events are still on old customer) and wrong location (e.g. driver recorded emptying at wrong address).
+
+**How:** The Transfer Billing Event modal covers both scenarios. It shows the current customer, asks for a target customer number (required) and target property ID (optional for location transfers), and requires a mandatory reason. Bulk transfer is also available from the billing events list. All transfers are logged in the audit trail.
+
+| Requirement | Status |
+|-------------|--------|
+| Transfer event to different customer | ✅ |
+| Transfer event to different location/property | ✅ |
+| Mandatory reason for transfer | ✅ |
+| Bulk transfer from list view | ✅ |
+| Only works on unbilled (In Progress) events | ✅ |
+| Audit trail logging | ✅ |
+
+---
+
+### PD-275 — Transfer and copy of billed events
+
+**Status:** ✅ Covered
+
+**Where:** Operations → Billing Events → Event Detail → Credit & Transfer button (modal)
+
+**My understanding:** When an invoice has already been sent and a mistake is discovered — wrong customer, wrong frequency, wrong period — the system needs to issue a credit for the original and create a new event for the correct customer. The entire history must remain visible and traceable.
+
+**How:** A "Credit & Transfer" button is shown on events with status SENT or COMPLETED. It opens a modal showing the original event summary, target customer number, optional target property ID, and a mandatory reason. On confirm, a credit record is created (negative amounts) and a new IN_PROGRESS event is created for the target customer. All three records are linked and visible. Part 1 (credit/refund) is handled by PD-269.
+
+| Requirement | Status |
+|-------------|--------|
+| Credit & Transfer button on Sent/Completed events | ✅ |
+| Warning banner explaining the action | ✅ |
+| Original event summary in modal | ✅ |
+| Target customer number (required) | ✅ |
+| Target property ID (optional) | ✅ |
+| Mandatory reason logged in audit trail | ✅ |
+| Original event not modified | ✅ |
+| Credit and new event linked and visible | ✅ |
+| CREDIT and TRANSFER origin badges on list | ✅ |
+
+---
+
 ### PD-277 & PD-318 — Manual editing of events / Editing billing events
 
 **Status:** ✅ Covered
@@ -119,6 +164,8 @@ This document tracks how each PD requirement across Invoicing 1–4 is covered i
 | Editing locked on Sent/Completed events | ✅ (no Edit button shown) |
 
 ---
+
+### PD-299 — Billing event details
 
 **Status:** ✅ Covered
 
