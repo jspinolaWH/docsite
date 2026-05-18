@@ -114,16 +114,19 @@ export function DocRenderer({ content, highlight }: { content: string; highlight
         remarkPlugins={[remarkGfm, remarkLinkPdTasks]}
         rehypePlugins={[rehypeHighlight, rehypeSlug]}
         components={{
-          a: ({ href, children, ...props }) => (
-            <a
-              href={href}
-              target={href?.startsWith('http') ? '_blank' : undefined}
-              rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
-              {...props}
-            >
-              {children}
-            </a>
-          ),
+          a: ({ href, children, ...props }) => {
+            const external = href?.startsWith('http') || href?.endsWith('.html');
+            return (
+              <a
+                href={href}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noopener noreferrer' : undefined}
+                {...props}
+              >
+                {children}
+              </a>
+            );
+          },
         }}
       >
         {content}
