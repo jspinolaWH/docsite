@@ -251,7 +251,6 @@ function InvoicingSidebarContent() {
   const { grouped } = useInvoicingDocs();
   const { theme } = useTheme();
   const [localCollapsed, setLocalCollapsed] = useState<Record<string, boolean>>({});
-
   const toggle = (key: string) =>
     setLocalCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
 
@@ -260,36 +259,6 @@ function InvoicingSidebarContent() {
       <NavLink to="/invoicing" className="sidebar-home" end>
         Home
       </NavLink>
-
-      <div className="sidebar-category">
-        <button
-          className="sidebar-category-header"
-          onClick={() => toggle('inv-diagrams')}
-          style={{ borderLeftColor: '#0369a1' }}
-        >
-          <span className="sidebar-category-label" style={{ color: '#0369a1' }}>
-            Diagrams
-          </span>
-          <span className={`sidebar-chevron ${localCollapsed['inv-diagrams'] ? '' : 'open'}`}>
-            <svg width="12" height="12" viewBox="0 0 12 12">
-              <path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="2" />
-            </svg>
-          </span>
-        </button>
-
-        {!localCollapsed['inv-diagrams'] && (
-          <ul className="sidebar-docs">
-            <li>
-              <NavLink
-                to="/invoicing/diagrams/flow-diagrams"
-                className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
-              >
-                Flow Diagrams
-              </NavLink>
-            </li>
-          </ul>
-        )}
-      </div>
 
       {Object.entries(INVOICING_CATEGORIES).map(([catId, config]) => {
         const isCollapsed = localCollapsed[catId] ?? false;
@@ -315,24 +284,16 @@ function InvoicingSidebarContent() {
 
             {!isCollapsed && (
               <ul className="sidebar-docs">
-                {docs.length === 0 ? (
-                  <li style={{ padding: '4px 12px', opacity: 0.45, fontStyle: 'italic', fontSize: '0.8rem' }}>
-                    No documents yet
+                {docs.map((doc) => (
+                  <li key={doc.slug}>
+                    <NavLink
+                      to={`/invoicing/doc/${doc.slug}`}
+                      className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
+                    >
+                      {doc.title}
+                    </NavLink>
                   </li>
-                ) : (
-                  docs.map((doc) => (
-                    <li key={doc.slug}>
-                      <NavLink
-                        to={`/invoicing/doc/${doc.slug}`}
-                        className={({ isActive }) =>
-                          `sidebar-link${isActive ? ' active' : ''}`
-                        }
-                      >
-                        {doc.title}
-                      </NavLink>
-                    </li>
-                  ))
-                )}
+                ))}
               </ul>
             )}
           </div>

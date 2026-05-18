@@ -15,7 +15,6 @@ import { TranscriptsPage } from './pages/TranscriptsPage';
 import { RequirementsCompliancePage } from './pages/RequirementsCompliancePage';
 import { InvoicingHomePage } from './pages/InvoicingHomePage';
 import { InvoicingDocPage } from './pages/InvoicingDocPage';
-import { InvoicingFlowDiagramsPage } from './pages/InvoicingFlowDiagramsPage';
 
 export default function App() {
   const docsCtx = useDocsProvider();
@@ -40,7 +39,6 @@ export default function App() {
                 <Route path="/miska/requirements" element={<RequirementsCompliancePage />} />
                 <Route path="/invoicing" element={<InvoicingHomePage />} />
                 <Route path="/invoicing/doc/:slug" element={<InvoicingDocPage />} />
-                <Route path="/invoicing/diagrams/flow-diagrams" element={<InvoicingFlowDiagramsPage />} />
               </Route>
             </Routes>
           </BrowserRouter>

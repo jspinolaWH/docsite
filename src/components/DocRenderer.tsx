@@ -3,6 +3,11 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
+import mermaid from 'mermaid';
+
+mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'loose' });
+
+let mermaidCounter = 0;
 
 // Skip linkifying inside these node types
 const SKIP = new Set(['code', 'inlineCode', 'link', 'linkReference', 'image']);
@@ -47,6 +52,28 @@ function remarkLinkPdTasks() {
 
 export function DocRenderer({ content, highlight }: { content: string; highlight?: string }) {
   const ref = useRef<HTMLDivElement>(null);
+
+  // Render mermaid diagrams after ReactMarkdown finishes
+  useEffect(() => {
+    if (!ref.current) return;
+    const blocks = ref.current.querySelectorAll<HTMLElement>('code.language-mermaid');
+    blocks.forEach(async (block) => {
+      const code = block.textContent || '';
+      const pre = block.parentElement;
+      if (!pre) return;
+      const id = `mermaid-${++mermaidCounter}`;
+      try {
+        const { svg } = await mermaid.render(id, code);
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = svg;
+        wrapper.style.overflowX = 'auto';
+        wrapper.style.margin = '1.5rem 0';
+        pre.replaceWith(wrapper);
+      } catch {
+        // leave as code block on failure
+      }
+    });
+  }, [content]);
 
   useEffect(() => {
     if (!highlight || !ref.current) return;
