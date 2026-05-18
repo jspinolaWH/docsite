@@ -260,6 +260,18 @@ function InvoicingSidebarContent() {
         Home
       </NavLink>
 
+      <a
+        href="/docsite/invoicing/mockups/r1-mockup.html"
+        className="sidebar-home"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Mockup R1
+        <svg width="12" height="12" viewBox="0 0 12 12" style={{ marginLeft: '6px', verticalAlign: 'middle' }}>
+          <path d="M10 1H7M10 1V4M10 1L5 6M4 2H2v8h8V8" fill="none" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      </a>
+
       {Object.entries(INVOICING_CATEGORIES).map(([catId, config]) => {
         const isCollapsed = localCollapsed[catId] ?? false;
         const categoryColor = theme === 'dark' ? config.darkColor : config.color;
