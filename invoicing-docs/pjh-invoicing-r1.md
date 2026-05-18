@@ -338,15 +338,16 @@ The ten PD requirements that R1 delivers:
 
 The screens devs will build live in the interactive mockup → [r1-mockup.html](./r1-mockup.html)
 
-Seven tabs walk through what R1 produces:
+Seven main tabs walk through what R1 produces, plus drill-down detail pages for events and invoices:
 
-1. **Events** — the new event schema in action, with the validation status column showing [PD-278](https://ioteelab.atlassian.net/browse/PD-278) in effect
-2. **Cost centres** — read-only view of what's configured (per [PD-296](https://ioteelab.atlassian.net/browse/PD-296))
-3. **Accounting accounts** — main-user management (per [PD-295](https://ioteelab.atlassian.net/browse/PD-295))
-4. **Invoices** — the invoices R1 produces with the [PD-309](https://ioteelab.atlassian.net/browse/PD-309) numbering on display
-5. **Credit notes** — credit notes with original-invoice references and INV02 codes
-6. **Invoice detail** — split view of an invoice's lines and the FINVOICE 3.0 XML output side by side
-7. **Demo flow** — the five-step walkthrough, clickable
+1. **Events** — the new event schema in action, with the validation status sidebar filtering rows by [PD-278](https://ioteelab.atlassian.net/browse/PD-278) status. View on any row opens the **Event detail** page.
+2. **Event detail** (drill-down from Events) — full record of a single event: all fields, operational source, classification, validation breakdown, and the downstream effect on FINVOICE. Blocked events show exactly which mandatory field is missing and what action unblocks them — that's [PD-278](https://ioteelab.atlassian.net/browse/PD-278) error listing in concrete form.
+3. **Cost centres** — office users can add/edit cost centres (per [PD-296](https://ioteelab.atlassian.net/browse/PD-296))
+4. **Accounting accounts** — main-user management (per [PD-295](https://ioteelab.atlassian.net/browse/PD-295))
+5. **Invoices** — the invoices R1 produces with the [PD-309](https://ioteelab.atlassian.net/browse/PD-309) numbering on display
+6. **Credit notes** — credit notes with original-invoice references and INV02 codes
+7. **Invoice detail** (drill-down from Invoices) — split view of an invoice's lines and the FINVOICE 3.0 XML output side by side
+8. **Demo flow** — the five-step walkthrough, clickable
 
 Every column header, every PD chip, every screen anchors to a specific R1 requirement. If something appears in the mockup that doesn't trace to one of the ten PDs above, it's a bug in the mockup.
 

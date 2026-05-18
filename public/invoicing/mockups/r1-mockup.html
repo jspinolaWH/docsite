@@ -90,6 +90,8 @@ body { font-family: 'Poppins', -apple-system, sans-serif; background: var(--bg);
 .btn-primary:hover { background: var(--blue-hover); }
 .btn-secondary { background: var(--white); border: 1px solid var(--border-mid); color: var(--text); }
 .btn-secondary:hover { background: var(--surface); }
+.btn-view { background: var(--white); border: 1px solid var(--border-mid); color: var(--text-muted); padding: 5px 12px; border-radius: var(--radius-sm); font-size: 12px; font-family: 'Poppins', sans-serif; cursor: pointer; transition: all 0.12s; }
+.btn-view:hover { background: var(--surface); color: var(--text); border-color: #d4d4d4; }
 
 /* ── Table ─────────────────────────────────────────────────────────────────── */
 .table-container { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
@@ -172,6 +174,24 @@ tr:hover td { background: #fafafa; }
 /* ── Tab panels ────────────────────────────────────────────────────────────── */
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
+
+/* ── Modal (detail preview from View button) ──────────────────────────────── */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(23, 23, 23, 0.45); display: none; align-items: center; justify-content: center; z-index: 100; padding: 24px; }
+.modal-backdrop.open { display: flex; }
+.modal { background: var(--white); border-radius: var(--radius-lg); max-width: 560px; width: 100%; max-height: 86vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+.modal-head { display: flex; justify-content: space-between; align-items: flex-start; padding: 20px 24px 16px; border-bottom: 1px solid var(--border); gap: 16px; }
+.modal-title { font-size: 18px; font-weight: 600; color: var(--text); }
+.modal-pd-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.modal-close { background: none; border: none; font-size: 22px; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 4px 8px; border-radius: var(--radius-sm); }
+.modal-close:hover { background: var(--surface); color: var(--text); }
+.modal-body { padding: 20px 24px 24px; }
+.modal-section { margin-bottom: 18px; }
+.modal-section:last-child { margin-bottom: 0; }
+.modal-section-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-weight: 500; }
+.modal-list { list-style: none; }
+.modal-list li { font-size: 13px; color: var(--text); padding: 6px 0 6px 18px; position: relative; line-height: 1.55; }
+.modal-list li::before { content: "→"; position: absolute; left: 0; color: var(--blue); font-family: 'JetBrains Mono', monospace; }
+.modal-note { background: var(--blue-light); border-left: 3px solid var(--blue); padding: 12px 16px; border-radius: var(--radius); font-size: 13px; color: var(--text); line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -203,10 +223,10 @@ tr:hover td { background: #fafafa; }
   <div class="content-wrapper">
     <div class="left-sidebar">
       <div class="category-title">Validation status<span style="font-size: 9px; margin-left: 4px;">(PD-278)</span></div>
-      <div class="category-item active"><span>All events</span><span class="category-count">42</span></div>
-      <div class="category-item"><span>Ready to invoice</span><span class="category-count">34</span></div>
-      <div class="category-item"><span>Missing mandatory data</span><span class="category-count">6</span></div>
-      <div class="category-item"><span>Already invoiced</span><span class="category-count">2</span></div>
+      <div class="category-item active" onclick="filterEvents('all', this)"><span>All events</span><span class="category-count">8</span></div>
+      <div class="category-item" onclick="filterEvents('ready', this)"><span>Ready to invoice</span><span class="category-count">6</span></div>
+      <div class="category-item" onclick="filterEvents('missing', this)"><span>Missing mandatory data</span><span class="category-count">2</span></div>
+      <div class="category-item" onclick="filterEvents('invoiced', this)"><span>Already invoiced</span><span class="category-count">0</span></div>
     </div>
 
     <div class="main-area">
@@ -233,10 +253,11 @@ tr:hover td { background: #fafafa; }
               <th>Account<span class="pd-label">PD-296</span></th>
               <th style="text-align:right">Amount (€)</th>
               <th>Status<span class="pd-label">PD-278</span></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr data-status="ready" data-event-id="ev1">
               <td class="cell-mono">2026-05-12</td>
               <td><span class="cell-primary">Korhonen Maija</span><span class="cell-secondary">Mäntytie 14, Hyvinkää</span></td>
               <td>Sekajäte 240L tyhjennys<span class="cell-secondary">Route execution · vehicle 47</span></td>
@@ -246,8 +267,9 @@ tr:hover td { background: #fafafa; }
               <td class="cell-mono">30002</td>
               <td class="cell-amount">7.93</td>
               <td><span class="badge badge-green">Ready</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev1')">View</button></td>
             </tr>
-            <tr>
+            <tr data-status="ready" data-event-id="ev2">
               <td class="cell-mono">2026-05-12</td>
               <td><span class="cell-primary">Asunto Oy Lammitie 8</span><span class="cell-secondary">Lammitie 8, Hyvinkää</span></td>
               <td>Biojäte 140L tyhjennys<span class="cell-secondary">Route execution · shared service</span></td>
@@ -257,8 +279,9 @@ tr:hover td { background: #fafafa; }
               <td class="cell-mono">30002</td>
               <td class="cell-amount">5.21</td>
               <td><span class="badge badge-green">Ready</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev2')">View</button></td>
             </tr>
-            <tr>
+            <tr data-status="ready" data-event-id="ev3">
               <td class="cell-mono">2026-05-12</td>
               <td><span class="cell-primary">Rakennus Virtanen Oy</span><span class="cell-secondary">Tehdaskuja 22, Riihimäki</span></td>
               <td>Rakennusjäte vastaanotto<span class="cell-secondary">Weighbridge · 1 240 kg</span></td>
@@ -268,8 +291,9 @@ tr:hover td { background: #fafafa; }
               <td class="cell-mono">30005</td>
               <td class="cell-amount">98.40</td>
               <td><span class="badge badge-green">Ready</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev3')">View</button></td>
             </tr>
-            <tr>
+            <tr data-status="missing" data-event-id="ev4">
               <td class="cell-mono">2026-05-11</td>
               <td><span class="cell-primary">Lahtinen Pekka</span><span class="cell-secondary">Kotipolku 3, Hyvinkää</span></td>
               <td>Sakokaivon tyhjennys 4 m³<span class="cell-secondary">Manual entry · Aino S.</span></td>
@@ -279,8 +303,9 @@ tr:hover td { background: #fafafa; }
               <td class="cell-mono">—</td>
               <td class="cell-amount">142.00</td>
               <td><span class="badge badge-amber">Missing account</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev4')">View</button></td>
             </tr>
-            <tr>
+            <tr data-status="ready" data-event-id="ev5">
               <td class="cell-mono">2026-05-11</td>
               <td><span class="cell-primary">Korhonen Maija</span><span class="cell-secondary">Mäntytie 14, Hyvinkää</span></td>
               <td>Vuosiperusmaksu 2026<span class="cell-secondary">Recurring · auto-generated</span></td>
@@ -290,8 +315,9 @@ tr:hover td { background: #fafafa; }
               <td class="cell-mono">30001</td>
               <td class="cell-amount">45.00</td>
               <td><span class="badge badge-green">Ready</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev5')">View</button></td>
             </tr>
-            <tr>
+            <tr data-status="ready" data-event-id="ev6">
               <td class="cell-mono">2026-05-10</td>
               <td><span class="cell-primary">Suomen Kierrätys Oy</span><span class="cell-secondary">Vantaa</span></td>
               <td>Metalliromun vastaanotto<span class="cell-secondary">Weighbridge · 3 870 kg</span></td>
@@ -301,8 +327,9 @@ tr:hover td { background: #fafafa; }
               <td class="cell-mono">30005</td>
               <td class="cell-amount">231.55</td>
               <td><span class="badge badge-green">Ready</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev6')">View</button></td>
             </tr>
-            <tr>
+            <tr data-status="missing" data-event-id="ev7">
               <td class="cell-mono">2026-05-09</td>
               <td><span class="cell-primary">Niemi Tiina</span><span class="cell-secondary">Koivumäki 7, Riihimäki</span></td>
               <td>Sekajäte 660L tyhjennys<span class="cell-secondary">Route execution · vehicle 42</span></td>
@@ -312,8 +339,9 @@ tr:hover td { background: #fafafa; }
               <td class="cell-mono">—</td>
               <td class="cell-amount">12.60</td>
               <td><span class="badge badge-amber">Missing account</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev7')">View</button></td>
             </tr>
-            <tr>
+            <tr data-status="ready" data-event-id="ev8">
               <td class="cell-mono">2026-05-09</td>
               <td><span class="cell-primary">Mäkelä Jarkko</span><span class="cell-secondary">Vihtikatu 5, Hyvinkää</span></td>
               <td>Paperinkeräys 240L tyhjennys<span class="cell-secondary">Route execution · vehicle 47</span></td>
@@ -323,6 +351,7 @@ tr:hover td { background: #fafafa; }
               <td class="cell-mono">30004</td>
               <td class="cell-amount">3.80</td>
               <td><span class="badge badge-green">Ready</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev8')">View</button></td>
             </tr>
           </tbody>
         </table>
@@ -337,6 +366,72 @@ tr:hover td { background: #fafafa; }
 </div>
 
 <!-- ===================================================================== -->
+<!-- TAB: EVENT DETAIL (data-driven from JS based on which row View'd)     -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-event-detail">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%;">
+      <div class="page-head">
+        <a href="#" onclick="showTab('events'); return false;" style="color: var(--blue); font-size: 13px; text-decoration: none; display: inline-block; margin-bottom: 8px;">← Back to events</a>
+        <div class="page-title" id="evDetailTitle">Event detail</div>
+        <div class="page-subtitle" id="evDetailSubtitle">Loaded from the events table.</div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-299" target="_blank">PD-299 Event details</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-296" target="_blank">PD-296 Cost centres on events</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-278" target="_blank">PD-278 Mandatory data validation</a>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Event data</div>
+              <div class="detail-card-pd">PD-299</div>
+            </div>
+            <div class="detail-card-body" id="evDetailFields"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Operational source</div>
+              <div class="detail-card-pd">PD-299</div>
+            </div>
+            <div class="detail-card-body" id="evDetailSource"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Classification</div>
+              <div class="detail-card-pd">PD-296 · PD-284</div>
+            </div>
+            <div class="detail-card-body" id="evDetailClassification"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Validation</div>
+              <div class="detail-card-pd">PD-278</div>
+            </div>
+            <div class="detail-card-body" id="evDetailValidation"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Downstream</div>
+              <div class="detail-card-pd">PD-310</div>
+            </div>
+            <div class="detail-card-body" id="evDetailDownstream"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
 <!-- TAB: COST CENTRES                                                      -->
 <!-- ===================================================================== -->
 <div class="tab-panel" id="tab-cost-centres">
@@ -344,9 +439,16 @@ tr:hover td { background: #fafafa; }
     <div class="main-area" style="width: 100%;">
       <div class="page-head">
         <div class="page-title">Cost centres</div>
-        <div class="page-subtitle">Each event carries a cost centre. PD-296 specifies cost centres are configured during implementation — this view shows what's currently in the system. Cost centre data is forwarded as part of FINVOICE.</div>
+        <div class="page-subtitle">Each event carries a cost centre. PD-296 lets office users manually add, update, and maintain cost centres. Each cost centre flows downstream into FINVOICE as accounting data.</div>
         <div class="page-pds">
           <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-296" target="_blank">PD-296 Cost centres & accounts on events</a>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div></div>
+        <div class="action-buttons">
+          <button class="btn btn-primary">+ New cost centre</button>
         </div>
       </div>
 
@@ -358,18 +460,19 @@ tr:hover td { background: #fafafa; }
               <th>Name</th>
               <th>Region</th>
               <th>Service type</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr><td class="cell-mono">20/200/1</td><td><span class="cell-primary">Hyvinkää · Perusmaksut</span></td><td>Hyvinkää</td><td>Annual base fee</td></tr>
-            <tr><td class="cell-mono">20/200/3</td><td><span class="cell-primary">Hyvinkää · Kotitalousjäte</span></td><td>Hyvinkää</td><td>Mixed waste, bio-waste, paper</td></tr>
-            <tr><td class="cell-mono">20/200/4</td><td><span class="cell-primary">Hyvinkää · Yhteispalvelut</span></td><td>Hyvinkää</td><td>Shared service splits</td></tr>
-            <tr><td class="cell-mono">20/200/5</td><td><span class="cell-primary">Hyvinkää · Viranomaispalvelut</span></td><td>Hyvinkää</td><td>Regulatory, complaint handling</td></tr>
-            <tr><td class="cell-mono">25/250/2</td><td><span class="cell-primary">Hyvinkää · TSV / toissijainen</span></td><td>Hyvinkää</td><td>Municipal secondary (Waste Act §33)</td></tr>
-            <tr><td class="cell-mono">22/200/3</td><td><span class="cell-primary">Riihimäki · Kotitalousjäte</span></td><td>Riihimäki</td><td>Mixed waste, bio-waste, paper</td></tr>
-            <tr><td class="cell-mono">22/200/4</td><td><span class="cell-primary">Riihimäki · Yhteispalvelut</span></td><td>Riihimäki</td><td>Shared service splits</td></tr>
-            <tr><td class="cell-mono">30/300/1</td><td><span class="cell-primary">Vastaanotto · Hyvinkää-laitos</span></td><td>Hyvinkää</td><td>Weighbridge intake</td></tr>
-            <tr><td class="cell-mono">30/300/2</td><td><span class="cell-primary">Vastaanotto · Riihimäki-laitos</span></td><td>Riihimäki</td><td>Weighbridge intake</td></tr>
+            <tr><td class="cell-mono">20/200/1</td><td><span class="cell-primary">Hyvinkää · Perusmaksut</span></td><td>Hyvinkää</td><td>Annual base fee</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
+            <tr><td class="cell-mono">20/200/3</td><td><span class="cell-primary">Hyvinkää · Kotitalousjäte</span></td><td>Hyvinkää</td><td>Mixed waste, bio-waste, paper</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
+            <tr><td class="cell-mono">20/200/4</td><td><span class="cell-primary">Hyvinkää · Yhteispalvelut</span></td><td>Hyvinkää</td><td>Shared service splits</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
+            <tr><td class="cell-mono">20/200/5</td><td><span class="cell-primary">Hyvinkää · Viranomaispalvelut</span></td><td>Hyvinkää</td><td>Regulatory, complaint handling</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
+            <tr><td class="cell-mono">25/250/2</td><td><span class="cell-primary">Hyvinkää · TSV / toissijainen</span></td><td>Hyvinkää</td><td>Municipal secondary (Waste Act §33)</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
+            <tr><td class="cell-mono">22/200/3</td><td><span class="cell-primary">Riihimäki · Kotitalousjäte</span></td><td>Riihimäki</td><td>Mixed waste, bio-waste, paper</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
+            <tr><td class="cell-mono">22/200/4</td><td><span class="cell-primary">Riihimäki · Yhteispalvelut</span></td><td>Riihimäki</td><td>Shared service splits</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
+            <tr><td class="cell-mono">30/300/1</td><td><span class="cell-primary">Vastaanotto · Hyvinkää-laitos</span></td><td>Hyvinkää</td><td>Weighbridge intake</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
+            <tr><td class="cell-mono">30/300/2</td><td><span class="cell-primary">Vastaanotto · Riihimäki-laitos</span></td><td>Riihimäki</td><td>Weighbridge intake</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
           </tbody>
         </table>
       </div>
@@ -407,18 +510,19 @@ tr:hover td { background: #fafafa; }
               <th>Name<span class="pd-label">PD-295</span></th>
               <th>VAT rate<span class="pd-label">PD-278</span></th>
               <th>Validity<span class="pd-label">PD-295</span></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr><td class="cell-mono">30001</td><td><span class="cell-primary">Perusmaksutuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td></tr>
-            <tr><td class="cell-mono">30002</td><td><span class="cell-primary">Kotitalousjätteen keräys — kunnallinen</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td></tr>
-            <tr><td class="cell-mono">30003</td><td><span class="cell-primary">Sakokaivopalvelut</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td></tr>
-            <tr><td class="cell-mono">30004</td><td><span class="cell-primary">Kierrätystuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td></tr>
-            <tr><td class="cell-mono">30005</td><td><span class="cell-primary">Yritysjätteen vastaanotto</span></td><td class="cell-mono">0.0% RC</td><td class="cell-mono-muted">From 2018-01-01</td></tr>
-            <tr><td class="cell-mono">30008</td><td><span class="cell-primary">Kuljetustuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td></tr>
-            <tr><td class="cell-mono">2939</td><td><span class="cell-primary">Maksettava ALV 25.5%</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2024-09-01</td></tr>
-            <tr><td class="cell-mono">2940</td><td><span class="cell-primary">Maksettava ALV 14%</span></td><td class="cell-mono">14.0%</td><td class="cell-mono-muted">From 2014-04-01</td></tr>
-            <tr><td class="cell-mono">2942</td><td><span class="cell-primary">ALV 0% — käännetty verovelvollisuus</span></td><td class="cell-mono">0.0% RC</td><td class="cell-mono-muted">From 2018-01-01</td></tr>
+            <tr><td class="cell-mono">30001</td><td><span class="cell-primary">Perusmaksutuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
+            <tr><td class="cell-mono">30002</td><td><span class="cell-primary">Kotitalousjätteen keräys — kunnallinen</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
+            <tr><td class="cell-mono">30003</td><td><span class="cell-primary">Sakokaivopalvelut</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
+            <tr><td class="cell-mono">30004</td><td><span class="cell-primary">Kierrätystuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
+            <tr><td class="cell-mono">30005</td><td><span class="cell-primary">Yritysjätteen vastaanotto</span></td><td class="cell-mono">0.0% RC</td><td class="cell-mono-muted">From 2018-01-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
+            <tr><td class="cell-mono">30008</td><td><span class="cell-primary">Kuljetustuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
+            <tr><td class="cell-mono">2939</td><td><span class="cell-primary">Maksettava ALV 25.5%</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2024-09-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
+            <tr><td class="cell-mono">2940</td><td><span class="cell-primary">Maksettava ALV 14%</span></td><td class="cell-mono">14.0%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
+            <tr><td class="cell-mono">2942</td><td><span class="cell-primary">ALV 0% — käännetty verovelvollisuus</span></td><td class="cell-mono">0.0% RC</td><td class="cell-mono-muted">From 2018-01-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
           </tbody>
         </table>
       </div>
@@ -454,15 +558,16 @@ tr:hover td { background: #fafafa; }
               <th style="text-align:right">VAT (€)<span class="pd-label">PD-310</span></th>
               <th style="text-align:right">Total (€)<span class="pd-label">PD-310</span></th>
               <th>Credit note<span class="pd-label">PD-269</span></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr><td class="cell-mono">126000142</td><td><span class="cell-primary" onclick="showTab('invoice-detail')">Korhonen Maija</span><span class="cell-secondary">CID 100482</span></td><td class="cell-mono-muted">2026-05-15</td><td><span class="badge badge-blue">Public</span></td><td class="cell-amount">46.33</td><td class="cell-amount">11.81</td><td class="cell-amount">58.14</td><td>—</td></tr>
-            <tr><td class="cell-mono">126000143</td><td><span class="cell-primary">Asunto Oy Lammitie 8</span><span class="cell-secondary">CID 100719</span></td><td class="cell-mono-muted">2026-05-15</td><td><span class="badge badge-blue">Public</span></td><td class="cell-amount">208.40</td><td class="cell-amount">53.14</td><td class="cell-amount">261.54</td><td>—</td></tr>
-            <tr><td class="cell-mono">226000044</td><td><span class="cell-primary">Rakennus Virtanen Oy</span><span class="cell-secondary">CID 200314</span></td><td class="cell-mono-muted">2026-05-14</td><td><span class="badge badge-purple">Private</span></td><td class="cell-amount">98.40</td><td class="cell-amount">0.00</td><td class="cell-amount">98.40</td><td class="cell-mono-muted">→ 326000007</td></tr>
-            <tr><td class="cell-mono">126000141</td><td><span class="cell-primary">Lahtinen Pekka</span><span class="cell-secondary">CID 100612</span></td><td class="cell-mono-muted">2026-05-14</td><td><span class="badge badge-amber">Municipal sec.</span></td><td class="cell-amount">142.00</td><td class="cell-amount">36.21</td><td class="cell-amount">178.21</td><td>—</td></tr>
-            <tr><td class="cell-mono">126000139<br><span class="cell-mono-muted">+ 226000043</span></td><td><span class="cell-primary">Mäkelä Jarkko</span><span class="cell-secondary">CID 100501</span></td><td class="cell-mono-muted">2026-05-13</td><td><span class="badge badge-blue">Public</span> <span class="badge badge-purple">Private</span></td><td class="cell-amount">187.20</td><td class="cell-amount">38.04</td><td class="cell-amount">225.24</td><td>—</td></tr>
-            <tr><td class="cell-mono">226000042</td><td><span class="cell-primary">Suomen Kierrätys Oy</span><span class="cell-secondary">CID 200511</span></td><td class="cell-mono-muted">2026-05-12</td><td><span class="badge badge-purple">Private</span></td><td class="cell-amount">231.55</td><td class="cell-amount">0.00</td><td class="cell-amount">231.55</td><td>—</td></tr>
+            <tr><td class="cell-mono">126000142</td><td><span class="cell-primary" onclick="showTab('invoice-detail')">Korhonen Maija</span><span class="cell-secondary">CID 100482</span></td><td class="cell-mono-muted">2026-05-15</td><td><span class="badge badge-blue">Public</span></td><td class="cell-amount">46.33</td><td class="cell-amount">11.81</td><td class="cell-amount">58.14</td><td>—</td><td><button class="btn-view" onclick="showTab('invoice-detail')">View</button></td></tr>
+            <tr><td class="cell-mono">126000143</td><td><span class="cell-primary">Asunto Oy Lammitie 8</span><span class="cell-secondary">CID 100719</span></td><td class="cell-mono-muted">2026-05-15</td><td><span class="badge badge-blue">Public</span></td><td class="cell-amount">208.40</td><td class="cell-amount">53.14</td><td class="cell-amount">261.54</td><td>—</td><td><button class="btn-view" onclick="showTab('invoice-detail')">View</button></td></tr>
+            <tr><td class="cell-mono">226000044</td><td><span class="cell-primary">Rakennus Virtanen Oy</span><span class="cell-secondary">CID 200314</span></td><td class="cell-mono-muted">2026-05-14</td><td><span class="badge badge-purple">Private</span></td><td class="cell-amount">98.40</td><td class="cell-amount">0.00</td><td class="cell-amount">98.40</td><td class="cell-mono-muted">→ 326000007</td><td><button class="btn-view" onclick="showTab('invoice-detail')">View</button></td></tr>
+            <tr><td class="cell-mono">126000141</td><td><span class="cell-primary">Lahtinen Pekka</span><span class="cell-secondary">CID 100612</span></td><td class="cell-mono-muted">2026-05-14</td><td><span class="badge badge-amber">Municipal sec.</span></td><td class="cell-amount">142.00</td><td class="cell-amount">36.21</td><td class="cell-amount">178.21</td><td>—</td><td><button class="btn-view" onclick="showTab('invoice-detail')">View</button></td></tr>
+            <tr><td class="cell-mono">126000139<br><span class="cell-mono-muted">+ 226000043</span></td><td><span class="cell-primary">Mäkelä Jarkko</span><span class="cell-secondary">CID 100501</span></td><td class="cell-mono-muted">2026-05-13</td><td><span class="badge badge-blue">Public</span> <span class="badge badge-purple">Private</span></td><td class="cell-amount">187.20</td><td class="cell-amount">38.04</td><td class="cell-amount">225.24</td><td>—</td><td><button class="btn-view" onclick="showTab('invoice-detail')">View</button></td></tr>
+            <tr><td class="cell-mono">226000042</td><td><span class="cell-primary">Suomen Kierrätys Oy</span><span class="cell-secondary">CID 200511</span></td><td class="cell-mono-muted">2026-05-12</td><td><span class="badge badge-purple">Private</span></td><td class="cell-amount">231.55</td><td class="cell-amount">0.00</td><td class="cell-amount">231.55</td><td>—</td><td><button class="btn-view" onclick="showTab('invoice-detail')">View</button></td></tr>
           </tbody>
         </table>
       </div>
@@ -509,14 +614,15 @@ tr:hover td { background: #fafafa; }
               <th>Credit text<span class="pd-label">PD-269</span></th>
               <th style="text-align:right">Amount (€)<span class="pd-label">PD-310</span></th>
               <th>FINVOICE<span class="pd-label">PD-310</span></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr><td class="cell-mono">326000007</td><td class="cell-mono-muted">→ 226000044</td><td><span class="cell-primary">Rakennus Virtanen Oy</span></td><td class="cell-mono-muted">2026-05-14</td><td>Hyvitys virheellisestä hinnoittelusta</td><td class="cell-amount">−98.40</td><td><span class="badge badge-cyan">INV02</span></td></tr>
-            <tr><td class="cell-mono">326000006</td><td class="cell-mono-muted">→ 126000132</td><td><span class="cell-primary">Toivonen Anne</span></td><td class="cell-mono-muted">2026-05-08</td><td>Hyvitys edelliselle haltijalle</td><td class="cell-amount">−42.18</td><td><span class="badge badge-cyan">INV02</span></td></tr>
-            <tr><td class="cell-mono">326000005</td><td class="cell-mono-muted">→ 126000119</td><td><span class="cell-primary">Salonen Mika</span></td><td class="cell-mono-muted">2026-05-02</td><td>Palvelua ei suoritettu</td><td class="cell-amount">−12.60</td><td><span class="badge badge-cyan">INV02</span></td></tr>
-            <tr><td class="cell-mono">326000004</td><td class="cell-mono-muted">→ 126000098</td><td><span class="cell-primary">Heinonen Sanna</span></td><td class="cell-mono-muted">2026-04-28</td><td>Asiakas muuttanut osoitteesta</td><td class="cell-amount">−84.36</td><td><span class="badge badge-cyan">INV02</span></td></tr>
-            <tr><td class="cell-mono">326000003</td><td class="cell-mono-muted">→ 126000077</td><td><span class="cell-primary">Karjalainen Tomi</span></td><td class="cell-mono-muted">2026-04-22</td><td>ALV-prosenttikorjaus</td><td class="cell-amount">−5.20</td><td><span class="badge badge-cyan">INV02</span></td></tr>
+            <tr><td class="cell-mono">326000007</td><td class="cell-mono-muted">→ 226000044</td><td><span class="cell-primary">Rakennus Virtanen Oy</span></td><td class="cell-mono-muted">2026-05-14</td><td>Hyvitys virheellisestä hinnoittelusta</td><td class="cell-amount">−98.40</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showDetailModal('credit-note')">View</button></td></tr>
+            <tr><td class="cell-mono">326000006</td><td class="cell-mono-muted">→ 126000132</td><td><span class="cell-primary">Toivonen Anne</span></td><td class="cell-mono-muted">2026-05-08</td><td>Hyvitys edelliselle haltijalle</td><td class="cell-amount">−42.18</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showDetailModal('credit-note')">View</button></td></tr>
+            <tr><td class="cell-mono">326000005</td><td class="cell-mono-muted">→ 126000119</td><td><span class="cell-primary">Salonen Mika</span></td><td class="cell-mono-muted">2026-05-02</td><td>Palvelua ei suoritettu</td><td class="cell-amount">−12.60</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showDetailModal('credit-note')">View</button></td></tr>
+            <tr><td class="cell-mono">326000004</td><td class="cell-mono-muted">→ 126000098</td><td><span class="cell-primary">Heinonen Sanna</span></td><td class="cell-mono-muted">2026-04-28</td><td>Asiakas muuttanut osoitteesta</td><td class="cell-amount">−84.36</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showDetailModal('credit-note')">View</button></td></tr>
+            <tr><td class="cell-mono">326000003</td><td class="cell-mono-muted">→ 126000077</td><td><span class="cell-primary">Karjalainen Tomi</span></td><td class="cell-mono-muted">2026-04-22</td><td>ALV-prosenttikorjaus</td><td class="cell-amount">−5.20</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showDetailModal('credit-note')">View</button></td></tr>
           </tbody>
         </table>
       </div>
@@ -774,6 +880,20 @@ tr:hover td { background: #fafafa; }
   </div>
 </div>
 
+<!-- ── Detail modal (opened by View buttons on Events / Cost centres / Accounts / Credit notes) ── -->
+<div class="modal-backdrop" id="detailModal" onclick="if(event.target===this) closeModal()">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="modalTitle">Detail</div>
+        <div class="modal-pd-row" id="modalPds"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
 <script>
 function showTab(tabId) {
   // Hide all panels
@@ -794,6 +914,495 @@ function showTab(tabId) {
 
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+const DETAIL_CONTENT = {
+  'event': {
+    title: 'Event detail',
+    pds: [
+      { code: 'PD-299', label: 'Event details' },
+      { code: 'PD-296', label: 'Cost centres & accounts on events' },
+      { code: 'PD-278', label: 'Mandatory data validation' }
+    ],
+    sections: [
+      { label: 'What this view shows', items: [
+        'All fields on the event (customer, product, event date, VAT, cost centre, account, service responsibility, waste type, eco-fee)',
+        'Validation status — which mandatory fields are missing, if any',
+        'Source of the event (route execution, weighbridge, manual entry, recurring)',
+        'Whether the event has been invoiced and, if so, on which invoice'
+      ]},
+      { label: 'What office staff can do here', items: [
+        'Inspect the event\'s exact data as captured at event time',
+        'See which validation rule is blocking the event from invoicing',
+        'Open the invoice the event was billed on (if any)'
+      ]}
+    ],
+    note: 'Editing the event itself is out of R1 scope — that lands in R2 with PD-277 (Manual editing of events) and PD-318.'
+  },
+  'cost-centre': {
+    title: 'Cost centre detail',
+    pds: [
+      { code: 'PD-296', label: 'Cost centres & accounts on events' }
+    ],
+    sections: [
+      { label: 'What this view shows', items: [
+        'Cost centre code (e.g. 20/200/3), name, region, service type',
+        'Which products and price lists route to this cost centre',
+        'Linked accounting accounts',
+        'Validity period (if the cost centre has been retired)'
+      ]},
+      { label: 'What office staff can do here', items: [
+        'Edit the cost centre name and metadata',
+        'Activate or retire the cost centre',
+        'See where this cost centre is referenced before editing'
+      ]}
+    ],
+    note: 'PD-296 explicitly enables office users to manually add, update, and maintain cost centres.'
+  },
+  'account': {
+    title: 'Accounting account detail',
+    pds: [
+      { code: 'PD-295', label: 'Account and cost centre data' },
+      { code: 'PD-296', label: 'Cost centres & accounts on events' }
+    ],
+    sections: [
+      { label: 'What this view shows', items: [
+        'Account number, name, VAT rate, validity period',
+        'Which products and services route revenue to this account',
+        'Which legal classification this account is associated with (public-law / market-based)'
+      ]},
+      { label: 'What office staff can do here', items: [
+        'Edit account name and metadata',
+        'Adjust validity period',
+        'View routing rules pointing to this account before changing anything'
+      ]}
+    ],
+    note: 'PD-295 specifies main users manage accounts centrally; PD-296 routes events to the right account at event time.'
+  },
+  'credit-note': {
+    title: 'Credit note detail',
+    pds: [
+      { code: 'PD-269', label: 'Credit invoices' },
+      { code: 'PD-310', label: 'FINVOICE data' },
+      { code: 'PD-309', label: 'Numbering' }
+    ],
+    sections: [
+      { label: 'What this view shows', items: [
+        'Credit note number (3xxxxxxxx) and reference to the original invoice',
+        'Credit text (visible on the document) and internal comment (private to office staff)',
+        'Whether the credit is full or partial — and which invoice rows are credited',
+        'The FINVOICE INV02 XML that was generated'
+      ]},
+      { label: 'What office staff can do here', items: [
+        'Inspect the credit note exactly as it was issued',
+        'Open the original invoice it credits',
+        'Download or copy the FINVOICE INV02 XML'
+      ]}
+    ],
+    note: 'PD-269 requires the credit text, internal comment, original invoice reference, and FINVOICE generation to all be present on every credit note.'
+  }
+};
+
+function showDetailModal(kind) {
+  const data = DETAIL_CONTENT[kind];
+  if (!data) return;
+
+  document.getElementById('modalTitle').textContent = data.title;
+
+  const pdsEl = document.getElementById('modalPds');
+  pdsEl.innerHTML = data.pds.map(pd =>
+    `<a class="pd-chip" href="https://ioteelab.atlassian.net/browse/${pd.code}" target="_blank" rel="noopener">${pd.code} ${pd.label}</a>`
+  ).join('');
+
+  const bodyEl = document.getElementById('modalBody');
+  let html = '';
+  for (const section of data.sections) {
+    html += `<div class="modal-section">
+      <div class="modal-section-label">${section.label}</div>
+      <ul class="modal-list">${section.items.map(i => `<li>${i}</li>`).join('')}</ul>
+    </div>`;
+  }
+  if (data.note) {
+    html += `<div class="modal-section"><div class="modal-note">${data.note}</div></div>`;
+  }
+  bodyEl.innerHTML = html;
+
+  document.getElementById('detailModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('detailModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ── Events tab: sidebar filter ─────────────────────────────────────────────
+function filterEvents(filter, sidebarItem) {
+  // Update active state on sidebar
+  document.querySelectorAll('#tab-events .category-item').forEach(el => el.classList.remove('active'));
+  if (sidebarItem) sidebarItem.classList.add('active');
+
+  // Show/hide rows based on data-status
+  const rows = document.querySelectorAll('#tab-events tbody tr[data-event-id]');
+  rows.forEach(row => {
+    const status = row.getAttribute('data-status');
+    if (filter === 'all') {
+      row.style.display = '';
+    } else if (filter === 'ready' && status === 'ready') {
+      row.style.display = '';
+    } else if (filter === 'missing' && status === 'missing') {
+      row.style.display = '';
+    } else if (filter === 'invoiced' && status === 'invoiced') {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+// ── Event detail page (data-driven) ────────────────────────────────────────
+const EVENT_DATA = {
+  ev1: {
+    title: 'Event: Korhonen Maija — Sekajäte 240L tyhjennys',
+    subtitle: '2026-05-12 · Mäntytie 14, Hyvinkää · ready to invoice',
+    fields: [
+      ['Event ID', 'evt-2026-05-12-0001', 'mono'],
+      ['Event date', '2026-05-12', 'mono'],
+      ['Customer', 'Korhonen Maija (CID 100482)'],
+      ['Property', 'Mäntytie 14, 05800 Hyvinkää'],
+      ['Product', 'Sekajäte 240L tyhjennys'],
+      ['Quantity', '1', 'mono'],
+      ['Unit price (net)', '6.32 €', 'mono'],
+      ['Net amount', '6.32 €', 'mono'],
+      ['VAT amount', '1.61 €', 'mono'],
+      ['Total (gross)', '7.93 €', 'mono']
+    ],
+    source: [
+      ['Source', 'Route execution'],
+      ['Vehicle', '47', 'mono'],
+      ['Route', 'Hyvinkää morning round'],
+      ['Driver action', 'Emptied (single tap)'],
+      ['Timestamp', '2026-05-12 08:14:33', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Municipal', 'badge-blue'],
+      ['Legal basis', 'Jätelaki §32 (Public law)'],
+      ['Cost centre', '20/200/3 — Hyvinkää · Kotitalousjäte', 'mono'],
+      ['Accounting account', '30002 — Kotitalousjäte', 'mono'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Waste type (EWC)', '20 03 01 — Mixed municipal waste', 'mono']
+    ],
+    validation: [
+      ['Customer info', '✓ Present', 'good'],
+      ['Cost centre', '✓ Present', 'good'],
+      ['Accounting account', '✓ Present', 'good'],
+      ['VAT rate', '✓ Present', 'good'],
+      ['Service responsibility', '✓ Present', 'good'],
+      ['Status', 'Ready to invoice', 'badge-green']
+    ],
+    downstream: [
+      ['Invoice', '— Not yet invoiced'],
+      ['FINVOICE row', 'Will become one <InvoiceRow> in INV01'],
+      ['Account dimension', '<AccountDimensionText>30002</AccountDimensionText>', 'mono'],
+      ['Cost centre dimension', '<DimensionText>20/200/3</DimensionText>', 'mono']
+    ]
+  },
+  ev2: {
+    title: 'Event: Asunto Oy Lammitie 8 — Biojäte 140L tyhjennys',
+    subtitle: '2026-05-12 · Lammitie 8, Hyvinkää · ready to invoice',
+    fields: [
+      ['Event ID', 'evt-2026-05-12-0002', 'mono'],
+      ['Event date', '2026-05-12', 'mono'],
+      ['Customer', 'Asunto Oy Lammitie 8 (CID 100719)'],
+      ['Property', 'Lammitie 8, 05800 Hyvinkää'],
+      ['Product', 'Biojäte 140L tyhjennys'],
+      ['Quantity', '1', 'mono'],
+      ['Net amount', '4.15 €', 'mono'],
+      ['VAT amount', '1.06 €', 'mono'],
+      ['Total (gross)', '5.21 €', 'mono']
+    ],
+    source: [
+      ['Source', 'Route execution'],
+      ['Shared service', 'Yes — split across 8 housing-cooperative subscribers'],
+      ['Route', 'Hyvinkää morning round'],
+      ['Timestamp', '2026-05-12 08:42:11', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Municipal', 'badge-blue'],
+      ['Legal basis', 'Jätelaki §32 (Public law)'],
+      ['Cost centre', '20/200/3 — Hyvinkää · Kotitalousjäte', 'mono'],
+      ['Accounting account', '30002 — Kotitalousjäte', 'mono'],
+      ['VAT rate', '25.5%', 'mono']
+    ],
+    validation: [
+      ['All mandatory fields', '✓ Present', 'good'],
+      ['Status', 'Ready to invoice', 'badge-green']
+    ],
+    downstream: [
+      ['Invoice', '— Not yet invoiced'],
+      ['Note', 'Shared-service split (PD-279) is R3 — for R1 this charges the housing cooperative directly']
+    ]
+  },
+  ev3: {
+    title: 'Event: Rakennus Virtanen Oy — Rakennusjäte vastaanotto',
+    subtitle: '2026-05-12 · Tehdaskuja 22, Riihimäki · ready to invoice',
+    fields: [
+      ['Event ID', 'evt-2026-05-12-0003', 'mono'],
+      ['Event date', '2026-05-12', 'mono'],
+      ['Customer', 'Rakennus Virtanen Oy (CID 200314)'],
+      ['Property', 'Tehdaskuja 22, Riihimäki'],
+      ['Product', 'Rakennusjäte vastaanotto'],
+      ['Quantity', '1 240 kg', 'mono'],
+      ['Unit price (net)', '0.08 €/kg', 'mono'],
+      ['Net amount', '98.40 €', 'mono'],
+      ['VAT amount', '0.00 € (reverse charge)', 'mono'],
+      ['Total (gross)', '98.40 €', 'mono']
+    ],
+    source: [
+      ['Source', 'Weighbridge'],
+      ['Weight', '1 240 kg', 'mono'],
+      ['Facility', 'Hyvinkää reception (Hyvinkää-laitos)'],
+      ['Vehicle', 'Customer-owned truck'],
+      ['Timestamp', '2026-05-12 11:08:54', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Market-based', 'badge-purple'],
+      ['Legal basis', 'Commercial contract 2024-K-44'],
+      ['Cost centre', '30/300/1 — Vastaanotto · Hyvinkää-laitos', 'mono'],
+      ['Accounting account', '30005 — Yritysjätteen vastaanotto', 'mono'],
+      ['VAT rate', '0.0% Reverse charge', 'mono'],
+      ['Waste type (EWC)', '17 09 04 — Mixed construction & demolition waste', 'mono']
+    ],
+    validation: [
+      ['All mandatory fields', '✓ Present', 'good'],
+      ['Reverse charge eligibility', '✓ Customer has VAT number', 'good'],
+      ['Status', 'Ready to invoice', 'badge-green']
+    ],
+    downstream: [
+      ['Invoice', '— Not yet invoiced'],
+      ['FINVOICE', 'Will produce invoice 226000XXX (private-law sequence)'],
+      ['Reverse charge notice', 'Finnish statutory text auto-included on invoice']
+    ]
+  },
+  ev4: {
+    title: 'Event: Lahtinen Pekka — Sakokaivon tyhjennys 4 m³',
+    subtitle: '2026-05-11 · Kotipolku 3, Hyvinkää · blocked from invoicing',
+    fields: [
+      ['Event ID', 'evt-2026-05-11-0007', 'mono'],
+      ['Event date', '2026-05-11', 'mono'],
+      ['Customer', 'Lahtinen Pekka (CID 100612)'],
+      ['Property', 'Kotipolku 3, Hyvinkää'],
+      ['Product', 'Sakokaivon tyhjennys 4 m³'],
+      ['Quantity', '1', 'mono'],
+      ['Net amount', '113.15 €', 'mono'],
+      ['VAT amount', '28.85 €', 'mono'],
+      ['Total (gross)', '142.00 €', 'mono']
+    ],
+    source: [
+      ['Source', 'Manual entry'],
+      ['Created by', 'Aino S. (office staff)'],
+      ['Reason', 'Phone order — septic tank emptying'],
+      ['Timestamp', '2026-05-11 14:22:08', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Municipal secondary (TSV)', 'badge-amber'],
+      ['Legal basis', 'Jätelaki §33'],
+      ['Cost centre', '25/250/2 — Hyvinkää · TSV', 'mono'],
+      ['Accounting account', '— MISSING', 'bad'],
+      ['VAT rate', '25.5%', 'mono']
+    ],
+    validation: [
+      ['Customer info', '✓ Present', 'good'],
+      ['Cost centre', '✓ Present', 'good'],
+      ['Accounting account', '✗ Missing — no account configured for TSV sakokaivo product', 'bad'],
+      ['VAT rate', '✓ Present', 'good'],
+      ['Service responsibility', '✓ Present', 'good'],
+      ['Status', 'Blocked — missing account', 'badge-amber']
+    ],
+    downstream: [
+      ['Invoice', '— Blocked until classification is fixed'],
+      ['Action needed', 'Office staff: assign account to "Sakokaivon tyhjennys" product for TSV customers, OR override account on this event']
+    ]
+  },
+  ev5: {
+    title: 'Event: Korhonen Maija — Vuosiperusmaksu 2026',
+    subtitle: '2026-05-11 · Mäntytie 14, Hyvinkää · ready to invoice',
+    fields: [
+      ['Event ID', 'evt-2026-05-11-0010', 'mono'],
+      ['Event date', '2026-05-11', 'mono'],
+      ['Customer', 'Korhonen Maija (CID 100482)'],
+      ['Property', 'Mäntytie 14, 05800 Hyvinkää'],
+      ['Product', 'Vuosiperusmaksu 2026 (annual base fee)'],
+      ['Quantity', '1', 'mono'],
+      ['Net amount', '35.86 €', 'mono'],
+      ['VAT amount', '9.14 €', 'mono'],
+      ['Total (gross)', '45.00 €', 'mono']
+    ],
+    source: [
+      ['Source', 'Recurring contract'],
+      ['Generated by', 'Annual recurring schedule'],
+      ['Contract', 'Standard residential — Hyvinkää'],
+      ['Timestamp', '2026-05-11 00:00:01', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Municipal', 'badge-blue'],
+      ['Legal basis', 'Jätelaki §32 (Public law)'],
+      ['Cost centre', '20/200/1 — Hyvinkää · Perusmaksut', 'mono'],
+      ['Accounting account', '30001 — Perusmaksutuotot', 'mono'],
+      ['VAT rate', '25.5%', 'mono']
+    ],
+    validation: [
+      ['All mandatory fields', '✓ Present', 'good'],
+      ['Status', 'Ready to invoice', 'badge-green']
+    ],
+    downstream: [
+      ['Invoice', '— Will land on next annual invoice run'],
+      ['Note', 'Recurring fees (PD-288) are R2 — for R1 these are pre-generated by script']
+    ]
+  },
+  ev6: {
+    title: 'Event: Suomen Kierrätys Oy — Metalliromun vastaanotto',
+    subtitle: '2026-05-10 · Vantaa · ready to invoice',
+    fields: [
+      ['Event ID', 'evt-2026-05-10-0019', 'mono'],
+      ['Event date', '2026-05-10', 'mono'],
+      ['Customer', 'Suomen Kierrätys Oy (CID 200511)'],
+      ['Property', 'Vantaa'],
+      ['Product', 'Metalliromun vastaanotto'],
+      ['Quantity', '3 870 kg', 'mono'],
+      ['Unit price (net)', '0.06 €/kg', 'mono'],
+      ['Net amount', '231.55 €', 'mono'],
+      ['VAT amount', '0.00 € (reverse charge)', 'mono'],
+      ['Total (gross)', '231.55 €', 'mono']
+    ],
+    source: [
+      ['Source', 'Weighbridge'],
+      ['Weight', '3 870 kg', 'mono'],
+      ['Facility', 'Riihimäki reception (Riihimäki-laitos)'],
+      ['Timestamp', '2026-05-10 09:36:21', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Market-based', 'badge-purple'],
+      ['Legal basis', 'Commercial contract 2025-K-12'],
+      ['Cost centre', '30/300/2 — Vastaanotto · Riihimäki-laitos', 'mono'],
+      ['Accounting account', '30005 — Yritysjätteen vastaanotto', 'mono'],
+      ['VAT rate', '0.0% Reverse charge', 'mono']
+    ],
+    validation: [
+      ['All mandatory fields', '✓ Present', 'good'],
+      ['Status', 'Ready to invoice', 'badge-green']
+    ],
+    downstream: [
+      ['Invoice', '— Not yet invoiced'],
+      ['FINVOICE', 'Will produce invoice 226000XXX (private-law sequence)']
+    ]
+  },
+  ev7: {
+    title: 'Event: Niemi Tiina — Sekajäte 660L tyhjennys',
+    subtitle: '2026-05-09 · Koivumäki 7, Riihimäki · blocked from invoicing',
+    fields: [
+      ['Event ID', 'evt-2026-05-09-0023', 'mono'],
+      ['Event date', '2026-05-09', 'mono'],
+      ['Customer', 'Niemi Tiina (CID 100488)'],
+      ['Property', 'Koivumäki 7, Riihimäki'],
+      ['Product', 'Sekajäte 660L tyhjennys'],
+      ['Quantity', '1', 'mono'],
+      ['Net amount', '10.04 €', 'mono'],
+      ['VAT amount', '2.56 €', 'mono'],
+      ['Total (gross)', '12.60 €', 'mono']
+    ],
+    source: [
+      ['Source', 'Route execution'],
+      ['Vehicle', '42', 'mono'],
+      ['Route', 'Riihimäki morning round'],
+      ['Timestamp', '2026-05-09 07:55:42', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Municipal', 'badge-blue'],
+      ['Cost centre', '22/200/3 — Riihimäki · Kotitalousjäte', 'mono'],
+      ['Accounting account', '— MISSING', 'bad'],
+      ['VAT rate', '25.5%', 'mono']
+    ],
+    validation: [
+      ['Customer info', '✓ Present', 'good'],
+      ['Cost centre', '✓ Present', 'good'],
+      ['Accounting account', '✗ Missing — Riihimäki municipal account not yet configured', 'bad'],
+      ['VAT rate', '✓ Present', 'good'],
+      ['Status', 'Blocked — missing account', 'badge-amber']
+    ],
+    downstream: [
+      ['Invoice', '— Blocked until classification is fixed'],
+      ['Action needed', 'Office staff: confirm account 30002 also applies to Riihimäki municipal collection']
+    ]
+  },
+  ev8: {
+    title: 'Event: Mäkelä Jarkko — Paperinkeräys 240L tyhjennys',
+    subtitle: '2026-05-09 · Vihtikatu 5, Hyvinkää · ready to invoice',
+    fields: [
+      ['Event ID', 'evt-2026-05-09-0031', 'mono'],
+      ['Event date', '2026-05-09', 'mono'],
+      ['Customer', 'Mäkelä Jarkko (CID 100501)'],
+      ['Property', 'Vihtikatu 5, Hyvinkää'],
+      ['Product', 'Paperinkeräys 240L tyhjennys'],
+      ['Quantity', '1', 'mono'],
+      ['Net amount', '3.03 €', 'mono'],
+      ['VAT amount', '0.77 €', 'mono'],
+      ['Total (gross)', '3.80 €', 'mono']
+    ],
+    source: [
+      ['Source', 'Route execution'],
+      ['Vehicle', '47', 'mono'],
+      ['Route', 'Hyvinkää morning round'],
+      ['Timestamp', '2026-05-09 08:21:09', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Municipal', 'badge-blue'],
+      ['Legal basis', 'Jätelaki §32 (Public law)'],
+      ['Cost centre', '20/200/3 — Hyvinkää · Kotitalousjäte', 'mono'],
+      ['Accounting account', '30004 — Kierrätystuotot', 'mono'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Waste type (EWC)', '20 01 01 — Paper and cardboard', 'mono']
+    ],
+    validation: [
+      ['All mandatory fields', '✓ Present', 'good'],
+      ['Status', 'Ready to invoice', 'badge-green']
+    ],
+    downstream: [
+      ['Invoice', '— Will land on next Hyvinkää municipal invoice run']
+    ]
+  }
+};
+
+function renderKvList(rows) {
+  return rows.map(r => {
+    const [key, value, modifier] = r;
+    let valueClass = 'kv-value';
+    let valueHtml = value;
+    if (modifier === 'mono') valueClass += ' kv-value-mono';
+    if (modifier === 'good') valueHtml = `<span style="color: #0a7c3a;">${value}</span>`;
+    if (modifier === 'bad') valueHtml = `<span style="color: #b94a00; font-weight: 500;">${value}</span>`;
+    if (modifier && modifier.startsWith('badge-')) valueHtml = `<span class="badge ${modifier}">${value}</span>`;
+    return `<div class="kv-row"><span class="kv-key">${key}</span><span class="${valueClass}">${valueHtml}</span></div>`;
+  }).join('');
+}
+
+function showEventDetail(eventId) {
+  const data = EVENT_DATA[eventId];
+  if (!data) return;
+
+  document.getElementById('evDetailTitle').textContent = data.title;
+  document.getElementById('evDetailSubtitle').textContent = data.subtitle;
+  document.getElementById('evDetailFields').innerHTML = renderKvList(data.fields);
+  document.getElementById('evDetailSource').innerHTML = renderKvList(data.source);
+  document.getElementById('evDetailClassification').innerHTML = renderKvList(data.classification);
+  document.getElementById('evDetailValidation').innerHTML = renderKvList(data.validation);
+  document.getElementById('evDetailDownstream').innerHTML = renderKvList(data.downstream);
+
+  showTab('event-detail');
 }
 </script>
 
