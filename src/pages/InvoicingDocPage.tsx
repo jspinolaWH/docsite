@@ -60,7 +60,7 @@ export function InvoicingDocPage() {
 
       <div className="doc-layout">
         <article className="doc-article">
-          <DocRenderer content={doc.content} highlight={highlight} />
+          <DocRenderer key={slug} content={doc.content} highlight={highlight} />
         </article>
 
         <aside className="doc-sidebar">
