@@ -1,6 +1,6 @@
 ---
 slug: pjh-invoicing-r1-requirements
-title: PJH Invoicing — Release 1 Requirements
+title: Release 1 Requirements
 category: inv-overview
 order: 3
 description: The 10 PD requirements the Ledger squad delivers in R1, with exact Jira text and plain-language explanations.
