@@ -99,15 +99,11 @@ flowchart TB
 
 ## What the invoicing module *is* for PJH
 
-### Claim: It is a regulated revenue engine, not a generic billing module.
+### Claim: At its core, it turns operational work into money the company gets paid for.
 
-The module must handle both public-law and private-law transactions under different collection processes ([PD-285](https://ioteelab.atlassian.net/browse/PD-285), [PD-284](https://ioteelab.atlassian.net/browse/PD-284)). This means that, for example, if a municipal customer doesn't pay an invoice for household waste collection (public law), the unpaid amount can be sent to ulosotto (Finnish direct enforcement) without a court judgment — but if a business customer doesn't pay for a commercial waste container rental (private law), it follows normal commercial debt collection. The same WasteHero invoice can contain both kinds of lines, and each line has to be tagged correctly so the right collection process kicks in downstream.
+Every day PJH performs work — emptying bins, weighing waste at a reception facility, providing recurring services under contract. Each piece of work is a billable event. The invoicing module's purpose is to take those events, attach the right price and the right accounting information to them, group them into invoices that the company can send out, and hand them off to an external system that delivers them to customers.
 
-It must enforce service responsibility classification tied to the Waste Act §33 ([PD-363](https://ioteelab.atlassian.net/browse/PD-363)). This means the system has to track when a business customer classified under municipal service responsibility (kunnan toissijainen velvollisuus) has been invoiced more than €2,000 in a year, and automatically raise a flag — because Finnish law requires the waste company to review whether that customer should still be in municipal responsibility or move to a market-based contract.
-
-It must support retroactive service responsibility changes ([PD-364](https://ioteelab.atlassian.net/browse/PD-364)). This means that if a regulator decides commercial waste from a specific property type moves out of municipal responsibility effective 1 January, the office worker can apply that change in March and have all uninvoiced events from 1 January re-classified — without touching invoices that already went out.
-
-A generic SaaS billing module like Stripe or Chargebee doesn't have any of these concepts. They're specific to how Finnish waste regulation works.
+If everything worked perfectly, that's the whole story: work happens, gets billed, customer pays. The complexity of the module comes from making sure the *right* customer gets billed the *right* amount under the *right* legal framework — and that the data flows correctly into accounting, reporting, and the operator that delivers the final document.
 
 ### Claim: Its core job is turning operational events into legally compliant invoices.
 
@@ -124,6 +120,18 @@ Each event must carry mandatory data before it can be transferred to invoicing (
 | **Classify legally** | Stamp each line with the right public/private law tag, cost centre, accounting account, service responsibility, and VAT classification | [PD-284](https://ioteelab.atlassian.net/browse/PD-284), [PD-285](https://ioteelab.atlassian.net/browse/PD-285), [PD-295](https://ioteelab.atlassian.net/browse/PD-295), [PD-296](https://ioteelab.atlassian.net/browse/PD-296), [PD-289](https://ioteelab.atlassian.net/browse/PD-289) |
 | **Bundle into invoices** | Group events into invoices based on per-customer billing cycle, batch filters, restrictions, and assign legally compliant invoice numbers | [PD-291](https://ioteelab.atlassian.net/browse/PD-291), [PD-290](https://ioteelab.atlassian.net/browse/PD-290), [PD-293](https://ioteelab.atlassian.net/browse/PD-293), [PD-292](https://ioteelab.atlassian.net/browse/PD-292), [PD-309](https://ioteelab.atlassian.net/browse/PD-309) |
 | **Hand off and reconcile** | Generate FINVOICE 3.0 output, send to operator, handle credit notes, cancellations, and transfers of billed events | [PD-310](https://ioteelab.atlassian.net/browse/PD-310), [PD-107](https://ioteelab.atlassian.net/browse/PD-107), [PD-269](https://ioteelab.atlassian.net/browse/PD-269), [PD-273](https://ioteelab.atlassian.net/browse/PD-273), [PD-275](https://ioteelab.atlassian.net/browse/PD-275) |
+
+### Claim: It is a *regulated* revenue engine, not a generic billing module.
+
+The five jobs above could describe Stripe, Chargebee, or any generic SaaS billing system. What makes this module different is that PJH operates under Finnish waste regulation, and the module has to enforce specific legal rules that a generic billing system has no concept of.
+
+**Public-law vs private-law transactions.** The module must handle both public-law and private-law transactions under different collection processes ([PD-285](https://ioteelab.atlassian.net/browse/PD-285), [PD-284](https://ioteelab.atlassian.net/browse/PD-284)). This means that, for example, if a municipal customer doesn't pay an invoice for household waste collection (public law), the unpaid amount can be sent to ulosotto (Finnish direct enforcement) without a court judgment — but if a business customer doesn't pay for a commercial waste container rental (private law), it follows normal commercial debt collection. The same WasteHero invoice can contain both kinds of lines, and each line has to be tagged correctly so the right collection process kicks in downstream.
+
+**Service responsibility classification tied to the Waste Act §33** ([PD-363](https://ioteelab.atlassian.net/browse/PD-363)). This means the system has to track when a business customer classified under municipal service responsibility (kunnan toissijainen velvollisuus) has been invoiced more than €2,000 in a year, and automatically raise a flag — because Finnish law requires the waste company to review whether that customer should still be in municipal responsibility or move to a market-based contract.
+
+**Retroactive service responsibility changes** ([PD-364](https://ioteelab.atlassian.net/browse/PD-364)). This means that if a regulator decides commercial waste from a specific property type moves out of municipal responsibility effective 1 January, the office worker can apply that change in March and have all uninvoiced events from 1 January re-classified — without touching invoices that already went out.
+
+A generic SaaS billing module like Stripe or Chargebee doesn't have any of these concepts. They're specific to how Finnish waste regulation works.
 
 ### Claim: The module does not own the customer-facing PDF or the accounts receivable ledger.
 
