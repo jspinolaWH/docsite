@@ -1,7 +1,7 @@
 ---
 slug: pjh-invoicing-module-analysis
 title: Module — System Analysis
-category: inv-overview
+category: inv-arch
 order: 1
 description: What the invoicing module is, how it touches the platform, and what the foundational base looks like — anchored to Jira release 11436.
 tags:

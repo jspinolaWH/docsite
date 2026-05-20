@@ -1,8 +1,8 @@
 ---
 slug: r1-pd-flow
 title: R1 — How the 10 PDs Work Together
-category: inv-overview
-order: 4
+category: inv-flow
+order: 1
 description: How the 10 R1 PDs layer together — from event trigger through master data lookups, validation, legal classification, invoice production, and FINVOICE export.
 related:
   - pjh-invoicing-r1

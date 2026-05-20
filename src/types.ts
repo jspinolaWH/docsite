@@ -119,15 +119,35 @@ export const DIAGRAM_LINKS: DiagramLink[] = [
 
 // Categories for the Invoicing section
 export const INVOICING_CATEGORIES: Record<string, CategoryConfig> = {
-  'inv-overview': {
-    id: 'inv-overview',
-    label: 'Overview & Analysis',
+  'inv-arch': {
+    id: 'inv-arch',
+    label: 'Architecture & Analysis',
     color: '#0369a1',
     bgColor: '#f0f9ff',
     borderColor: '#bae6fd',
     darkColor: '#38bdf8',
     darkBgColor: '#082f49',
     darkBorderColor: '#0369a1',
+  },
+  'inv-r1': {
+    id: 'inv-r1',
+    label: 'Release 1 Scope',
+    color: '#047857',
+    bgColor: '#f0fdf4',
+    borderColor: '#bbf7d0',
+    darkColor: '#34d399',
+    darkBgColor: '#022c22',
+    darkBorderColor: '#047857',
+  },
+  'inv-flow': {
+    id: 'inv-flow',
+    label: 'Process & Flow',
+    color: '#7c3aed',
+    bgColor: '#faf5ff',
+    borderColor: '#e9d5ff',
+    darkColor: '#a78bfa',
+    darkBgColor: '#2e1065',
+    darkBorderColor: '#7c3aed',
   },
 };
 

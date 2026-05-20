@@ -66,7 +66,7 @@ export function loadInvoicingDocs(): DocEntry[] {
     docs.push({
       slug: (meta.slug as string) || filePath.split('/').pop()?.replace('.md', '') || '',
       title: (meta.title as string) || 'Untitled',
-      category: (meta.category as string) || 'inv-overview',
+      category: (meta.category as string) || 'inv-arch',
       subcategory: meta.subcategory as string | undefined,
       order: Number(meta.order) || 0,
       description: (meta.description as string) || '',

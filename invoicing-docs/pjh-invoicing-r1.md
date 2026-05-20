@@ -1,8 +1,8 @@
 ---
 slug: pjh-invoicing-r1
 title: Release 1
-category: inv-overview
-order: 2
+category: inv-r1
+order: 1
 description: The Finnish foundation — data model first, smallest possible UI on top, one end-to-end scenario PJH can validate.
 tags:
   - invoicing
