@@ -192,6 +192,16 @@ tr:hover td { background: #fafafa; }
 .modal-list li { font-size: 13px; color: var(--text); padding: 6px 0 6px 18px; position: relative; line-height: 1.55; }
 .modal-list li::before { content: "→"; position: absolute; left: 0; color: var(--blue); font-family: 'JetBrains Mono', monospace; }
 .modal-note { background: var(--blue-light); border-left: 3px solid var(--blue); padding: 12px 16px; border-radius: var(--radius); font-size: 13px; color: var(--text); line-height: 1.5; }
+
+/* ── Form fields (in create modals) ──────────────────────────────────────── */
+.form-field { margin-bottom: 16px; }
+.form-field label { display: block; font-size: 12px; color: var(--text); font-weight: 500; margin-bottom: 6px; }
+.form-field .form-hint { display: block; font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.45; }
+.form-field input, .form-field select, .form-field textarea { width: 100%; padding: 8px 12px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; background: var(--white); outline: none; box-sizing: border-box; }
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--blue); }
+.form-field input.mono, .form-field textarea.mono { font-family: 'JetBrains Mono', monospace; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-pd-tag { display: inline-block; font-size: 10px; color: var(--blue); background: var(--blue-light); padding: 2px 8px; border-radius: 10px; margin-left: 6px; font-family: 'JetBrains Mono', monospace; font-weight: 500; vertical-align: middle; }
 </style>
 </head>
 <body>
@@ -448,7 +458,7 @@ tr:hover td { background: #fafafa; }
       <div class="toolbar">
         <div></div>
         <div class="action-buttons">
-          <button class="btn btn-primary">+ New cost centre</button>
+          <button class="btn btn-primary" onclick="openCreateForm('cost-centre')">+ New cost centre</button>
         </div>
       </div>
 
@@ -464,17 +474,89 @@ tr:hover td { background: #fafafa; }
             </tr>
           </thead>
           <tbody>
-            <tr><td class="cell-mono">20/200/1</td><td><span class="cell-primary">Hyvinkää · Perusmaksut</span></td><td>Hyvinkää</td><td>Annual base fee</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
-            <tr><td class="cell-mono">20/200/3</td><td><span class="cell-primary">Hyvinkää · Kotitalousjäte</span></td><td>Hyvinkää</td><td>Mixed waste, bio-waste, paper</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
-            <tr><td class="cell-mono">20/200/4</td><td><span class="cell-primary">Hyvinkää · Yhteispalvelut</span></td><td>Hyvinkää</td><td>Shared service splits</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
-            <tr><td class="cell-mono">20/200/5</td><td><span class="cell-primary">Hyvinkää · Viranomaispalvelut</span></td><td>Hyvinkää</td><td>Regulatory, complaint handling</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
-            <tr><td class="cell-mono">25/250/2</td><td><span class="cell-primary">Hyvinkää · TSV / toissijainen</span></td><td>Hyvinkää</td><td>Municipal secondary (Waste Act §33)</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
-            <tr><td class="cell-mono">22/200/3</td><td><span class="cell-primary">Riihimäki · Kotitalousjäte</span></td><td>Riihimäki</td><td>Mixed waste, bio-waste, paper</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
-            <tr><td class="cell-mono">22/200/4</td><td><span class="cell-primary">Riihimäki · Yhteispalvelut</span></td><td>Riihimäki</td><td>Shared service splits</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
-            <tr><td class="cell-mono">30/300/1</td><td><span class="cell-primary">Vastaanotto · Hyvinkää-laitos</span></td><td>Hyvinkää</td><td>Weighbridge intake</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
-            <tr><td class="cell-mono">30/300/2</td><td><span class="cell-primary">Vastaanotto · Riihimäki-laitos</span></td><td>Riihimäki</td><td>Weighbridge intake</td><td><button class="btn-view" onclick="showDetailModal('cost-centre')">View</button></td></tr>
+            <tr><td class="cell-mono">20/200/1</td><td><span class="cell-primary">Hyvinkää · Perusmaksut</span></td><td>Hyvinkää</td><td>Annual base fee</td><td><button class="btn-view" onclick="showCostCentreDetail('cc1')">View</button></td></tr>
+            <tr><td class="cell-mono">20/200/3</td><td><span class="cell-primary">Hyvinkää · Kotitalousjäte</span></td><td>Hyvinkää</td><td>Mixed waste, bio-waste, paper</td><td><button class="btn-view" onclick="showCostCentreDetail('cc2')">View</button></td></tr>
+            <tr><td class="cell-mono">20/200/4</td><td><span class="cell-primary">Hyvinkää · Yhteispalvelut</span></td><td>Hyvinkää</td><td>Shared service splits</td><td><button class="btn-view" onclick="showCostCentreDetail('cc3')">View</button></td></tr>
+            <tr><td class="cell-mono">20/200/5</td><td><span class="cell-primary">Hyvinkää · Viranomaispalvelut</span></td><td>Hyvinkää</td><td>Regulatory, complaint handling</td><td><button class="btn-view" onclick="showCostCentreDetail('cc4')">View</button></td></tr>
+            <tr><td class="cell-mono">25/250/2</td><td><span class="cell-primary">Hyvinkää · TSV / toissijainen</span></td><td>Hyvinkää</td><td>Municipal secondary (Waste Act §33)</td><td><button class="btn-view" onclick="showCostCentreDetail('cc5')">View</button></td></tr>
+            <tr><td class="cell-mono">22/200/3</td><td><span class="cell-primary">Riihimäki · Kotitalousjäte</span></td><td>Riihimäki</td><td>Mixed waste, bio-waste, paper</td><td><button class="btn-view" onclick="showCostCentreDetail('cc6')">View</button></td></tr>
+            <tr><td class="cell-mono">22/200/4</td><td><span class="cell-primary">Riihimäki · Yhteispalvelut</span></td><td>Riihimäki</td><td>Shared service splits</td><td><button class="btn-view" onclick="showCostCentreDetail('cc7')">View</button></td></tr>
+            <tr><td class="cell-mono">30/300/1</td><td><span class="cell-primary">Vastaanotto · Hyvinkää-laitos</span></td><td>Hyvinkää</td><td>Weighbridge intake</td><td><button class="btn-view" onclick="showCostCentreDetail('cc8')">View</button></td></tr>
+            <tr><td class="cell-mono">30/300/2</td><td><span class="cell-primary">Vastaanotto · Riihimäki-laitos</span></td><td>Riihimäki</td><td>Weighbridge intake</td><td><button class="btn-view" onclick="showCostCentreDetail('cc9')">View</button></td></tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: COST CENTRE DETAIL (data-driven from JS based on which row View'd)-->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-cost-centre-detail">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%;">
+      <div class="page-head">
+        <a href="#" onclick="showTab('cost-centres'); return false;" style="color: var(--blue); font-size: 13px; text-decoration: none; display: inline-block; margin-bottom: 8px;">← Back to cost centres</a>
+        <div class="page-title" id="ccDetailTitle">Cost centre detail</div>
+        <div class="page-subtitle" id="ccDetailSubtitle"></div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-296" target="_blank">PD-296 Cost centres & accounts on events</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-295" target="_blank">PD-295 Account & cost centre data</a>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Properties</div>
+              <div class="detail-card-pd">PD-296</div>
+            </div>
+            <div class="detail-card-body" id="ccDetailProperties"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Recent events tagged with this cost centre</div>
+              <div class="detail-card-pd">PD-299 · PD-296</div>
+            </div>
+            <div class="detail-card-body" style="padding: 0;">
+              <table style="width: 100%; font-size: 12px;">
+                <thead>
+                  <tr style="background: var(--surface);">
+                    <th style="padding: 8px 12px; text-align: left;">Date</th>
+                    <th style="padding: 8px 12px; text-align: left;">Customer</th>
+                    <th style="padding: 8px 12px; text-align: left;">Product</th>
+                    <th style="padding: 8px 12px; text-align: right;">Net (€)</th>
+                  </tr>
+                </thead>
+                <tbody id="ccDetailEvents"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Linked accounting accounts</div>
+              <div class="detail-card-pd">PD-295</div>
+            </div>
+            <div class="detail-card-body" id="ccDetailAccounts"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">FINVOICE export</div>
+              <div class="detail-card-pd">PD-296 · PD-310</div>
+            </div>
+            <div class="detail-card-body" style="padding: 16px;">
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">When events tagged with this cost centre are invoiced, the code is forwarded as part of the FINVOICE data on each invoice row:</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; background: #1e293b; color: #e2e8f0; padding: 12px; border-radius: 6px; overflow-x: auto;" id="ccDetailFinvoice"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -498,7 +580,7 @@ tr:hover td { background: #fafafa; }
       <div class="toolbar">
         <div></div>
         <div class="action-buttons">
-          <button class="btn btn-primary">+ New account</button>
+          <button class="btn btn-primary" onclick="openCreateForm('account')">+ New account</button>
         </div>
       </div>
 
@@ -514,17 +596,89 @@ tr:hover td { background: #fafafa; }
             </tr>
           </thead>
           <tbody>
-            <tr><td class="cell-mono">30001</td><td><span class="cell-primary">Perusmaksutuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
-            <tr><td class="cell-mono">30002</td><td><span class="cell-primary">Kotitalousjätteen keräys — kunnallinen</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
-            <tr><td class="cell-mono">30003</td><td><span class="cell-primary">Sakokaivopalvelut</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
-            <tr><td class="cell-mono">30004</td><td><span class="cell-primary">Kierrätystuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
-            <tr><td class="cell-mono">30005</td><td><span class="cell-primary">Yritysjätteen vastaanotto</span></td><td class="cell-mono">0.0% RC</td><td class="cell-mono-muted">From 2018-01-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
-            <tr><td class="cell-mono">30008</td><td><span class="cell-primary">Kuljetustuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
-            <tr><td class="cell-mono">2939</td><td><span class="cell-primary">Maksettava ALV 25.5%</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2024-09-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
-            <tr><td class="cell-mono">2940</td><td><span class="cell-primary">Maksettava ALV 14%</span></td><td class="cell-mono">14.0%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
-            <tr><td class="cell-mono">2942</td><td><span class="cell-primary">ALV 0% — käännetty verovelvollisuus</span></td><td class="cell-mono">0.0% RC</td><td class="cell-mono-muted">From 2018-01-01</td><td><button class="btn-view" onclick="showDetailModal('account')">View</button></td></tr>
+            <tr><td class="cell-mono">30001</td><td><span class="cell-primary">Perusmaksutuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showAccountDetail('ac1')">View</button></td></tr>
+            <tr><td class="cell-mono">30002</td><td><span class="cell-primary">Kotitalousjätteen keräys — kunnallinen</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showAccountDetail('ac2')">View</button></td></tr>
+            <tr><td class="cell-mono">30003</td><td><span class="cell-primary">Sakokaivopalvelut</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showAccountDetail('ac3')">View</button></td></tr>
+            <tr><td class="cell-mono">30004</td><td><span class="cell-primary">Kierrätystuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showAccountDetail('ac4')">View</button></td></tr>
+            <tr><td class="cell-mono">30005</td><td><span class="cell-primary">Yritysjätteen vastaanotto</span></td><td class="cell-mono">0.0% RC</td><td class="cell-mono-muted">From 2018-01-01</td><td><button class="btn-view" onclick="showAccountDetail('ac5')">View</button></td></tr>
+            <tr><td class="cell-mono">30008</td><td><span class="cell-primary">Kuljetustuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showAccountDetail('ac6')">View</button></td></tr>
+            <tr><td class="cell-mono">2939</td><td><span class="cell-primary">Maksettava ALV 25.5%</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2024-09-01</td><td><button class="btn-view" onclick="showAccountDetail('ac7')">View</button></td></tr>
+            <tr><td class="cell-mono">2940</td><td><span class="cell-primary">Maksettava ALV 14%</span></td><td class="cell-mono">14.0%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showAccountDetail('ac8')">View</button></td></tr>
+            <tr><td class="cell-mono">2942</td><td><span class="cell-primary">ALV 0% — käännetty verovelvollisuus</span></td><td class="cell-mono">0.0% RC</td><td class="cell-mono-muted">From 2018-01-01</td><td><button class="btn-view" onclick="showAccountDetail('ac9')">View</button></td></tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: ACCOUNT DETAIL                                                    -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-account-detail">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%;">
+      <div class="page-head">
+        <a href="#" onclick="showTab('accounts'); return false;" style="color: var(--blue); font-size: 13px; text-decoration: none; display: inline-block; margin-bottom: 8px;">← Back to accounts</a>
+        <div class="page-title" id="acDetailTitle">Account detail</div>
+        <div class="page-subtitle" id="acDetailSubtitle"></div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-295" target="_blank">PD-295 Account & cost centre data</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-296" target="_blank">PD-296 Cost centres & accounts on events</a>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Properties</div>
+              <div class="detail-card-pd">PD-295</div>
+            </div>
+            <div class="detail-card-body" id="acDetailProperties"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Recent events posted to this account</div>
+              <div class="detail-card-pd">PD-299 · PD-296</div>
+            </div>
+            <div class="detail-card-body" style="padding: 0;">
+              <table style="width: 100%; font-size: 12px;">
+                <thead>
+                  <tr style="background: var(--surface);">
+                    <th style="padding: 8px 12px; text-align: left;">Date</th>
+                    <th style="padding: 8px 12px; text-align: left;">Customer</th>
+                    <th style="padding: 8px 12px; text-align: left;">Product</th>
+                    <th style="padding: 8px 12px; text-align: right;">Amount (€)</th>
+                  </tr>
+                </thead>
+                <tbody id="acDetailEvents"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Products / services routing to this account</div>
+              <div class="detail-card-pd">PD-295</div>
+            </div>
+            <div class="detail-card-body" id="acDetailProducts"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">FINVOICE export</div>
+              <div class="detail-card-pd">PD-295 · PD-310</div>
+            </div>
+            <div class="detail-card-body" style="padding: 16px;">
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">When events posted to this account are invoiced, the account number is forwarded as part of the FINVOICE data:</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; background: #1e293b; color: #e2e8f0; padding: 12px; border-radius: 6px; overflow-x: auto;" id="acDetailFinvoice"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -599,7 +753,7 @@ tr:hover td { background: #fafafa; }
       <div class="toolbar">
         <div></div>
         <div class="action-buttons">
-          <button class="btn btn-primary">+ Issue credit note</button>
+          <button class="btn btn-primary" onclick="openCreateForm('credit-note')">+ Issue credit note</button>
         </div>
       </div>
 
@@ -618,11 +772,11 @@ tr:hover td { background: #fafafa; }
             </tr>
           </thead>
           <tbody>
-            <tr><td class="cell-mono">326000007</td><td class="cell-mono-muted">→ 226000044</td><td><span class="cell-primary">Rakennus Virtanen Oy</span></td><td class="cell-mono-muted">2026-05-14</td><td>Hyvitys virheellisestä hinnoittelusta</td><td class="cell-amount">−98.40</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showDetailModal('credit-note')">View</button></td></tr>
-            <tr><td class="cell-mono">326000006</td><td class="cell-mono-muted">→ 126000132</td><td><span class="cell-primary">Toivonen Anne</span></td><td class="cell-mono-muted">2026-05-08</td><td>Hyvitys edelliselle haltijalle</td><td class="cell-amount">−42.18</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showDetailModal('credit-note')">View</button></td></tr>
-            <tr><td class="cell-mono">326000005</td><td class="cell-mono-muted">→ 126000119</td><td><span class="cell-primary">Salonen Mika</span></td><td class="cell-mono-muted">2026-05-02</td><td>Palvelua ei suoritettu</td><td class="cell-amount">−12.60</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showDetailModal('credit-note')">View</button></td></tr>
-            <tr><td class="cell-mono">326000004</td><td class="cell-mono-muted">→ 126000098</td><td><span class="cell-primary">Heinonen Sanna</span></td><td class="cell-mono-muted">2026-04-28</td><td>Asiakas muuttanut osoitteesta</td><td class="cell-amount">−84.36</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showDetailModal('credit-note')">View</button></td></tr>
-            <tr><td class="cell-mono">326000003</td><td class="cell-mono-muted">→ 126000077</td><td><span class="cell-primary">Karjalainen Tomi</span></td><td class="cell-mono-muted">2026-04-22</td><td>ALV-prosenttikorjaus</td><td class="cell-amount">−5.20</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showDetailModal('credit-note')">View</button></td></tr>
+            <tr><td class="cell-mono">326000007</td><td class="cell-mono-muted">→ 226000044</td><td><span class="cell-primary">Rakennus Virtanen Oy</span></td><td class="cell-mono-muted">2026-05-14</td><td>Hyvitys virheellisestä hinnoittelusta</td><td class="cell-amount">−98.40</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showCreditNoteDetail('cn1')">View</button></td></tr>
+            <tr><td class="cell-mono">326000006</td><td class="cell-mono-muted">→ 126000132</td><td><span class="cell-primary">Toivonen Anne</span></td><td class="cell-mono-muted">2026-05-08</td><td>Hyvitys edelliselle haltijalle</td><td class="cell-amount">−42.18</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showCreditNoteDetail('cn2')">View</button></td></tr>
+            <tr><td class="cell-mono">326000005</td><td class="cell-mono-muted">→ 126000119</td><td><span class="cell-primary">Salonen Mika</span></td><td class="cell-mono-muted">2026-05-02</td><td>Palvelua ei suoritettu</td><td class="cell-amount">−12.60</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showCreditNoteDetail('cn3')">View</button></td></tr>
+            <tr><td class="cell-mono">326000004</td><td class="cell-mono-muted">→ 126000098</td><td><span class="cell-primary">Heinonen Sanna</span></td><td class="cell-mono-muted">2026-04-28</td><td>Asiakas muuttanut osoitteesta</td><td class="cell-amount">−84.36</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showCreditNoteDetail('cn4')">View</button></td></tr>
+            <tr><td class="cell-mono">326000003</td><td class="cell-mono-muted">→ 126000077</td><td><span class="cell-primary">Karjalainen Tomi</span></td><td class="cell-mono-muted">2026-04-22</td><td>ALV-prosenttikorjaus</td><td class="cell-amount">−5.20</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showCreditNoteDetail('cn5')">View</button></td></tr>
           </tbody>
         </table>
       </div>
@@ -630,6 +784,93 @@ tr:hover td { background: #fafafa; }
       <div class="callout">
         <div class="callout-title">Why credit notes are a first-class subtype</div>
         <div class="callout-text">PD-269 specifies credit notes are standalone documents that carry their own custom text, internal comment, and an explicit reference to the credited invoice. FINVOICE distinguishes them with message code <span class="mono">INV02</span> (separate from <span class="mono">INV01</span>). Both full and partial credit are supported — partial means crediting only selected invoice rows. Credited transactions remain visible in customer transaction history.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: CREDIT NOTE DETAIL                                                -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-credit-note-detail">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%;">
+      <div class="page-head">
+        <a href="#" onclick="showTab('credit-notes'); return false;" style="color: var(--blue); font-size: 13px; text-decoration: none; display: inline-block; margin-bottom: 8px;">← Back to credit notes</a>
+        <div class="page-title" id="cnDetailTitle">Credit note detail</div>
+        <div class="page-subtitle" id="cnDetailSubtitle"></div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-269" target="_blank">PD-269 Credit invoices</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-309" target="_blank">PD-309 Numbering</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-310" target="_blank">PD-310 FINVOICE data</a>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Credit note properties</div>
+              <div class="detail-card-pd">PD-269 · PD-309</div>
+            </div>
+            <div class="detail-card-body" id="cnDetailProperties"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Credited invoice lines</div>
+              <div class="detail-card-pd">PD-269</div>
+            </div>
+            <div class="detail-card-body" style="padding: 0;">
+              <table style="width: 100%; font-size: 12px;">
+                <thead>
+                  <tr style="background: var(--surface);">
+                    <th style="padding: 8px 12px; text-align: left;">Product</th>
+                    <th style="padding: 8px 12px; text-align: right;">Net (€)</th>
+                    <th style="padding: 8px 12px; text-align: right;">VAT (€)</th>
+                    <th style="padding: 8px 12px; text-align: right;">Total (€)</th>
+                  </tr>
+                </thead>
+                <tbody id="cnDetailLines"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Customer-facing credit text</div>
+              <div class="detail-card-pd">PD-269</div>
+            </div>
+            <div class="detail-card-body" style="padding: 16px;">
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">This text appears on the credit note delivered to the customer:</div>
+              <div style="font-size: 13px; padding: 12px; background: var(--surface); border-left: 3px solid var(--blue); border-radius: 4px; font-style: italic;" id="cnDetailCreditText"></div>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Internal comment</div>
+              <div class="detail-card-pd">PD-269</div>
+            </div>
+            <div class="detail-card-body" style="padding: 16px;">
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Visible only to office staff. Not on the FINVOICE export:</div>
+              <div style="font-size: 13px; padding: 12px; background: #fff7ed; border-left: 3px solid #f59e0b; border-radius: 4px;" id="cnDetailInternalComment"></div>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">FINVOICE INV02 export</div>
+              <div class="detail-card-pd">PD-310</div>
+            </div>
+            <div class="detail-card-body" style="padding: 16px;">
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">A credit note is exported as a separate FINVOICE message with code <span class="mono">INV02</span>:</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; background: #1e293b; color: #e2e8f0; padding: 12px; border-radius: 6px; overflow-x: auto;" id="cnDetailFinvoice"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -880,17 +1121,21 @@ tr:hover td { background: #fafafa; }
   </div>
 </div>
 
-<!-- ── Detail modal (opened by View buttons on Events / Cost centres / Accounts / Credit notes) ── -->
-<div class="modal-backdrop" id="detailModal" onclick="if(event.target===this) closeModal()">
+<!-- ── Create form modal (opened by + New cost centre / + New account / + Issue credit note) ── -->
+<div class="modal-backdrop" id="createModal" onclick="if(event.target===this) closeCreateModal()">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-head">
       <div>
-        <div class="modal-title" id="modalTitle">Detail</div>
-        <div class="modal-pd-row" id="modalPds"></div>
+        <div class="modal-title" id="createModalTitle">Create</div>
+        <div class="modal-pd-row" id="createModalPds"></div>
       </div>
-      <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+      <button class="modal-close" onclick="closeCreateModal()" aria-label="Close">×</button>
     </div>
-    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-body" id="createModalBody"></div>
+    <div style="padding: 16px 24px 20px; display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid var(--border);">
+      <button class="btn btn-secondary" onclick="closeCreateModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitCreateForm()">Save</button>
+    </div>
   </div>
 </div>
 
@@ -916,128 +1161,613 @@ function showTab(tabId) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-const DETAIL_CONTENT = {
-  'event': {
-    title: 'Event detail',
-    pds: [
-      { code: 'PD-299', label: 'Event details' },
-      { code: 'PD-296', label: 'Cost centres & accounts on events' },
-      { code: 'PD-278', label: 'Mandatory data validation' }
+// ===================================================================
+// Detail page data — sourced from PD-296, PD-295, PD-269 requirements
+// ===================================================================
+
+// ── COST CENTRES — anchored to PD-296 (example values from PD-296's own example) ──
+const COST_CENTRE_DATA = {
+  cc1: {
+    code: '20/200/1',
+    title: 'Cost centre 20/200/1 — Hyvinkää · Perusmaksut',
+    subtitle: 'Annual base fee collection for residential properties in Hyvinkää.',
+    properties: [
+      ['Code', '20/200/1', 'mono'],
+      ['Name', 'Hyvinkää · Perusmaksut'],
+      ['Region', 'Hyvinkää'],
+      ['Service type', 'Annual base fee']
     ],
-    sections: [
-      { label: 'What this view shows', items: [
-        'All fields on the event (customer, product, event date, VAT, cost centre, account, service responsibility, waste type, eco-fee)',
-        'Validation status — which mandatory fields are missing, if any',
-        'Source of the event (route execution, weighbridge, manual entry, recurring)',
-        'Whether the event has been invoiced and, if so, on which invoice'
-      ]},
-      { label: 'What office staff can do here', items: [
-        'Inspect the event\'s exact data as captured at event time',
-        'See which validation rule is blocking the event from invoicing',
-        'Open the invoice the event was billed on (if any)'
-      ]}
+    events: [
+      ['2026-05-11', 'Korhonen Maija', 'Vuosiperusmaksu 2026', '35.86'],
+      ['2026-05-11', 'Asunto Oy Lammitie 8', 'Vuosiperusmaksu 2026', '286.88'],
+      ['2026-05-10', 'Lahtinen Pekka', 'Vuosiperusmaksu 2026', '35.86']
     ],
-    note: 'Editing the event itself is out of R1 scope — that lands in R2 with PD-277 (Manual editing of events) and PD-318.'
+    accounts: [
+      ['Revenue account', '30001 — Perusmaksutuotot', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;20/200/1&lt;/DimensionText&gt;'
   },
-  'cost-centre': {
-    title: 'Cost centre detail',
-    pds: [
-      { code: 'PD-296', label: 'Cost centres & accounts on events' }
+  cc2: {
+    code: '20/200/3',
+    title: 'Cost centre 20/200/3 — Hyvinkää · Kotitalousjäte',
+    subtitle: 'Household waste collection in Hyvinkää. This is the example cost centre called out in PD-296\'s acceptance criteria.',
+    properties: [
+      ['Code', '20/200/3', 'mono'],
+      ['Name', 'Hyvinkää · Kotitalousjäte'],
+      ['Region', 'Hyvinkää'],
+      ['Service type', 'Mixed waste, bio-waste, paper']
     ],
-    sections: [
-      { label: 'What this view shows', items: [
-        'Cost centre code (e.g. 20/200/3), name, region, service type',
-        'Which products and price lists route to this cost centre',
-        'Linked accounting accounts',
-        'Validity period (if the cost centre has been retired)'
-      ]},
-      { label: 'What office staff can do here', items: [
-        'Edit the cost centre name and metadata',
-        'Activate or retire the cost centre',
-        'See where this cost centre is referenced before editing'
-      ]}
+    events: [
+      ['2026-05-12', 'Korhonen Maija', 'Sekajäte 240L tyhjennys', '6.32'],
+      ['2026-05-12', 'Asunto Oy Lammitie 8', 'Biojäte 140L tyhjennys', '4.15'],
+      ['2026-05-09', 'Mäkelä Jarkko', 'Paperinkeräys 240L tyhjennys', '3.03']
     ],
-    note: 'PD-296 explicitly enables office users to manually add, update, and maintain cost centres.'
+    accounts: [
+      ['Waste treatment', '30002 — Kotitalousjätteen keräys', 'mono'],
+      ['Transport', '30005 — Kuljetustuotot', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;20/200/3&lt;/DimensionText&gt;'
   },
-  'account': {
-    title: 'Accounting account detail',
-    pds: [
-      { code: 'PD-295', label: 'Account and cost centre data' },
-      { code: 'PD-296', label: 'Cost centres & accounts on events' }
+  cc3: {
+    code: '20/200/4',
+    title: 'Cost centre 20/200/4 — Hyvinkää · Yhteispalvelut',
+    subtitle: 'Shared services in Hyvinkää.',
+    properties: [
+      ['Code', '20/200/4', 'mono'],
+      ['Name', 'Hyvinkää · Yhteispalvelut'],
+      ['Region', 'Hyvinkää'],
+      ['Service type', 'Shared service splits']
     ],
-    sections: [
-      { label: 'What this view shows', items: [
-        'Account number, name, VAT rate, validity period',
-        'Which products and services route revenue to this account',
-        'Which legal classification this account is associated with (public-law / market-based)'
-      ]},
-      { label: 'What office staff can do here', items: [
-        'Edit account name and metadata',
-        'Adjust validity period',
-        'View routing rules pointing to this account before changing anything'
-      ]}
+    events: [
+      ['2026-05-12', 'Asunto Oy Lammitie 8', 'Yhteiskeräys 660L tyhjennys', '12.40']
     ],
-    note: 'PD-295 specifies main users manage accounts centrally; PD-296 routes events to the right account at event time.'
+    accounts: [
+      ['Waste treatment', '30002 — Kotitalousjätteen keräys', 'mono'],
+      ['Transport', '30005 — Kuljetustuotot', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;20/200/4&lt;/DimensionText&gt;'
   },
-  'credit-note': {
-    title: 'Credit note detail',
-    pds: [
-      { code: 'PD-269', label: 'Credit invoices' },
-      { code: 'PD-310', label: 'FINVOICE data' },
-      { code: 'PD-309', label: 'Numbering' }
+  cc4: {
+    code: '20/200/5',
+    title: 'Cost centre 20/200/5 — Hyvinkää · Viranomaispalvelut',
+    subtitle: 'Regulatory work in Hyvinkää.',
+    properties: [
+      ['Code', '20/200/5', 'mono'],
+      ['Name', 'Hyvinkää · Viranomaispalvelut'],
+      ['Region', 'Hyvinkää'],
+      ['Service type', 'Regulatory, complaint handling']
     ],
-    sections: [
-      { label: 'What this view shows', items: [
-        'Credit note number (3xxxxxxxx) and reference to the original invoice',
-        'Credit text (visible on the document) and internal comment (private to office staff)',
-        'Whether the credit is full or partial — and which invoice rows are credited',
-        'The FINVOICE INV02 XML that was generated'
-      ]},
-      { label: 'What office staff can do here', items: [
-        'Inspect the credit note exactly as it was issued',
-        'Open the original invoice it credits',
-        'Download or copy the FINVOICE INV02 XML'
-      ]}
+    events: [
+      ['2026-05-04', 'Anonymous property #4421', 'Tilauspakon valvonta', '85.00']
     ],
-    note: 'PD-269 requires the credit text, internal comment, original invoice reference, and FINVOICE generation to all be present on every credit note.'
+    accounts: [
+      ['Revenue account', '30002 — Kotitalousjätteen keräys', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;20/200/5&lt;/DimensionText&gt;'
+  },
+  cc5: {
+    code: '25/250/2',
+    title: 'Cost centre 25/250/2 — Hyvinkää · TSV / toissijainen',
+    subtitle: 'Municipal secondary service responsibility (Waste Act §33) in Hyvinkää.',
+    properties: [
+      ['Code', '25/250/2', 'mono'],
+      ['Name', 'Hyvinkää · TSV / toissijainen'],
+      ['Region', 'Hyvinkää'],
+      ['Service type', 'Municipal secondary (Waste Act §33)']
+    ],
+    events: [
+      ['2026-05-11', 'Lahtinen Pekka', 'Sakokaivon tyhjennys 4 m³', '113.15']
+    ],
+    accounts: [
+      ['Revenue account', '30003 — Sakokaivopalvelut', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;25/250/2&lt;/DimensionText&gt;'
+  },
+  cc6: {
+    code: '22/200/3',
+    title: 'Cost centre 22/200/3 — Riihimäki · Kotitalousjäte',
+    subtitle: 'Household waste collection in Riihimäki.',
+    properties: [
+      ['Code', '22/200/3', 'mono'],
+      ['Name', 'Riihimäki · Kotitalousjäte'],
+      ['Region', 'Riihimäki'],
+      ['Service type', 'Mixed waste, bio-waste, paper']
+    ],
+    events: [
+      ['2026-05-09', 'Niemi Tiina', 'Sekajäte 660L tyhjennys', '10.04']
+    ],
+    accounts: [
+      ['Waste treatment', '30002 — Kotitalousjätteen keräys', 'mono'],
+      ['Transport', '30005 — Kuljetustuotot', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;22/200/3&lt;/DimensionText&gt;'
+  },
+  cc7: {
+    code: '22/200/4',
+    title: 'Cost centre 22/200/4 — Riihimäki · Yhteispalvelut',
+    subtitle: 'Shared services in Riihimäki.',
+    properties: [
+      ['Code', '22/200/4', 'mono'],
+      ['Name', 'Riihimäki · Yhteispalvelut'],
+      ['Region', 'Riihimäki'],
+      ['Service type', 'Shared service splits']
+    ],
+    events: [
+      ['2026-04-30', 'Kimppakeräys Vihtikatu', 'Yhteiskeräys 660L tyhjennys', '12.40']
+    ],
+    accounts: [
+      ['Waste treatment', '30002 — Kotitalousjätteen keräys', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;22/200/4&lt;/DimensionText&gt;'
+  },
+  cc8: {
+    code: '30/300/1',
+    title: 'Cost centre 30/300/1 — Vastaanotto · Hyvinkää-laitos',
+    subtitle: 'Weighbridge reception facility at the Hyvinkää processing plant.',
+    properties: [
+      ['Code', '30/300/1', 'mono'],
+      ['Name', 'Vastaanotto · Hyvinkää-laitos'],
+      ['Region', 'Hyvinkää'],
+      ['Service type', 'Weighbridge intake']
+    ],
+    events: [
+      ['2026-05-12', 'Rakennus Virtanen Oy', 'Rakennusjäte vastaanotto', '98.40']
+    ],
+    accounts: [
+      ['Revenue account', '30005 — Yritysjätteen vastaanotto', 'mono'],
+      ['VAT account', '2942 — ALV 0% käännetty verovelvollisuus', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;30/300/1&lt;/DimensionText&gt;'
+  },
+  cc9: {
+    code: '30/300/2',
+    title: 'Cost centre 30/300/2 — Vastaanotto · Riihimäki-laitos',
+    subtitle: 'Weighbridge reception facility at the Riihimäki processing plant.',
+    properties: [
+      ['Code', '30/300/2', 'mono'],
+      ['Name', 'Vastaanotto · Riihimäki-laitos'],
+      ['Region', 'Riihimäki'],
+      ['Service type', 'Weighbridge intake']
+    ],
+    events: [
+      ['2026-05-10', 'Suomen Kierrätys Oy', 'Metalliromun vastaanotto', '231.55']
+    ],
+    accounts: [
+      ['Revenue account', '30005 — Yritysjätteen vastaanotto', 'mono'],
+      ['VAT account', '2942 — ALV 0% käännetty verovelvollisuus', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;30/300/2&lt;/DimensionText&gt;'
   }
 };
 
-function showDetailModal(kind) {
-  const data = DETAIL_CONTENT[kind];
-  if (!data) return;
+// ── ACCOUNTS — anchored to PD-295: number, name, validity period ──
+const ACCOUNT_DATA = {
+  ac1: {
+    title: 'Account 30001 — Perusmaksutuotot',
+    subtitle: 'Revenue account for annual base fees.',
+    properties: [
+      ['Account number', '30001', 'mono'],
+      ['Name', 'Perusmaksutuotot'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Validity from', '2014-04-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-11', 'Korhonen Maija', 'Vuosiperusmaksu 2026', '35.86'],
+      ['2026-05-11', 'Asunto Oy Lammitie 8', 'Vuosiperusmaksu 2026', '286.88']
+    ],
+    products: [
+      ['Vuosiperusmaksu (annual base fee)'],
+      ['Note', 'PD-295: accounts are defined per pricing component of a product. The base fee component routes here.']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;30001&lt;/AccountDimensionText&gt;'
+  },
+  ac2: {
+    title: 'Account 30002 — Kotitalousjätteen keräys',
+    subtitle: 'Revenue account for household waste collection (PD-296\'s example).',
+    properties: [
+      ['Account number', '30002', 'mono'],
+      ['Name', 'Kotitalousjätteen keräys'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Validity from', '2014-04-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-12', 'Korhonen Maija', 'Sekajäte 240L · waste treatment portion', '3.49'],
+      ['2026-05-12', 'Asunto Oy Lammitie 8', 'Biojäte 140L · waste treatment portion', '2.29']
+    ],
+    products: [
+      ['Sekajäte (mixed waste) — treatment portion'],
+      ['Biojäte (bio waste) — treatment portion'],
+      ['Note', 'PD-296 example: a single 240L mixed waste emptying for €7.93 routes €3.49 to this account (waste treatment), €2.83 to account 30005 (transport), and €1.61 to account 2939 (VAT).']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;30002&lt;/AccountDimensionText&gt;'
+  },
+  ac3: {
+    title: 'Account 30003 — Sakokaivopalvelut',
+    subtitle: 'Revenue account for sludge tank services (TSV / municipal secondary).',
+    properties: [
+      ['Account number', '30003', 'mono'],
+      ['Name', 'Sakokaivopalvelut'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Validity from', '2014-04-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-11', 'Lahtinen Pekka', 'Sakokaivon tyhjennys 4 m³', '113.15']
+    ],
+    products: [
+      ['Sakokaivon tyhjennys (septic tank emptying)']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;30003&lt;/AccountDimensionText&gt;'
+  },
+  ac4: {
+    title: 'Account 30004 — Kierrätystuotot',
+    subtitle: 'Revenue account for recycling services.',
+    properties: [
+      ['Account number', '30004', 'mono'],
+      ['Name', 'Kierrätystuotot'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Validity from', '2014-04-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-09', 'Mäkelä Jarkko', 'Paperinkeräys 240L tyhjennys', '3.03']
+    ],
+    products: [
+      ['Paperinkeräys (paper collection)'],
+      ['Pakkauslasi (glass packaging)'],
+      ['Metallinkeräys (metal collection)']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;30004&lt;/AccountDimensionText&gt;'
+  },
+  ac5: {
+    title: 'Account 30005 — Yritysjätteen vastaanotto / Kuljetustuotot',
+    subtitle: 'Revenue account for commercial waste reception and transport portions.',
+    properties: [
+      ['Account number', '30005', 'mono'],
+      ['Name', 'Yritysjätteen vastaanotto'],
+      ['VAT rate', '0.0% Reverse charge', 'mono'],
+      ['Validity from', '2018-01-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-12', 'Rakennus Virtanen Oy', 'Rakennusjäte vastaanotto', '98.40'],
+      ['2026-05-12', 'Korhonen Maija', 'Sekajäte 240L · transport portion', '2.83']
+    ],
+    products: [
+      ['Commercial waste reception (weighbridge)'],
+      ['Transport portion of household collection (PD-296 example)']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;30005&lt;/AccountDimensionText&gt;'
+  },
+  ac6: {
+    title: 'Account 30008 — Kuljetustuotot',
+    subtitle: 'Revenue account for transport revenue (standalone).',
+    properties: [
+      ['Account number', '30008', 'mono'],
+      ['Name', 'Kuljetustuotot'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Validity from', '2014-04-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [],
+    products: [
+      ['Transport services billed separately from waste collection']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;30008&lt;/AccountDimensionText&gt;'
+  },
+  ac7: {
+    title: 'Account 2939 — Maksettava ALV 25.5%',
+    subtitle: 'VAT payable account at 25.5% rate.',
+    properties: [
+      ['Account number', '2939', 'mono'],
+      ['Name', 'Maksettava ALV 25.5%'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Validity from', '2024-09-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-12', 'Korhonen Maija', 'Sekajäte 240L · VAT portion', '1.61']
+    ],
+    products: [
+      ['VAT portion of any product taxed at 25.5%'],
+      ['Note', 'PD-296: a single product line is split across multiple accounts — VAT lands here regardless of which revenue account the rest of the line goes to.']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;2939&lt;/AccountDimensionText&gt;'
+  },
+  ac8: {
+    title: 'Account 2940 — Maksettava ALV 14%',
+    subtitle: 'VAT payable account at 14% rate.',
+    properties: [
+      ['Account number', '2940', 'mono'],
+      ['Name', 'Maksettava ALV 14%'],
+      ['VAT rate', '14.0%', 'mono'],
+      ['Validity from', '2014-04-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [],
+    products: [
+      ['VAT portion of products taxed at 14%']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;2940&lt;/AccountDimensionText&gt;'
+  },
+  ac9: {
+    title: 'Account 2942 — ALV 0% käännetty verovelvollisuus',
+    subtitle: 'Reverse-charge VAT account (0% rate).',
+    properties: [
+      ['Account number', '2942', 'mono'],
+      ['Name', 'ALV 0% käännetty verovelvollisuus'],
+      ['VAT rate', '0.0% Reverse charge', 'mono'],
+      ['Validity from', '2018-01-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-12', 'Rakennus Virtanen Oy', 'Rakennusjäte · reverse-charge VAT', '0.00']
+    ],
+    products: [
+      ['Construction waste reception (reverse charge)'],
+      ['Metal scrap reception (reverse charge)']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;2942&lt;/AccountDimensionText&gt;'
+  }
+};
 
-  document.getElementById('modalTitle').textContent = data.title;
+// ── CREDIT NOTES — anchored to PD-269 (custom text, internal comment, reference to original) ──
+const CREDIT_NOTE_DATA = {
+  cn1: {
+    title: 'Credit note 326000007',
+    subtitle: 'Issued 2026-05-14 against invoice 226000044 (Rakennus Virtanen Oy).',
+    properties: [
+      ['Credit note number', '326000007', 'mono'],
+      ['References invoice', '226000044', 'mono'],
+      ['Customer', 'Rakennus Virtanen Oy (CID 200314)'],
+      ['Issue date', '2026-05-14', 'mono'],
+      ['Credit type', 'Full credit'],
+      ['Total credited', '−98.40 €', 'mono'],
+      ['FINVOICE message type', 'INV02', 'mono']
+    ],
+    lines: [
+      ['Rakennusjäte vastaanotto 1 240 kg', '−98.40', '0.00', '−98.40']
+    ],
+    creditText: 'Hyvitys virheellisestä hinnoittelusta. Alkuperäinen lasku 226000044 hyvitetään kokonaisuudessaan.',
+    internalComment: 'Customer reported wrong tariff applied — should have been the 2025 commercial rate, not the 2024 rate. Reissue with correct pricing after credit.',
+    finvoice: '&lt;Finvoice Version="3.0"&gt;\n  &lt;InvoiceDetails&gt;\n    &lt;InvoiceTypeCode&gt;INV02&lt;/InvoiceTypeCode&gt;\n    &lt;InvoiceNumber&gt;326000007&lt;/InvoiceNumber&gt;\n    &lt;OriginalInvoiceNumber&gt;226000044&lt;/OriginalInvoiceNumber&gt;\n    &lt;InvoiceTotalVatExcludedAmount Currency="EUR"&gt;-98,40&lt;/InvoiceTotalVatExcludedAmount&gt;\n  &lt;/InvoiceDetails&gt;\n&lt;/Finvoice&gt;'
+  },
+  cn2: {
+    title: 'Credit note 326000006',
+    subtitle: 'Issued 2026-05-08 against invoice 126000132 (Toivonen Anne).',
+    properties: [
+      ['Credit note number', '326000006', 'mono'],
+      ['References invoice', '126000132', 'mono'],
+      ['Customer', 'Toivonen Anne'],
+      ['Issue date', '2026-05-08', 'mono'],
+      ['Credit type', 'Full credit'],
+      ['Total credited', '−42.18 €', 'mono'],
+      ['FINVOICE message type', 'INV02', 'mono']
+    ],
+    lines: [
+      ['Sekajäte 240L tyhjennys × 5', '−34.00', '−8.18', '−42.18']
+    ],
+    creditText: 'Hyvitys edelliselle haltijalle. Asiakas muuttanut osoitteesta 1.5.2026.',
+    internalComment: 'Previous tenant moved out before invoiced period. Reissue to new occupant once registered.',
+    finvoice: '&lt;Finvoice Version="3.0"&gt;\n  &lt;InvoiceDetails&gt;\n    &lt;InvoiceTypeCode&gt;INV02&lt;/InvoiceTypeCode&gt;\n    &lt;InvoiceNumber&gt;326000006&lt;/InvoiceNumber&gt;\n    &lt;OriginalInvoiceNumber&gt;126000132&lt;/OriginalInvoiceNumber&gt;\n    &lt;InvoiceTotalVatExcludedAmount Currency="EUR"&gt;-34,00&lt;/InvoiceTotalVatExcludedAmount&gt;\n  &lt;/InvoiceDetails&gt;\n&lt;/Finvoice&gt;'
+  },
+  cn3: {
+    title: 'Credit note 326000005',
+    subtitle: 'Issued 2026-05-02 against invoice 126000119 (Salonen Mika).',
+    properties: [
+      ['Credit note number', '326000005', 'mono'],
+      ['References invoice', '126000119', 'mono'],
+      ['Customer', 'Salonen Mika'],
+      ['Issue date', '2026-05-02', 'mono'],
+      ['Credit type', 'Partial credit'],
+      ['Total credited', '−12.60 €', 'mono'],
+      ['FINVOICE message type', 'INV02', 'mono']
+    ],
+    lines: [
+      ['Sekajäte 660L tyhjennys (1 of 3 lines)', '−10.04', '−2.56', '−12.60']
+    ],
+    creditText: 'Palvelua ei suoritettu — 24.4.2026 kerräys jäi tekemättä.',
+    internalComment: 'Driver could not access bin (locked gate). Only credit the failed pickup, leave the other two on the invoice.',
+    finvoice: '&lt;Finvoice Version="3.0"&gt;\n  &lt;InvoiceDetails&gt;\n    &lt;InvoiceTypeCode&gt;INV02&lt;/InvoiceTypeCode&gt;\n    &lt;InvoiceNumber&gt;326000005&lt;/InvoiceNumber&gt;\n    &lt;OriginalInvoiceNumber&gt;126000119&lt;/OriginalInvoiceNumber&gt;\n  &lt;/InvoiceDetails&gt;\n&lt;/Finvoice&gt;'
+  },
+  cn4: {
+    title: 'Credit note 326000004',
+    subtitle: 'Issued 2026-04-28 against invoice 126000098 (Heinonen Sanna).',
+    properties: [
+      ['Credit note number', '326000004', 'mono'],
+      ['References invoice', '126000098', 'mono'],
+      ['Customer', 'Heinonen Sanna'],
+      ['Issue date', '2026-04-28', 'mono'],
+      ['Credit type', 'Full credit'],
+      ['Total credited', '−84.36 €', 'mono'],
+      ['FINVOICE message type', 'INV02', 'mono']
+    ],
+    lines: [
+      ['Vuosiperusmaksu 2026 (proportional)', '−68.00', '−16.36', '−84.36']
+    ],
+    creditText: 'Asiakas muuttanut osoitteesta. Perusmaksu hyvitetty muuttopäivästä alkaen.',
+    internalComment: 'Customer moved out on March 31. Pro-rate refund for April-December.',
+    finvoice: '&lt;Finvoice Version="3.0"&gt;\n  &lt;InvoiceDetails&gt;\n    &lt;InvoiceTypeCode&gt;INV02&lt;/InvoiceTypeCode&gt;\n    &lt;InvoiceNumber&gt;326000004&lt;/InvoiceNumber&gt;\n    &lt;OriginalInvoiceNumber&gt;126000098&lt;/OriginalInvoiceNumber&gt;\n  &lt;/InvoiceDetails&gt;\n&lt;/Finvoice&gt;'
+  },
+  cn5: {
+    title: 'Credit note 326000003',
+    subtitle: 'Issued 2026-04-22 against invoice 126000077 (Karjalainen Tomi).',
+    properties: [
+      ['Credit note number', '326000003', 'mono'],
+      ['References invoice', '126000077', 'mono'],
+      ['Customer', 'Karjalainen Tomi'],
+      ['Issue date', '2026-04-22', 'mono'],
+      ['Credit type', 'Partial credit'],
+      ['Total credited', '−5.20 €', 'mono'],
+      ['FINVOICE message type', 'INV02', 'mono']
+    ],
+    lines: [
+      ['ALV-korjaus (VAT correction)', '0.00', '−5.20', '−5.20']
+    ],
+    creditText: 'ALV-prosenttikorjaus. Virheellinen 24% sovellettu, oikea 25.5%.',
+    internalComment: 'Old VAT rate (24%) applied in error. Issue correcting credit note then reissue with correct VAT.',
+    finvoice: '&lt;Finvoice Version="3.0"&gt;\n  &lt;InvoiceDetails&gt;\n    &lt;InvoiceTypeCode&gt;INV02&lt;/InvoiceTypeCode&gt;\n    &lt;InvoiceNumber&gt;326000003&lt;/InvoiceNumber&gt;\n    &lt;OriginalInvoiceNumber&gt;126000077&lt;/OriginalInvoiceNumber&gt;\n  &lt;/InvoiceDetails&gt;\n&lt;/Finvoice&gt;'
+  }
+};
 
-  const pdsEl = document.getElementById('modalPds');
-  pdsEl.innerHTML = data.pds.map(pd =>
+// ── CREATE FORM definitions — fields strictly from PD requirements ──
+const CREATE_FORMS = {
+  'cost-centre': {
+    title: 'New cost centre',
+    pds: [{code: 'PD-296', label: 'Cost centres & accounts on events'}],
+    intro: 'PD-296 acceptance criteria: "The system allows office users to manually add, update, and maintain cost centers."',
+    fields: [
+      {key: 'code', label: 'Code', type: 'text', mono: true, placeholder: '20/200/3', hint: 'Cost centre code in the configured format.'},
+      {key: 'name', label: 'Name', type: 'text', placeholder: 'Hyvinkää · Kotitalousjäte'},
+      {key: 'region', label: 'Region', type: 'text', placeholder: 'Hyvinkää'},
+      {key: 'serviceType', label: 'Service type', type: 'text', placeholder: 'Mixed waste, bio-waste, paper'}
+    ]
+  },
+  'account': {
+    title: 'New accounting account',
+    pds: [{code: 'PD-295', label: 'Account & cost centre data'}],
+    intro: 'PD-295: "Accounts are managed in the settings, where properties such as account number, name, and validity period can be defined."',
+    fields: [
+      {key: 'number', label: 'Account number', type: 'text', mono: true, placeholder: '30002', hint: 'G/L account number per company chart of accounts.'},
+      {key: 'name', label: 'Account name', type: 'text', placeholder: 'Kotitalousjätteen keräys'},
+      {key: 'vatRate', label: 'VAT rate', type: 'select', options: ['25.5%', '14%', '10%', '0% (Reverse charge)', '0% (Exempt)']},
+      {key: 'validityFrom', label: 'Validity period — from', type: 'date'},
+      {key: 'validityTo', label: 'Validity period — to (optional)', type: 'date'}
+    ]
+  },
+  'credit-note': {
+    title: 'Issue credit note',
+    pds: [
+      {code: 'PD-269', label: 'Credit invoices'},
+      {code: 'PD-310', label: 'FINVOICE INV02'}
+    ],
+    intro: 'PD-269: "It must be possible to create a refund invoice from the desired invoice. The desired text must be added to the refund invoice. In addition, it must be possible to add a comment intended for internal use only."',
+    fields: [
+      {key: 'originalInvoice', label: 'Credit which invoice?', type: 'select', options: ['126000142 — Korhonen Maija', '126000143 — Asunto Oy Lammitie 8', '226000044 — Rakennus Virtanen Oy', '126000141 — Lahtinen Pekka', '126000139 — Mäkelä Jarkko', '226000042 — Suomen Kierrätys Oy']},
+      {key: 'creditType', label: 'Credit type', type: 'select', options: ['Full credit (all lines)', 'Partial credit (selected lines)']},
+      {key: 'creditText', label: 'Credit text (customer-facing)', type: 'textarea', placeholder: 'e.g. Hyvitys virheellisestä hinnoittelusta', hint: 'Visible on the credit note delivered to the customer.'},
+      {key: 'internalComment', label: 'Internal comment (office staff only)', type: 'textarea', placeholder: 'Reason for crediting — not on FINVOICE export', hint: 'Visible only to office staff. Not shared with customer.'}
+    ]
+  }
+};
+
+// ===================================================================
+// Detail page renderers
+// ===================================================================
+
+function showCostCentreDetail(ccId) {
+  const d = COST_CENTRE_DATA[ccId];
+  if (!d) return;
+  document.getElementById('ccDetailTitle').textContent = d.title;
+  document.getElementById('ccDetailSubtitle').textContent = d.subtitle;
+  document.getElementById('ccDetailProperties').innerHTML = renderKvList(d.properties);
+  document.getElementById('ccDetailAccounts').innerHTML = renderKvList(d.accounts);
+  document.getElementById('ccDetailFinvoice').innerHTML = d.finvoice;
+  document.getElementById('ccDetailEvents').innerHTML = d.events.map(e =>
+    `<tr style="border-top: 1px solid var(--border);">
+      <td style="padding: 8px 12px; font-family: 'JetBrains Mono', monospace; color: var(--text-muted);">${e[0]}</td>
+      <td style="padding: 8px 12px;">${e[1]}</td>
+      <td style="padding: 8px 12px; color: var(--text-muted);">${e[2]}</td>
+      <td style="padding: 8px 12px; text-align: right; font-family: 'JetBrains Mono', monospace;">${e[3]}</td>
+    </tr>`
+  ).join('');
+  showTab('cost-centre-detail');
+}
+
+function showAccountDetail(acId) {
+  const d = ACCOUNT_DATA[acId];
+  if (!d) return;
+  document.getElementById('acDetailTitle').textContent = d.title;
+  document.getElementById('acDetailSubtitle').textContent = d.subtitle;
+  document.getElementById('acDetailProperties').innerHTML = renderKvList(d.properties);
+  document.getElementById('acDetailProducts').innerHTML = renderKvList(d.products);
+  document.getElementById('acDetailFinvoice').innerHTML = d.finvoice;
+  const eventsHtml = d.events.length ? d.events.map(e =>
+    `<tr style="border-top: 1px solid var(--border);">
+      <td style="padding: 8px 12px; font-family: 'JetBrains Mono', monospace; color: var(--text-muted);">${e[0]}</td>
+      <td style="padding: 8px 12px;">${e[1]}</td>
+      <td style="padding: 8px 12px; color: var(--text-muted);">${e[2]}</td>
+      <td style="padding: 8px 12px; text-align: right; font-family: 'JetBrains Mono', monospace;">${e[3]}</td>
+    </tr>`
+  ).join('') : '<tr><td colspan="4" style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 12px;">No events posted to this account yet.</td></tr>';
+  document.getElementById('acDetailEvents').innerHTML = eventsHtml;
+  showTab('account-detail');
+}
+
+function showCreditNoteDetail(cnId) {
+  const d = CREDIT_NOTE_DATA[cnId];
+  if (!d) return;
+  document.getElementById('cnDetailTitle').textContent = d.title;
+  document.getElementById('cnDetailSubtitle').textContent = d.subtitle;
+  document.getElementById('cnDetailProperties').innerHTML = renderKvList(d.properties);
+  document.getElementById('cnDetailCreditText').textContent = d.creditText;
+  document.getElementById('cnDetailInternalComment').textContent = d.internalComment;
+  document.getElementById('cnDetailFinvoice').innerHTML = d.finvoice;
+  document.getElementById('cnDetailLines').innerHTML = d.lines.map(l =>
+    `<tr style="border-top: 1px solid var(--border);">
+      <td style="padding: 8px 12px;">${l[0]}</td>
+      <td style="padding: 8px 12px; text-align: right; font-family: 'JetBrains Mono', monospace;">${l[1]}</td>
+      <td style="padding: 8px 12px; text-align: right; font-family: 'JetBrains Mono', monospace;">${l[2]}</td>
+      <td style="padding: 8px 12px; text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 500;">${l[3]}</td>
+    </tr>`
+  ).join('');
+  showTab('credit-note-detail');
+}
+
+// ===================================================================
+// Create form modal
+// ===================================================================
+
+function openCreateForm(kind) {
+  const form = CREATE_FORMS[kind];
+  if (!form) return;
+  document.getElementById('createModalTitle').textContent = form.title;
+  document.getElementById('createModalPds').innerHTML = form.pds.map(pd =>
     `<a class="pd-chip" href="https://ioteelab.atlassian.net/browse/${pd.code}" target="_blank" rel="noopener">${pd.code} ${pd.label}</a>`
   ).join('');
 
-  const bodyEl = document.getElementById('modalBody');
-  let html = '';
-  for (const section of data.sections) {
-    html += `<div class="modal-section">
-      <div class="modal-section-label">${section.label}</div>
-      <ul class="modal-list">${section.items.map(i => `<li>${i}</li>`).join('')}</ul>
-    </div>`;
+  let html = `<div class="modal-note" style="margin-bottom: 18px;">${form.intro}</div>`;
+  for (const f of form.fields) {
+    html += `<div class="form-field">
+      <label>${f.label}</label>`;
+    if (f.type === 'select') {
+      html += `<select>${f.options.map(o => `<option>${o}</option>`).join('')}</select>`;
+    } else if (f.type === 'textarea') {
+      html += `<textarea rows="3" placeholder="${f.placeholder || ''}"></textarea>`;
+    } else {
+      const monoClass = f.mono ? ' class="mono"' : '';
+      html += `<input type="${f.type}" placeholder="${f.placeholder || ''}"${monoClass} />`;
+    }
+    if (f.hint) html += `<span class="form-hint">${f.hint}</span>`;
+    html += `</div>`;
   }
-  if (data.note) {
-    html += `<div class="modal-section"><div class="modal-note">${data.note}</div></div>`;
-  }
-  bodyEl.innerHTML = html;
-
-  document.getElementById('detailModal').classList.add('open');
+  document.getElementById('createModalBody').innerHTML = html;
+  document.getElementById('createModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
-function closeModal() {
-  document.getElementById('detailModal').classList.remove('open');
+function closeCreateModal() {
+  document.getElementById('createModal').classList.remove('open');
   document.body.style.overflow = '';
 }
 
+function submitCreateForm() {
+  // Mockup: confirm intent without persisting
+  alert('Mockup only — in production this would persist the record and close the modal.');
+  closeCreateModal();
+}
+
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Escape') closeCreateModal();
 });
 
 // ── Events tab: sidebar filter ─────────────────────────────────────────────
