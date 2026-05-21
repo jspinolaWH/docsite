@@ -119,6 +119,16 @@ export const DIAGRAM_LINKS: DiagramLink[] = [
 
 // Categories for the Invoicing section
 export const INVOICING_CATEGORIES: Record<string, CategoryConfig> = {
+  'inv-mockup': {
+    id: 'inv-mockup',
+    label: 'Mockup & Walkthrough',
+    color: '#c026d3',
+    bgColor: '#fdf4ff',
+    borderColor: '#f0abfc',
+    darkColor: '#e879f9',
+    darkBgColor: '#3b0764',
+    darkBorderColor: '#a21caf',
+  },
   'inv-arch': {
     id: 'inv-arch',
     label: 'Architecture & Analysis',

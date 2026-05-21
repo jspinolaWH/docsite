@@ -260,22 +260,57 @@ function InvoicingSidebarContent() {
         Home
       </NavLink>
 
-      <a
-        href="/docsite/invoicing/mockups/r1-mockup.html"
-        className="sidebar-home"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Mockup R1
-        <svg width="12" height="12" viewBox="0 0 12 12" style={{ marginLeft: '6px', verticalAlign: 'middle' }}>
-          <path d="M10 1H7M10 1V4M10 1L5 6M4 2H2v8h8V8" fill="none" stroke="currentColor" strokeWidth="1.5" />
-        </svg>
-      </a>
-
       {Object.entries(INVOICING_CATEGORIES).map(([catId, config]) => {
         const isCollapsed = localCollapsed[catId] ?? false;
         const categoryColor = theme === 'dark' ? config.darkColor : config.color;
         const docs = grouped[catId] || [];
+
+        if (catId === 'inv-mockup') {
+          return (
+            <div key={catId} className="sidebar-category">
+              <button
+                className="sidebar-category-header"
+                onClick={() => toggle(catId)}
+                style={{ borderLeftColor: categoryColor }}
+              >
+                <span className="sidebar-category-label" style={{ color: categoryColor }}>
+                  {config.label}
+                </span>
+                <span className={`sidebar-chevron ${isCollapsed ? '' : 'open'}`}>
+                  <svg width="12" height="12" viewBox="0 0 12 12">
+                    <path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="2" />
+                  </svg>
+                </span>
+              </button>
+              {!isCollapsed && (
+                <ul className="sidebar-docs">
+                  <li>
+                    <a
+                      href="/docsite/invoicing/mockups/r1-mockup.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="sidebar-link"
+                      style={{ display: 'flex', alignItems: 'center' }}
+                    >
+                      R1 Mockup
+                      <ExternalIcon />
+                    </a>
+                  </li>
+                  {docs.map((doc) => (
+                    <li key={doc.slug}>
+                      <NavLink
+                        to={`/invoicing/doc/${doc.slug}`}
+                        className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
+                      >
+                        {doc.title}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          );
+        }
 
         return (
           <div key={catId} className="sidebar-category">
