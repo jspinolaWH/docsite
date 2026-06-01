@@ -1,6 +1,6 @@
 # Documentation Files
 
-This directory contains all markdown documentation files for the WasteHero 2.0 Products & Pricing documentation site.
+This directory contains all markdown documentation files for the WasteHero Products & Pricing documentation site.
 
 ## Directory Structure
 

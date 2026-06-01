@@ -30,7 +30,7 @@ export function Layout() {
             </svg>
           </button>
           <Link to="/" className="header-title">
-            WasteHero 2.0 Docs
+            WasteHero Docs
           </Link>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

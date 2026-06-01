@@ -10,7 +10,7 @@ export function HomePage() {
   return (
     <div className="home-page">
       <div className="home-hero">
-        <h1>WasteHero 2.0 Documentation</h1>
+        <h1>WasteHero Documentation</h1>
         <p>Products &amp; Pricing documentation hub</p>
       </div>
 
