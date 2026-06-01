@@ -59,7 +59,7 @@ AI-assisted development provides approximately 27% faster implementation — sav
 |---------|---------|-------|------------|
 | **Release 1** | 1–2 | March 2–27 | Categories, Waste Fractions, Zones (hardcoded), Pricing Units, Bill of Materials |
 | **Release 2** | 3–4 | March 30–April 24 | Full Products CRUD, Map-based Zones, all product tabs (MVP) |
-| **Release 3** | 5–6 | April 27–May 22 | Full pricing engine, conditional pricing, WH 2.0 integration |
+| **Release 3** | 5–6 | April 27–May 22 | Full pricing engine, conditional pricing, WH integration |
 
 ---
 
@@ -72,7 +72,7 @@ Mar 16–27   Sprint 2 — Polish + Bill of Materials → RELEASE 1 (Mar 27) �
 Mar 30–10   Sprint 3 — Products CRUD + Map-based Zones
 Apr 13–24   Sprint 4 — Product tabs (MVPs) + Pricing foundation → RELEASE 2 (Apr 24) 🚀
 Apr 27– 8   Sprint 5 — FULL upgrades + Scheduled updates, Audit logs, Bulk editing
-May 11–22   Sprint 6 — Conditional pricing + WH 2.0 integration → RELEASE 3 (May 22) 🎉
+May 11–22   Sprint 6 — Conditional pricing + WH integration → RELEASE 3 (May 22) 🎉
 ```
 
 ---

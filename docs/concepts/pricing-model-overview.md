@@ -3,7 +3,7 @@ slug: pricing-model-overview
 title: Pricing Model Overview
 category: concepts
 order: 1
-description: How WasteHero 2.0 handles complex pricing with multi-condition matching, zones, and dynamic surcharges
+description: How WasteHero handles complex pricing with multi-condition matching, zones, and dynamic surcharges
 related:
   - product-types-explained
   - waste-fractions-explained
@@ -17,7 +17,7 @@ tags:
 
 # Pricing Model Overview
 
-How WasteHero 2.0 handles complex pricing with multi-condition matching.
+How WasteHero handles complex pricing with multi-condition matching.
 
 ---
 

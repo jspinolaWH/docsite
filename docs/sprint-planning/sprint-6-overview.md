@@ -3,7 +3,7 @@ slug: sprint-6-overview
 title: Sprint 6 Overview
 category: sprint-planning
 order: 6
-description: Conditional pricing engine, FULL price changes, discounts, timing and speed pricing, WH 2.0 integration, and production readiness — final release (May 11-22)
+description: Conditional pricing engine, FULL price changes, discounts, timing and speed pricing, WH integration, and production readiness — final release (May 11-22)
 related:
   - sprint-5-overview
   - delivery-plan-overview
@@ -31,7 +31,7 @@ tags:
 
 ## Sprint Goals
 
-Deliver conditional pricing — the ability for a single product to have multiple prices based on customer type, zone, service responsibility, and R/D code. Add all pricing modifier MVPs (discounts, timing surcharges, speed pricing). Integrate the pricing engine end-to-end with WH 2.0 (orders, properties, customers). Ship production-ready.
+Deliver conditional pricing — the ability for a single product to have multiple prices based on customer type, zone, service responsibility, and R/D code. Add all pricing modifier MVPs (discounts, timing surcharges, speed pricing). Integrate the pricing engine end-to-end with WH (orders, properties, customers). Ship production-ready.
 
 ---
 
@@ -61,9 +61,9 @@ When a Business customer in Urban zone places an order with Municipal responsibi
 | **Timing Pricing (PD-323 FULL)** | Holiday calendar + custom schedules + exception handling |
 | **Speed Pricing (PD-324 FULL)** | Express + same-day + emergency pricing tiers |
 
-### WH 2.0 Integration
+### WH Integration
 
-End-to-end integration with the WasteHero 2.0 platform:
+End-to-end integration with the WasteHero platform:
 
 | System | Integration |
 |--------|-------------|
@@ -85,7 +85,7 @@ End-to-end integration with the WasteHero 2.0 platform:
 | Week | Dates | Focus |
 |------|-------|-------|
 | Week 1 | May 11–15 | Conditional pricing UI, Price Changes, Discounts, Timing Pricing, Speed Pricing |
-| Week 2 | May 18–22 | WH 2.0 integration, security, performance, localisation, final QA, deploy |
+| Week 2 | May 18–22 | WH integration, security, performance, localisation, final QA, deploy |
 
 **Deploy Date:** May 22, 2026 🎉
 
@@ -111,7 +111,7 @@ After Release 3 deploys on May 22:
 - **Customer service** gets automatic correct pricing in every order — no manual lookup
 - **Admins** can manage hundreds of products with bulk editing, scheduled updates, and full audit trails
 - **Compliance** is covered — complete audit log of every price change with timestamp and actor
-- **Integration** — WasteHero 2.0 orders, properties, and customers are fully connected to the pricing engine
+- **Integration** — WasteHero orders, properties, and customers are fully connected to the pricing engine
 
 ---
 
@@ -122,7 +122,7 @@ After Release 3 deploys on May 22:
 - ✅ Admin bulk-updates all Urban prices by +10% (preview → apply)
 - ✅ Admin schedules a price increase for May 1
 - ✅ Audit log shows all changes with timestamps and actor names
-- ✅ Integration with WH 2.0 working end-to-end
+- ✅ Integration with WH working end-to-end
 - ✅ Security and performance checks passed
 - ✅ 0 P0 bugs, fewer than 5 P1 bugs
 - ✅ **Deployed to production** 🎉

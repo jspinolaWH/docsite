@@ -15,7 +15,7 @@ tags:
 ---
 
 # Sprint 2 — Designer Handoff
-**WasteHero 2.0 · Product Management Module**
+**WasteHero · Product Management Module**
 **Meeting date:** March 7, 2026
 **Prepared by:** Product Owner - Spinola
 

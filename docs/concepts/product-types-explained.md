@@ -23,7 +23,7 @@ Understanding the 5 product types and how they work together.
 
 ## Overview
 
-WasteHero 2.0 uses 5 product types. Each type represents a fundamentally different kind of thing you sell, and each needs different information.
+WasteHero uses 5 product types. Each type represents a fundamentally different kind of thing you sell, and each needs different information.
 
 **From PD-41:**
 > "Material-based waste products, Service-based products tied to emptying tasks, One-off fees, and Recurring fixed-fee services"
