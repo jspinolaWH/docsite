@@ -1,5 +1,7 @@
 # WasteHero 2.0 — Pricing, Products & Invoicing Documentation
 
+**Live site: https://jspinolawh.github.io/docsite/**
+
 This site is used for scoping and understanding two key WasteHero 2.0 releases: the **Products & Pricing release** and the **Invoicing release**.
 
 It brings together concept documentation, delivery planning, designer handoffs, and requirements traceability in one place — giving the product, design, and engineering teams a shared reference throughout the build.
