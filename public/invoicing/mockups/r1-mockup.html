@@ -396,28 +396,44 @@ tr:hover td { background: #fafafa; }
         <div>
           <div class="detail-card">
             <div class="detail-card-head">
-              <div class="detail-card-title">Event data</div>
+              <div class="detail-card-title">Event &amp; customer</div>
               <div class="detail-card-pd">PD-299</div>
             </div>
-            <div class="detail-card-body" id="evDetailFields"></div>
+            <div class="detail-card-body" id="evDetailIdentity"></div>
           </div>
 
           <div class="detail-card">
             <div class="detail-card-head">
-              <div class="detail-card-title">Operational source</div>
+              <div class="detail-card-title">Product &amp; quantity</div>
               <div class="detail-card-pd">PD-299</div>
             </div>
-            <div class="detail-card-body" id="evDetailSource"></div>
+            <div class="detail-card-body" id="evDetailProduct"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Price formation</div>
+              <div class="detail-card-pd">PD-299 · eco-fee per Päivi K</div>
+            </div>
+            <div class="detail-card-body" id="evDetailPricing"></div>
           </div>
         </div>
 
         <div>
           <div class="detail-card">
             <div class="detail-card-head">
-              <div class="detail-card-title">Classification</div>
-              <div class="detail-card-pd">PD-296 · PD-284</div>
+              <div class="detail-card-title">Accounting &amp; classification</div>
+              <div class="detail-card-pd">PD-296 · PD-295 · PD-284/285</div>
             </div>
             <div class="detail-card-body" id="evDetailClassification"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Comments</div>
+              <div class="detail-card-pd">PD-299</div>
+            </div>
+            <div class="detail-card-body" id="evDetailComments"></div>
           </div>
 
           <div class="detail-card">
@@ -426,14 +442,6 @@ tr:hover td { background: #fafafa; }
               <div class="detail-card-pd">PD-278</div>
             </div>
             <div class="detail-card-body" id="evDetailValidation"></div>
-          </div>
-
-          <div class="detail-card">
-            <div class="detail-card-head">
-              <div class="detail-card-title">Downstream</div>
-              <div class="detail-card-pd">PD-310</div>
-            </div>
-            <div class="detail-card-body" id="evDetailDownstream"></div>
           </div>
         </div>
       </div>
@@ -1799,32 +1807,44 @@ const EVENT_DATA = {
   ev1: {
     title: 'Event: Korhonen Maija — Sekajäte 240L tyhjennys',
     subtitle: '2026-05-12 · Mäntytie 14, Hyvinkää · ready to invoice',
-    fields: [
+    identity: [
       ['Event ID', 'evt-2026-05-12-0001', 'mono'],
-      ['Event date', '2026-05-12', 'mono'],
-      ['Customer', 'Korhonen Maija (CID 100482)'],
-      ['Property', 'Mäntytie 14, 05800 Hyvinkää'],
-      ['Product', 'Sekajäte 240L tyhjennys'],
-      ['Quantity', '1', 'mono'],
-      ['Unit price (net)', '6.32 €', 'mono'],
-      ['Net amount', '6.32 €', 'mono'],
-      ['VAT amount', '1.61 €', 'mono'],
-      ['Total (gross)', '7.93 €', 'mono']
+      ['Date', '2026-05-12', 'mono'],
+      ['Customer number', 'Korhonen Maija (CID 100482)'],
+      ['Contractor', 'Kuljetus Hyvinkää Oy'],
+      ['Municipality', 'Hyvinkää'],
+      ['Origin', 'Mäntytie 14, 05800 Hyvinkää'],
+      ['Direction', 'Collection (inbound)'],
+      ['Registration number', 'HVK-247', 'mono'],
+      ['Place of unloading', 'Hyvinkää-laitos']
     ],
-    source: [
-      ['Source', 'Route execution'],
-      ['Vehicle', '47', 'mono'],
-      ['Route', 'Hyvinkää morning round'],
-      ['Driver action', 'Emptied (single tap)'],
-      ['Timestamp', '2026-05-12 08:14:33', 'mono']
+    product: [
+      ['Product / service', 'Emptying service'],
+      ['Product name', 'Sekajäte 240L tyhjennys'],
+      ['Quantity', '1 pcs', 'mono'],
+      ['Weight', '38 kg', 'mono']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '3.49 €', 'mono'],
+      ['Transport price', '2.33 €', 'mono'],
+      ['Eco-fee', '0.50 €', 'mono'],
+      ['Shared collection point group %', '—'],
+      ['Net total — VAT 0% base', '0.00 €', 'mono'],
+      ['Net total — VAT 25.5% base', '6.32 €', 'mono'],
+      ['Total with 0% VAT', '0.00 €', 'mono'],
+      ['Total with 25.5% VAT', '7.93 €', 'mono']
     ],
     classification: [
-      ['Service responsibility', 'Municipal', 'badge-blue'],
-      ['Legal basis', 'Jätelaki §32 (Public law)'],
+      ['Service responsibility', 'Municipal (public law)', 'badge-blue'],
       ['Cost centre', '20/200/3 — Hyvinkää · Kotitalousjäte', 'mono'],
-      ['Accounting account', '30002 — Kotitalousjäte', 'mono'],
-      ['VAT rate', '25.5%', 'mono'],
-      ['Waste type (EWC)', '20 03 01 — Mixed municipal waste', 'mono']
+      ['Treatment → account', '30002 · 3.49 €', 'mono'],
+      ['Transport → account', '30005 · 2.33 €', 'mono'],
+      ['Eco-fee → account', '30007 · 0.50 €', 'mono'],
+      ['VAT → account', '2939 · 1.61 €', 'mono']
+    ],
+    comments: [
+      ['Free-text comment', '—'],
+      ['Event comments', 'Standard scheduled emptying']
     ],
     validation: [
       ['Customer info', '✓ Present', 'good'],
@@ -1833,117 +1853,140 @@ const EVENT_DATA = {
       ['VAT rate', '✓ Present', 'good'],
       ['Service responsibility', '✓ Present', 'good'],
       ['Status', 'Ready to invoice', 'badge-green']
-    ],
-    downstream: [
-      ['Invoice', '— Not yet invoiced'],
-      ['FINVOICE row', 'Will become one <InvoiceRow> in INV01'],
-      ['Account dimension', '<AccountDimensionText>30002</AccountDimensionText>', 'mono'],
-      ['Cost centre dimension', '<DimensionText>20/200/3</DimensionText>', 'mono']
     ]
   },
   ev2: {
     title: 'Event: Asunto Oy Lammitie 8 — Biojäte 140L tyhjennys',
     subtitle: '2026-05-12 · Lammitie 8, Hyvinkää · ready to invoice',
-    fields: [
+    identity: [
       ['Event ID', 'evt-2026-05-12-0002', 'mono'],
-      ['Event date', '2026-05-12', 'mono'],
-      ['Customer', 'Asunto Oy Lammitie 8 (CID 100719)'],
-      ['Property', 'Lammitie 8, 05800 Hyvinkää'],
-      ['Product', 'Biojäte 140L tyhjennys'],
-      ['Quantity', '1', 'mono'],
-      ['Net amount', '4.15 €', 'mono'],
-      ['VAT amount', '1.06 €', 'mono'],
-      ['Total (gross)', '5.21 €', 'mono']
+      ['Date', '2026-05-12', 'mono'],
+      ['Customer number', 'Asunto Oy Lammitie 8 (CID 100719)'],
+      ['Contractor', 'Kuljetus Hyvinkää Oy'],
+      ['Municipality', 'Hyvinkää'],
+      ['Origin', 'Lammitie 8, 05800 Hyvinkää'],
+      ['Direction', 'Collection (inbound)'],
+      ['Registration number', 'HVK-247', 'mono'],
+      ['Place of unloading', 'Hyvinkää-laitos']
     ],
-    source: [
-      ['Source', 'Route execution'],
-      ['Shared service', 'Yes — split across 8 housing-cooperative subscribers'],
-      ['Route', 'Hyvinkää morning round'],
-      ['Timestamp', '2026-05-12 08:42:11', 'mono']
+    product: [
+      ['Product / service', 'Emptying service'],
+      ['Product name', 'Biojäte 140L tyhjennys'],
+      ['Quantity', '1 pcs', 'mono'],
+      ['Weight', '21 kg', 'mono']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '2.40 €', 'mono'],
+      ['Transport price', '1.45 €', 'mono'],
+      ['Eco-fee', '0.30 €', 'mono'],
+      ['Shared collection point group %', '12.5% (1 of 8 subscribers)'],
+      ['Net total — VAT 0% base', '0.00 €', 'mono'],
+      ['Net total — VAT 25.5% base', '4.15 €', 'mono'],
+      ['Total with 0% VAT', '0.00 €', 'mono'],
+      ['Total with 25.5% VAT', '5.21 €', 'mono']
     ],
     classification: [
-      ['Service responsibility', 'Municipal', 'badge-blue'],
-      ['Legal basis', 'Jätelaki §32 (Public law)'],
+      ['Service responsibility', 'Municipal (public law)', 'badge-blue'],
       ['Cost centre', '20/200/3 — Hyvinkää · Kotitalousjäte', 'mono'],
-      ['Accounting account', '30002 — Kotitalousjäte', 'mono'],
-      ['VAT rate', '25.5%', 'mono']
+      ['Treatment → account', '30002 · 2.40 €', 'mono'],
+      ['Transport → account', '30005 · 1.45 €', 'mono'],
+      ['Eco-fee → account', '30007 · 0.30 €', 'mono'],
+      ['VAT → account', '2939 · 1.06 €', 'mono']
+    ],
+    comments: [
+      ['Free-text comment', '—'],
+      ['Event comments', 'Shared collection point — group of 8']
     ],
     validation: [
       ['All mandatory fields', '✓ Present', 'good'],
       ['Status', 'Ready to invoice', 'badge-green']
-    ],
-    downstream: [
-      ['Invoice', '— Not yet invoiced'],
-      ['Note', 'Shared-service split (PD-279) is R3 — for R1 this charges the housing cooperative directly']
     ]
   },
   ev3: {
     title: 'Event: Rakennus Virtanen Oy — Rakennusjäte vastaanotto',
     subtitle: '2026-05-12 · Tehdaskuja 22, Riihimäki · ready to invoice',
-    fields: [
+    identity: [
       ['Event ID', 'evt-2026-05-12-0003', 'mono'],
-      ['Event date', '2026-05-12', 'mono'],
-      ['Customer', 'Rakennus Virtanen Oy (CID 200314)'],
-      ['Property', 'Tehdaskuja 22, Riihimäki'],
-      ['Product', 'Rakennusjäte vastaanotto'],
-      ['Quantity', '1 240 kg', 'mono'],
-      ['Unit price (net)', '0.08 €/kg', 'mono'],
-      ['Net amount', '98.40 €', 'mono'],
-      ['VAT amount', '0.00 € (reverse charge)', 'mono'],
-      ['Total (gross)', '98.40 €', 'mono']
+      ['Date', '2026-05-12', 'mono'],
+      ['Customer number', 'Rakennus Virtanen Oy (CID 200314)'],
+      ['Contractor', 'Customer-delivered (own truck)'],
+      ['Municipality', 'Riihimäki'],
+      ['Origin', 'Tehdaskuja 22, Riihimäki'],
+      ['Direction', 'Reception (inbound to facility)'],
+      ['Registration number', 'RKV-880', 'mono'],
+      ['Place of unloading', 'Hyvinkää-laitos']
     ],
-    source: [
-      ['Source', 'Weighbridge'],
-      ['Weight', '1 240 kg', 'mono'],
-      ['Facility', 'Hyvinkää reception (Hyvinkää-laitos)'],
-      ['Vehicle', 'Customer-owned truck'],
-      ['Timestamp', '2026-05-12 11:08:54', 'mono']
+    product: [
+      ['Product / service', 'Waste reception'],
+      ['Product name', 'Rakennusjäte vastaanotto'],
+      ['Quantity', '1 240 kg', 'mono'],
+      ['Weight', '1 240 kg', 'mono']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '98.40 €', 'mono'],
+      ['Transport price', '0.00 € (customer-delivered)', 'mono'],
+      ['Eco-fee', '—'],
+      ['Shared collection point group %', '—'],
+      ['Net total — VAT 0% base', '98.40 €', 'mono'],
+      ['Net total — VAT 25.5% base', '0.00 €', 'mono'],
+      ['Total with 0% VAT', '98.40 € (reverse charge)', 'mono'],
+      ['Total with 25.5% VAT', '0.00 €', 'mono']
     ],
     classification: [
-      ['Service responsibility', 'Market-based', 'badge-purple'],
-      ['Legal basis', 'Commercial contract 2024-K-44'],
+      ['Service responsibility', 'Market-based (private law)', 'badge-purple'],
       ['Cost centre', '30/300/1 — Vastaanotto · Hyvinkää-laitos', 'mono'],
-      ['Accounting account', '30005 — Yritysjätteen vastaanotto', 'mono'],
-      ['VAT rate', '0.0% Reverse charge', 'mono'],
-      ['Waste type (EWC)', '17 09 04 — Mixed construction & demolition waste', 'mono']
+      ['Treatment → account', '30005 · 98.40 €', 'mono'],
+      ['VAT treatment', '0% reverse charge (AVL 8 c §)', 'mono']
+    ],
+    comments: [
+      ['Free-text comment', 'Construction waste, sorted'],
+      ['Event comments', 'Reverse charge — customer has FI VAT number']
     ],
     validation: [
       ['All mandatory fields', '✓ Present', 'good'],
       ['Reverse charge eligibility', '✓ Customer has VAT number', 'good'],
       ['Status', 'Ready to invoice', 'badge-green']
-    ],
-    downstream: [
-      ['Invoice', '— Not yet invoiced'],
-      ['FINVOICE', 'Will produce invoice 226000XXX (private-law sequence)'],
-      ['Reverse charge notice', 'Finnish statutory text auto-included on invoice']
     ]
   },
   ev4: {
     title: 'Event: Lahtinen Pekka — Sakokaivon tyhjennys 4 m³',
     subtitle: '2026-05-11 · Kotipolku 3, Hyvinkää · blocked from invoicing',
-    fields: [
+    identity: [
       ['Event ID', 'evt-2026-05-11-0007', 'mono'],
-      ['Event date', '2026-05-11', 'mono'],
-      ['Customer', 'Lahtinen Pekka (CID 100612)'],
-      ['Property', 'Kotipolku 3, Hyvinkää'],
-      ['Product', 'Sakokaivon tyhjennys 4 m³'],
-      ['Quantity', '1', 'mono'],
-      ['Net amount', '113.15 €', 'mono'],
-      ['VAT amount', '28.85 €', 'mono'],
-      ['Total (gross)', '142.00 €', 'mono']
+      ['Date', '2026-05-11', 'mono'],
+      ['Customer number', 'Lahtinen Pekka (CID 100612)'],
+      ['Contractor', 'Lokahuolto Etelä-Suomi Oy'],
+      ['Municipality', 'Hyvinkää'],
+      ['Origin', 'Kotipolku 3, Hyvinkää'],
+      ['Direction', 'Collection (inbound)'],
+      ['Registration number', 'LOK-512', 'mono'],
+      ['Place of unloading', 'Hyvinkää-laitos']
     ],
-    source: [
-      ['Source', 'Manual entry'],
-      ['Created by', 'Aino S. (office staff)'],
-      ['Reason', 'Phone order — septic tank emptying'],
-      ['Timestamp', '2026-05-11 14:22:08', 'mono']
+    product: [
+      ['Product / service', 'Septic tank emptying'],
+      ['Product name', 'Sakokaivon tyhjennys 4 m³'],
+      ['Quantity', '4 m³', 'mono'],
+      ['Weight', '—']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '70.00 €', 'mono'],
+      ['Transport price', '43.15 €', 'mono'],
+      ['Eco-fee', '—'],
+      ['Shared collection point group %', '—'],
+      ['Net total — VAT 0% base', '0.00 €', 'mono'],
+      ['Net total — VAT 25.5% base', '113.15 €', 'mono'],
+      ['Total with 0% VAT', '0.00 €', 'mono'],
+      ['Total with 25.5% VAT', '142.00 €', 'mono']
     ],
     classification: [
       ['Service responsibility', 'Municipal secondary (TSV)', 'badge-amber'],
-      ['Legal basis', 'Jätelaki §33'],
       ['Cost centre', '25/250/2 — Hyvinkää · TSV', 'mono'],
-      ['Accounting account', '— MISSING', 'bad'],
-      ['VAT rate', '25.5%', 'mono']
+      ['Treatment → account', '— MISSING', 'bad'],
+      ['Transport → account', '— MISSING', 'bad']
+    ],
+    comments: [
+      ['Free-text comment', 'Phone order, septic tank'],
+      ['Event comments', 'TSV product has no account configured yet']
     ],
     validation: [
       ['Customer info', '✓ Present', 'good'],
@@ -1952,110 +1995,138 @@ const EVENT_DATA = {
       ['VAT rate', '✓ Present', 'good'],
       ['Service responsibility', '✓ Present', 'good'],
       ['Status', 'Blocked — missing account', 'badge-amber']
-    ],
-    downstream: [
-      ['Invoice', '— Blocked until classification is fixed'],
-      ['Action needed', 'Office staff: assign account to "Sakokaivon tyhjennys" product for TSV customers, OR override account on this event']
     ]
   },
   ev5: {
     title: 'Event: Korhonen Maija — Vuosiperusmaksu 2026',
     subtitle: '2026-05-11 · Mäntytie 14, Hyvinkää · ready to invoice',
-    fields: [
+    identity: [
       ['Event ID', 'evt-2026-05-11-0010', 'mono'],
-      ['Event date', '2026-05-11', 'mono'],
-      ['Customer', 'Korhonen Maija (CID 100482)'],
-      ['Property', 'Mäntytie 14, 05800 Hyvinkää'],
-      ['Product', 'Vuosiperusmaksu 2026 (annual base fee)'],
-      ['Quantity', '1', 'mono'],
-      ['Net amount', '35.86 €', 'mono'],
-      ['VAT amount', '9.14 €', 'mono'],
-      ['Total (gross)', '45.00 €', 'mono']
+      ['Date', '2026-05-11', 'mono'],
+      ['Customer number', 'Korhonen Maija (CID 100482)'],
+      ['Contractor', '—'],
+      ['Municipality', 'Hyvinkää'],
+      ['Origin', 'Mäntytie 14, 05800 Hyvinkää'],
+      ['Direction', '—'],
+      ['Registration number', '—'],
+      ['Place of unloading', '—']
     ],
-    source: [
-      ['Source', 'Recurring contract'],
-      ['Generated by', 'Annual recurring schedule'],
-      ['Contract', 'Standard residential — Hyvinkää'],
-      ['Timestamp', '2026-05-11 00:00:01', 'mono']
+    product: [
+      ['Product / service', 'Annual base fee'],
+      ['Product name', 'Vuosiperusmaksu 2026'],
+      ['Quantity', '1 pcs', 'mono'],
+      ['Weight', '—']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '—'],
+      ['Transport price', '—'],
+      ['Eco-fee', '—'],
+      ['Shared collection point group %', '—'],
+      ['Base fee', '35.86 €', 'mono'],
+      ['Net total — VAT 25.5% base', '35.86 €', 'mono'],
+      ['Total with 0% VAT', '0.00 €', 'mono'],
+      ['Total with 25.5% VAT', '45.00 €', 'mono']
     ],
     classification: [
-      ['Service responsibility', 'Municipal', 'badge-blue'],
-      ['Legal basis', 'Jätelaki §32 (Public law)'],
+      ['Service responsibility', 'Municipal (public law)', 'badge-blue'],
       ['Cost centre', '20/200/1 — Hyvinkää · Perusmaksut', 'mono'],
-      ['Accounting account', '30001 — Perusmaksutuotot', 'mono'],
-      ['VAT rate', '25.5%', 'mono']
+      ['Base fee → account', '30001 · 35.86 €', 'mono'],
+      ['VAT → account', '2939 · 9.14 €', 'mono']
+    ],
+    comments: [
+      ['Free-text comment', '—'],
+      ['Event comments', 'Annual recurring base fee']
     ],
     validation: [
       ['All mandatory fields', '✓ Present', 'good'],
       ['Status', 'Ready to invoice', 'badge-green']
-    ],
-    downstream: [
-      ['Invoice', '— Will land on next annual invoice run'],
-      ['Note', 'Recurring fees (PD-288) are R2 — for R1 these are pre-generated by script']
     ]
   },
   ev6: {
     title: 'Event: Suomen Kierrätys Oy — Metalliromun vastaanotto',
     subtitle: '2026-05-10 · Vantaa · ready to invoice',
-    fields: [
+    identity: [
       ['Event ID', 'evt-2026-05-10-0019', 'mono'],
-      ['Event date', '2026-05-10', 'mono'],
-      ['Customer', 'Suomen Kierrätys Oy (CID 200511)'],
-      ['Property', 'Vantaa'],
-      ['Product', 'Metalliromun vastaanotto'],
-      ['Quantity', '3 870 kg', 'mono'],
-      ['Unit price (net)', '0.06 €/kg', 'mono'],
-      ['Net amount', '231.55 €', 'mono'],
-      ['VAT amount', '0.00 € (reverse charge)', 'mono'],
-      ['Total (gross)', '231.55 €', 'mono']
+      ['Date', '2026-05-10', 'mono'],
+      ['Customer number', 'Suomen Kierrätys Oy (CID 200511)'],
+      ['Contractor', 'Customer-delivered (own truck)'],
+      ['Municipality', 'Riihimäki'],
+      ['Origin', 'Vantaa'],
+      ['Direction', 'Reception (inbound to facility)'],
+      ['Registration number', 'SKO-410', 'mono'],
+      ['Place of unloading', 'Riihimäki-laitos']
     ],
-    source: [
-      ['Source', 'Weighbridge'],
-      ['Weight', '3 870 kg', 'mono'],
-      ['Facility', 'Riihimäki reception (Riihimäki-laitos)'],
-      ['Timestamp', '2026-05-10 09:36:21', 'mono']
+    product: [
+      ['Product / service', 'Waste reception'],
+      ['Product name', 'Metalliromun vastaanotto'],
+      ['Quantity', '3 870 kg', 'mono'],
+      ['Weight', '3 870 kg', 'mono']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '231.55 €', 'mono'],
+      ['Transport price', '0.00 € (customer-delivered)', 'mono'],
+      ['Eco-fee', '—'],
+      ['Shared collection point group %', '—'],
+      ['Net total — VAT 0% base', '231.55 €', 'mono'],
+      ['Net total — VAT 25.5% base', '0.00 €', 'mono'],
+      ['Total with 0% VAT', '231.55 € (reverse charge)', 'mono'],
+      ['Total with 25.5% VAT', '0.00 €', 'mono']
     ],
     classification: [
-      ['Service responsibility', 'Market-based', 'badge-purple'],
-      ['Legal basis', 'Commercial contract 2025-K-12'],
+      ['Service responsibility', 'Market-based (private law)', 'badge-purple'],
       ['Cost centre', '30/300/2 — Vastaanotto · Riihimäki-laitos', 'mono'],
-      ['Accounting account', '30005 — Yritysjätteen vastaanotto', 'mono'],
-      ['VAT rate', '0.0% Reverse charge', 'mono']
+      ['Treatment → account', '30005 · 231.55 €', 'mono'],
+      ['VAT treatment', '0% reverse charge (AVL 8 c §)', 'mono']
+    ],
+    comments: [
+      ['Free-text comment', 'Scrap metal'],
+      ['Event comments', 'Reverse charge — customer has FI VAT number']
     ],
     validation: [
       ['All mandatory fields', '✓ Present', 'good'],
       ['Status', 'Ready to invoice', 'badge-green']
-    ],
-    downstream: [
-      ['Invoice', '— Not yet invoiced'],
-      ['FINVOICE', 'Will produce invoice 226000XXX (private-law sequence)']
     ]
   },
   ev7: {
     title: 'Event: Niemi Tiina — Sekajäte 660L tyhjennys',
     subtitle: '2026-05-09 · Koivumäki 7, Riihimäki · blocked from invoicing',
-    fields: [
+    identity: [
       ['Event ID', 'evt-2026-05-09-0023', 'mono'],
-      ['Event date', '2026-05-09', 'mono'],
-      ['Customer', 'Niemi Tiina (CID 100488)'],
-      ['Property', 'Koivumäki 7, Riihimäki'],
-      ['Product', 'Sekajäte 660L tyhjennys'],
-      ['Quantity', '1', 'mono'],
-      ['Net amount', '10.04 €', 'mono'],
-      ['VAT amount', '2.56 €', 'mono'],
-      ['Total (gross)', '12.60 €', 'mono']
+      ['Date', '2026-05-09', 'mono'],
+      ['Customer number', 'Niemi Tiina (CID 100488)'],
+      ['Contractor', 'Kuljetus Riihimäki Oy'],
+      ['Municipality', 'Riihimäki'],
+      ['Origin', 'Koivumäki 7, Riihimäki'],
+      ['Direction', 'Collection (inbound)'],
+      ['Registration number', 'RMK-142', 'mono'],
+      ['Place of unloading', 'Riihimäki-laitos']
     ],
-    source: [
-      ['Source', 'Route execution'],
-      ['Vehicle', '42', 'mono'],
-      ['Route', 'Riihimäki morning round'],
-      ['Timestamp', '2026-05-09 07:55:42', 'mono']
+    product: [
+      ['Product / service', 'Emptying service'],
+      ['Product name', 'Sekajäte 660L tyhjennys'],
+      ['Quantity', '1 pcs', 'mono'],
+      ['Weight', '92 kg', 'mono']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '5.50 €', 'mono'],
+      ['Transport price', '4.04 €', 'mono'],
+      ['Eco-fee', '0.50 €', 'mono'],
+      ['Shared collection point group %', '—'],
+      ['Net total — VAT 0% base', '0.00 €', 'mono'],
+      ['Net total — VAT 25.5% base', '10.04 €', 'mono'],
+      ['Total with 0% VAT', '0.00 €', 'mono'],
+      ['Total with 25.5% VAT', '12.60 €', 'mono']
     ],
     classification: [
-      ['Service responsibility', 'Municipal', 'badge-blue'],
+      ['Service responsibility', 'Municipal (public law)', 'badge-blue'],
       ['Cost centre', '22/200/3 — Riihimäki · Kotitalousjäte', 'mono'],
-      ['Accounting account', '— MISSING', 'bad'],
-      ['VAT rate', '25.5%', 'mono']
+      ['Treatment → account', '— MISSING', 'bad'],
+      ['Transport → account', '— MISSING', 'bad'],
+      ['Eco-fee → account', '— MISSING', 'bad']
+    ],
+    comments: [
+      ['Free-text comment', '—'],
+      ['Event comments', 'Riihimäki municipal account not yet configured']
     ],
     validation: [
       ['Customer info', '✓ Present', 'good'],
@@ -2063,46 +2134,53 @@ const EVENT_DATA = {
       ['Accounting account', '✗ Missing — Riihimäki municipal account not yet configured', 'bad'],
       ['VAT rate', '✓ Present', 'good'],
       ['Status', 'Blocked — missing account', 'badge-amber']
-    ],
-    downstream: [
-      ['Invoice', '— Blocked until classification is fixed'],
-      ['Action needed', 'Office staff: confirm account 30002 also applies to Riihimäki municipal collection']
     ]
   },
   ev8: {
     title: 'Event: Mäkelä Jarkko — Paperinkeräys 240L tyhjennys',
     subtitle: '2026-05-09 · Vihtikatu 5, Hyvinkää · ready to invoice',
-    fields: [
+    identity: [
       ['Event ID', 'evt-2026-05-09-0031', 'mono'],
-      ['Event date', '2026-05-09', 'mono'],
-      ['Customer', 'Mäkelä Jarkko (CID 100501)'],
-      ['Property', 'Vihtikatu 5, Hyvinkää'],
-      ['Product', 'Paperinkeräys 240L tyhjennys'],
-      ['Quantity', '1', 'mono'],
-      ['Net amount', '3.03 €', 'mono'],
-      ['VAT amount', '0.77 €', 'mono'],
-      ['Total (gross)', '3.80 €', 'mono']
+      ['Date', '2026-05-09', 'mono'],
+      ['Customer number', 'Mäkelä Jarkko (CID 100501)'],
+      ['Contractor', 'Kuljetus Hyvinkää Oy'],
+      ['Municipality', 'Hyvinkää'],
+      ['Origin', 'Vihtikatu 5, Hyvinkää'],
+      ['Direction', 'Collection (inbound)'],
+      ['Registration number', 'HVK-247', 'mono'],
+      ['Place of unloading', 'Hyvinkää-laitos']
     ],
-    source: [
-      ['Source', 'Route execution'],
-      ['Vehicle', '47', 'mono'],
-      ['Route', 'Hyvinkää morning round'],
-      ['Timestamp', '2026-05-09 08:21:09', 'mono']
+    product: [
+      ['Product / service', 'Emptying service'],
+      ['Product name', 'Paperinkeräys 240L tyhjennys'],
+      ['Quantity', '1 pcs', 'mono'],
+      ['Weight', '14 kg', 'mono']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '1.50 €', 'mono'],
+      ['Transport price', '1.23 €', 'mono'],
+      ['Eco-fee', '0.30 €', 'mono'],
+      ['Shared collection point group %', '—'],
+      ['Net total — VAT 0% base', '0.00 €', 'mono'],
+      ['Net total — VAT 25.5% base', '3.03 €', 'mono'],
+      ['Total with 0% VAT', '0.00 €', 'mono'],
+      ['Total with 25.5% VAT', '3.80 €', 'mono']
     ],
     classification: [
-      ['Service responsibility', 'Municipal', 'badge-blue'],
-      ['Legal basis', 'Jätelaki §32 (Public law)'],
+      ['Service responsibility', 'Municipal (public law)', 'badge-blue'],
       ['Cost centre', '20/200/3 — Hyvinkää · Kotitalousjäte', 'mono'],
-      ['Accounting account', '30004 — Kierrätystuotot', 'mono'],
-      ['VAT rate', '25.5%', 'mono'],
-      ['Waste type (EWC)', '20 01 01 — Paper and cardboard', 'mono']
+      ['Treatment → account', '30004 · 1.50 €', 'mono'],
+      ['Transport → account', '30005 · 1.23 €', 'mono'],
+      ['Eco-fee → account', '30007 · 0.30 €', 'mono'],
+      ['VAT → account', '2939 · 0.77 €', 'mono']
+    ],
+    comments: [
+      ['Free-text comment', '—'],
+      ['Event comments', 'Recyclable paper collection']
     ],
     validation: [
       ['All mandatory fields', '✓ Present', 'good'],
       ['Status', 'Ready to invoice', 'badge-green']
-    ],
-    downstream: [
-      ['Invoice', '— Will land on next Hyvinkää municipal invoice run']
     ]
   }
 };
@@ -2126,11 +2204,12 @@ function showEventDetail(eventId) {
 
   document.getElementById('evDetailTitle').textContent = data.title;
   document.getElementById('evDetailSubtitle').textContent = data.subtitle;
-  document.getElementById('evDetailFields').innerHTML = renderKvList(data.fields);
-  document.getElementById('evDetailSource').innerHTML = renderKvList(data.source);
+  document.getElementById('evDetailIdentity').innerHTML = renderKvList(data.identity);
+  document.getElementById('evDetailProduct').innerHTML = renderKvList(data.product);
+  document.getElementById('evDetailPricing').innerHTML = renderKvList(data.pricing);
   document.getElementById('evDetailClassification').innerHTML = renderKvList(data.classification);
+  document.getElementById('evDetailComments').innerHTML = renderKvList(data.comments);
   document.getElementById('evDetailValidation').innerHTML = renderKvList(data.validation);
-  document.getElementById('evDetailDownstream').innerHTML = renderKvList(data.downstream);
 
   showTab('event-detail');
 }
