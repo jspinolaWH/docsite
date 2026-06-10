@@ -159,6 +159,16 @@ export const INVOICING_CATEGORIES: Record<string, CategoryConfig> = {
     darkBgColor: '#2e1065',
     darkBorderColor: '#7c3aed',
   },
+  'inv-r2': {
+    id: 'inv-r2',
+    label: 'Release 2 Scope',
+    color: '#be123c',
+    bgColor: '#fff1f2',
+    borderColor: '#fecdd3',
+    darkColor: '#fb7185',
+    darkBgColor: '#4c0519',
+    darkBorderColor: '#be123c',
+  },
 };
 
 // Subcategories for sprint-planning
