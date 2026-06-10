@@ -15,7 +15,10 @@ export function TableOfContents({ content }: { content: string }) {
     const regex = /^(#{2,3})\s+(.+)$/gm;
     let match;
     while ((match = regex.exec(content)) !== null) {
-      const text = match[2].replace(/[*`]/g, '').trim();
+      const text = match[2]
+        .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // markdown links -> link text
+        .replace(/[*`]/g, '')
+        .trim();
       const id = slugger.slug(text);
       items.push({ id, text, level: match[1].length });
     }
