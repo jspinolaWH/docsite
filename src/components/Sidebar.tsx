@@ -261,7 +261,7 @@ function InvoicingSidebarContent() {
       </NavLink>
 
       {Object.entries(INVOICING_CATEGORIES).map(([catId, config]) => {
-        const isCollapsed = localCollapsed[catId] ?? false;
+        const isCollapsed = localCollapsed[catId] ?? catId === 'inv-r2';
         const categoryColor = theme === 'dark' ? config.darkColor : config.color;
         const docs = grouped[catId] || [];
 
