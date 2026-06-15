@@ -1,0 +1,2939 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoicing — WasteHero R1 + R2 Mockup (PJH Finnish foundation)</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── Figma Design Tokens ───────────────────────────────────────────────────── */
+:root {
+  --blue:        #155dfc;
+  --blue-light:  #e8efff;
+  --blue-hover:  #1250d4;
+  --text:        #171717;
+  --text-muted:  #737373;
+  --text-faint:  #a3a3a3;
+  --border:      #f2f2f2;
+  --border-mid:  #e5e5e5;
+  --bg:          #fafafa;
+  --white:       #ffffff;
+  --surface:     #f5f5f5;
+  --green:       #16a34a;
+  --green-bg:    #dcfce7;
+  --amber:       #d97706;
+  --amber-bg:    #fef3c7;
+  --red:         #dc2626;
+  --red-bg:      #fee2e2;
+  --purple-bg:   #ede9fe;
+  --purple:      #7c3aed;
+  --cyan-bg:     #cffafe;
+  --cyan:        #0891b2;
+  --pink-bg:     #fce7f3;
+  --pink:        #db2777;
+  --radius-sm:   6px;
+  --radius:      8px;
+  --radius-lg:   12px;
+  --shadow:      0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ── Header ────────────────────────────────────────────────────────────────── */
+.main-header { background: var(--white); border-bottom: 1px solid var(--border); padding: 18px 32px; display: flex; justify-content: space-between; align-items: center; }
+.header-title { font-size: 16px; font-weight: 500; color: var(--text); }
+.header-meta { display: flex; gap: 12px; align-items: center; }
+.release-badge { background: var(--blue-light); color: var(--blue); padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; }
+.release-meta { font-size: 12px; color: var(--text-muted); }
+
+/* ── Tab Nav ───────────────────────────────────────────────────────────────── */
+.tab-nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 32px; display: flex; gap: 36px; overflow-x: auto; }
+.tab-item { padding: 16px 0 10px 0; color: var(--text-muted); font-size: 15px; font-weight: 400; cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; display: flex; flex-direction: column; gap: 3px; }
+.tab-item:hover { color: var(--text); }
+.tab-item.active { color: var(--blue); font-weight: 500; border-bottom-color: var(--blue); }
+.tab-pd { font-size: 10px; color: var(--text-faint); font-weight: 400; font-family: 'JetBrains Mono', monospace; }
+.tab-item.active .tab-pd { color: var(--blue); opacity: 0.65; }
+
+/* ── Layout ────────────────────────────────────────────────────────────────── */
+.content-wrapper { display: flex; }
+.left-sidebar { width: 220px; background: var(--white); border-right: 1px solid var(--border); min-height: calc(100vh - 120px); padding: 20px 0; flex-shrink: 0; }
+.main-area { flex: 1; padding: 24px 32px; min-width: 0; }
+
+/* ── Sidebar ───────────────────────────────────────────────────────────────── */
+.category-title { font-size: 10px; color: var(--text-faint); text-transform: uppercase; padding: 0 16px; margin-bottom: 8px; margin-top: 16px; font-weight: 500; letter-spacing: 0.06em; }
+.category-title:first-child { margin-top: 0; }
+.category-item { padding: 9px 16px; font-size: 13px; color: var(--text-muted); cursor: pointer; display: flex; justify-content: space-between; transition: background 0.1s; }
+.category-item:hover { background: var(--surface); color: var(--text); }
+.category-item.active { background: var(--blue-light); color: var(--blue); font-weight: 500; }
+.category-count { font-size: 11px; color: var(--text-faint); background: var(--surface); padding: 1px 7px; border-radius: 999px; }
+.category-item.active .category-count { background: var(--white); color: var(--blue); }
+
+/* ── Page head ─────────────────────────────────────────────────────────────── */
+.page-head { margin-bottom: 20px; }
+.page-title { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+.page-subtitle { font-size: 13px; color: var(--text-muted); line-height: 1.55; max-width: 720px; }
+.page-pds { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+.pd-chip { display: inline-flex; align-items: center; gap: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 3px 8px; border-radius: 4px; background: var(--blue-light); color: var(--blue); text-decoration: none; font-weight: 500; transition: all 0.15s; }
+.pd-chip:hover { background: var(--blue); color: white; }
+
+/* ── Toolbar ───────────────────────────────────────────────────────────────── */
+.toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; }
+.search-box { flex: 1; max-width: 400px; padding: 10px 14px; border: 1px solid var(--border-mid); border-radius: var(--radius); font-size: 14px; font-family: 'Poppins', sans-serif; color: var(--text); outline: none; transition: border 0.15s; }
+.search-box:focus { border-color: var(--blue); }
+.action-buttons { display: flex; gap: 8px; }
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+.btn { height: 40px; padding: 0 16px; border-radius: var(--radius); font-size: 14px; font-weight: 500; font-family: 'Poppins', sans-serif; cursor: pointer; border: none; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+.btn-primary { background: var(--blue); color: var(--white); }
+.btn-primary:hover { background: var(--blue-hover); }
+.btn-secondary { background: var(--white); border: 1px solid var(--border-mid); color: var(--text); }
+.btn-secondary:hover { background: var(--surface); }
+.btn-view { background: var(--white); border: 1px solid var(--border-mid); color: var(--text-muted); padding: 5px 12px; border-radius: var(--radius-sm); font-size: 12px; font-family: 'Poppins', sans-serif; cursor: pointer; transition: all 0.12s; }
+.btn-view:hover { background: var(--surface); color: var(--text); border-color: #d4d4d4; }
+
+/* ── Table ─────────────────────────────────────────────────────────────────── */
+.table-container { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
+table { width: 100%; border-collapse: collapse; }
+thead { background: var(--surface); }
+th { padding: 11px 16px; text-align: left; font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 500; letter-spacing: 0.05em; white-space: nowrap; }
+th .pd-label { display: block; font-size: 9px; color: var(--text-faint); margin-top: 2px; font-weight: 400; text-transform: none; letter-spacing: 0; font-family: 'JetBrains Mono', monospace; }
+td { padding: 14px 16px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text); vertical-align: top; }
+tr:hover td { background: #fafafa; }
+.cell-primary { color: var(--text); font-weight: 500; cursor: pointer; font-size: 13px; }
+.cell-primary:hover { color: var(--blue); }
+.cell-secondary { color: var(--text-faint); font-size: 11px; display: block; margin-top: 2px; }
+.cell-mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text); }
+.cell-mono-muted { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); }
+.cell-amount { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text); font-weight: 500; text-align: right; }
+.cell-amount-muted { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-muted); text-align: right; }
+
+/* ── Badges ────────────────────────────────────────────────────────────────── */
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+.badge-green { background: var(--green-bg); color: var(--green); }
+.badge-amber { background: var(--amber-bg); color: var(--amber); }
+.badge-red { background: var(--red-bg); color: var(--red); }
+.badge-blue { background: var(--blue-light); color: var(--blue); }
+.badge-purple { background: var(--purple-bg); color: var(--purple); }
+.badge-cyan { background: var(--cyan-bg); color: var(--cyan); }
+.badge-pink { background: var(--pink-bg); color: var(--pink); }
+.badge-gray { background: var(--surface); color: var(--text-muted); }
+
+/* ── Stat cards ────────────────────────────────────────────────────────────── */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; box-shadow: var(--shadow); }
+.stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.stat-value { font-size: 24px; font-weight: 600; color: var(--text); }
+.stat-meta { font-size: 11px; color: var(--text-faint); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+
+/* ── Detail panel ──────────────────────────────────────────────────────────── */
+.detail-grid { display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
+.detail-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 16px; }
+.detail-card-head { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--surface); }
+.detail-card-title { font-size: 13px; font-weight: 600; }
+.detail-card-pd { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-faint); }
+.detail-card-body { padding: 16px 18px; }
+.kv-row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--border); align-items: center; }
+.kv-row:last-child { border-bottom: none; }
+.kv-key { font-size: 12px; color: var(--text-muted); }
+.kv-value { font-size: 13px; color: var(--text); font-weight: 500; }
+.kv-value-mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+/* ── XML block ─────────────────────────────────────────────────────────────── */
+.xml-block { background: #1e1e2e; color: #cdd6f4; padding: 18px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.6; overflow-x: auto; white-space: pre; max-height: 520px; overflow-y: auto; }
+.xml-tag { color: #f5c2e7; }
+.xml-attr { color: #f9e2af; }
+.xml-string { color: #a6e3a1; }
+.xml-comment { color: #6c7086; font-style: italic; }
+
+/* ── Demo flow (overview tab) ──────────────────────────────────────────────── */
+.flow-intro { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px 28px; margin-bottom: 20px; box-shadow: var(--shadow); }
+.flow-intro-title { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+.flow-intro-subtitle { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; }
+
+.flow-step { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 22px; box-shadow: var(--shadow); display: grid; grid-template-columns: 48px 1fr auto; gap: 18px; align-items: center; transition: border-color 0.15s, transform 0.15s; margin-bottom: 12px; cursor: pointer; }
+.flow-step:hover { border-color: var(--blue); transform: translateX(2px); }
+.flow-step-num { font-size: 28px; font-weight: 600; color: var(--blue); font-family: 'JetBrains Mono', monospace; line-height: 1; }
+.flow-step-content { display: flex; flex-direction: column; gap: 4px; }
+.flow-step-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.flow-step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+.flow-step-screen { font-size: 11px; color: var(--blue); font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
+.flow-step-pds { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; max-width: 220px; }
+
+.callout { background: var(--blue-light); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: var(--radius); margin-top: 20px; }
+.callout-title { font-size: 12px; font-weight: 600; color: var(--blue); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+.callout-text { font-size: 13px; color: var(--text); line-height: 1.55; }
+
+.non-goal-section { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 24px; margin-top: 20px; box-shadow: var(--shadow); }
+.non-goal-title { font-size: 11px; font-weight: 600; color: var(--red); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+.non-goal-list { list-style: none; }
+.non-goal-list li { font-size: 13px; color: var(--text); padding: 6px 0 6px 22px; position: relative; line-height: 1.5; }
+.non-goal-list li::before { content: "×"; position: absolute; left: 0; color: var(--red); font-size: 16px; font-weight: 600; top: 3px; }
+
+/* ── Tab panels ────────────────────────────────────────────────────────────── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── Modal (detail preview from View button) ──────────────────────────────── */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(23, 23, 23, 0.45); display: none; align-items: center; justify-content: center; z-index: 100; padding: 24px; }
+.modal-backdrop.open { display: flex; }
+.modal { background: var(--white); border-radius: var(--radius-lg); max-width: 560px; width: 100%; max-height: 86vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+.modal-head { display: flex; justify-content: space-between; align-items: flex-start; padding: 20px 24px 16px; border-bottom: 1px solid var(--border); gap: 16px; }
+.modal-title { font-size: 18px; font-weight: 600; color: var(--text); }
+.modal-pd-row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.modal-close { background: none; border: none; font-size: 22px; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 4px 8px; border-radius: var(--radius-sm); }
+.modal-close:hover { background: var(--surface); color: var(--text); }
+.modal-body { padding: 20px 24px 24px; }
+.modal-section { margin-bottom: 18px; }
+.modal-section:last-child { margin-bottom: 0; }
+.modal-section-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-weight: 500; }
+.modal-list { list-style: none; }
+.modal-list li { font-size: 13px; color: var(--text); padding: 6px 0 6px 18px; position: relative; line-height: 1.55; }
+.modal-list li::before { content: "→"; position: absolute; left: 0; color: var(--blue); font-family: 'JetBrains Mono', monospace; }
+.modal-note { background: var(--blue-light); border-left: 3px solid var(--blue); padding: 12px 16px; border-radius: var(--radius); font-size: 13px; color: var(--text); line-height: 1.5; }
+
+/* ── Form fields (in create modals) ──────────────────────────────────────── */
+.form-field { margin-bottom: 16px; }
+.form-field label { display: block; font-size: 12px; color: var(--text); font-weight: 500; margin-bottom: 6px; }
+.form-field .form-hint { display: block; font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.45; }
+.form-field input, .form-field select, .form-field textarea { width: 100%; padding: 8px 12px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); font-size: 13px; font-family: 'Poppins', sans-serif; background: var(--white); outline: none; box-sizing: border-box; }
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--blue); }
+.form-field input.mono, .form-field textarea.mono { font-family: 'JetBrains Mono', monospace; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-pd-tag { display: inline-block; font-size: 10px; color: var(--blue); background: var(--blue-light); padding: 2px 8px; border-radius: 10px; margin-left: 6px; font-family: 'JetBrains Mono', monospace; font-weight: 500; vertical-align: middle; }
+
+/* ── R2 markers (pink = Release 2) ─────────────────────────────────────────── */
+.r2-pill { display: inline-flex; align-items: center; font-size: 9px; font-weight: 600; letter-spacing: 0.04em; color: var(--pink); background: var(--pink-bg); padding: 1px 6px; border-radius: 999px; font-family: 'Poppins', sans-serif; vertical-align: middle; }
+.tab-item .r2-pill { margin-left: 2px; }
+.tab-item.r2-tab.active { color: var(--pink); border-bottom-color: var(--pink); }
+.tab-item.r2-tab.active .tab-pd { color: var(--pink); opacity: 0.7; }
+.r2-legend { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
+.r2-legend .swatch { width: 11px; height: 11px; border-radius: 3px; background: var(--pink-bg); border: 1px solid var(--pink); display: inline-block; }
+
+/* pink-tinted card and section for R2 content */
+.r2-card { background: var(--pink-bg); border: 1px solid #f9c6e0; border-left: 3px solid var(--pink); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 16px; }
+.r2-card .r2-card-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
+.r2-card .r2-card-sub { font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-bottom: 10px; }
+.r2-card a.pd-chip { background: var(--white); color: var(--pink); }
+.r2-card a.pd-chip:hover { background: var(--pink); color: var(--white); }
+
+.r2-detail-card { border: 1px solid #f9c6e0; border-left: 3px solid var(--pink); border-radius: var(--radius-lg); background: #fffafc; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 16px; }
+.r2-detail-card .detail-card-head { background: var(--pink-bg); }
+.r2-detail-card .detail-card-pd { color: var(--pink); }
+
+/* pink row tint inside otherwise-R1 tables (for R2-only columns/notes) */
+tr.r2-row td { background: #fffafc !important; }
+.r2-inline { color: var(--pink); font-size: 11px; font-weight: 500; }
+
+/* R2 button */
+.btn-r2 { background: var(--pink); color: var(--white); }
+.btn-r2:hover { background: #be1d66; }
+.btn-r2-soft { background: var(--white); border: 1px solid var(--pink); color: var(--pink); }
+.btn-r2-soft:hover { background: var(--pink-bg); }
+
+/* status pills for billing runs */
+.run-status { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; }
+.run-draft { background: var(--surface); color: var(--text-muted); }
+.run-ready { background: var(--blue-light); color: var(--blue); }
+.run-sent  { background: var(--green-bg); color: var(--green); }
+.run-error { background: var(--red-bg); color: var(--red); }
+
+/* ── Toast ─────────────────────────────────────────────────────────────────── */
+#toast-wrap { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+.toast { background: var(--text); color: #fff; padding: 11px 18px; border-radius: var(--radius); font-size: 13px; box-shadow: 0 6px 20px rgba(0,0,0,0.18); opacity: 0; transform: translateY(8px); transition: opacity .2s, transform .2s; max-width: 460px; }
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.r2 { background: var(--pink); }
+.toast .toast-pd { font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.8; margin-right: 6px; }
+
+/* row marked excluded */
+tr.excluded td { opacity: 0.5; text-decoration: line-through; }
+tr.excluded td:last-child { opacity: 1; text-decoration: none; }
+.clickable { cursor: pointer; }
+
+/* ── Inline event edit (PD-277) ────────────────────────────────────────────── */
+.kv-edit { width: 100%; max-width: 280px; padding: 5px 9px; border: 1px solid var(--blue); border-radius: 6px; font-size: 13px; font-family: 'Poppins', sans-serif; outline: none; background: #fff; }
+.kv-edit.mono { font-family: 'JetBrains Mono', monospace; }
+.kv-row .lock-ico { font-size: 11px; color: var(--text-faint); margin-left: 6px; }
+.detail-banner { display: flex; align-items: center; gap: 10px; border-radius: var(--radius); padding: 12px 16px; margin-bottom: 18px; font-size: 13px; }
+.detail-banner.locked { background: var(--surface); border: 1px solid var(--border-mid); border-left: 3px solid var(--text-muted); color: var(--text); }
+.detail-banner.editing { background: var(--pink-bg); border: 1px solid #f9c6e0; border-left: 3px solid var(--pink); color: var(--text); }
+.detail-banner .lock-badge { font-size: 16px; }
+</style>
+</head>
+<body>
+
+<!-- ── Header ─────────────────────────────────────────────────────────────── -->
+<div class="main-header">
+  <div class="header-title">Invoicing — WasteHero (R1 + R2 Mockup, PJH Finnish foundation)</div>
+  <div class="header-meta">
+    <span class="release-badge">Release 1 + 2</span>
+    <span class="r2-legend"><span class="swatch"></span>Pink = Release 2</span>
+    <span class="release-meta">Ledger squad</span>
+  </div>
+</div>
+
+<!-- ── Tab Nav ────────────────────────────────────────────────────────────── -->
+<div class="tab-nav">
+  <div class="tab-item active" onclick="showTab('events')"><span>Events</span><span class="tab-pd">PD-299 · PD-278</span></div>
+  <div class="tab-item" onclick="showTab('cost-centres')"><span>Cost centres</span><span class="tab-pd">PD-296</span></div>
+  <div class="tab-item" onclick="showTab('accounts')"><span>Accounting accounts</span><span class="tab-pd">PD-296 · PD-295</span></div>
+  <div class="tab-item" onclick="showTab('invoices')"><span>Invoices</span><span class="tab-pd">PD-309</span></div>
+  <div class="tab-item" onclick="showTab('credit-notes')"><span>Credit notes</span><span class="tab-pd">PD-269</span></div>
+  <div class="tab-item" onclick="showTab('invoice-detail')"><span>Invoice detail</span><span class="tab-pd">PD-310</span></div>
+  <div class="tab-item r2-tab" onclick="showTab('billing-runs')"><span>Billing runs <span class="r2-pill">R2</span></span><span class="tab-pd">PD-291 · 290 · 292 · 293 · 297 · 273</span></div>
+  <div class="tab-item r2-tab" onclick="showTab('seasonal-fees')"><span>Seasonal fees <span class="r2-pill">R2</span></span><span class="tab-pd">PD-288 · PD-286</span></div>
+  <div class="tab-item" onclick="showTab('overview')"><span>📋 Demo flow</span></div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: EVENTS                                                            -->
+<!-- ===================================================================== -->
+<div class="tab-panel active" id="tab-events">
+  <div class="content-wrapper">
+    <div class="left-sidebar">
+      <div class="category-title">Validation status<span style="font-size: 9px; margin-left: 4px;">(PD-278)</span></div>
+      <div class="category-item active" onclick="filterEvents('all', this)"><span>All events</span><span class="category-count">8</span></div>
+      <div class="category-item" onclick="filterEvents('ready', this)"><span>Ready to invoice</span><span class="category-count">2</span></div>
+      <div class="category-item" onclick="filterEvents('missing', this)"><span>Missing mandatory data</span><span class="category-count">2</span></div>
+      <div class="category-item" onclick="filterEvents('invoiced', this)"><span>Already invoiced</span><span class="category-count">4</span></div>
+    </div>
+
+    <div class="main-area">
+      <div class="page-head">
+        <div class="page-title">Billable events</div>
+        <div class="page-subtitle">Every billable thing in the system is an event. The new schema carries everything FINVOICE needs — VAT at event time, cost centre, accounting account, service responsibility, public/private law tag. PD-278 validates mandatory fields before an event can transfer to invoicing.</div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-299" target="_blank">PD-299 Event details</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-296" target="_blank">PD-296 Cost centres on events</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-278" target="_blank">PD-278 Error listing & mandatory data</a>
+        </div>
+      </div>
+
+      <div class="r2-card">
+        <div class="r2-card-title">Release 2 on this screen <span class="r2-pill">R2</span></div>
+        <div class="r2-card-sub">In R2 the events list gains a create action and bulk exclusion. Add events by hand for things with no integration (land rent, expert work), or hold events out of a run. Editing an event happens on its own page (open one with View), where the sent-lock applies.</div>
+        <div class="action-buttons" style="flex-wrap:wrap;">
+          <button class="btn btn-r2" onclick="openCreateForm('manual-event')">+ New manual event <span class="r2-pill" style="background:rgba(255,255,255,0.25);color:#fff;">PD-283</span></button>
+          <button class="btn btn-r2-soft" onclick="toast('Bulk exclude: select events with the checkboxes, then exclude them from the run. Open a single event to edit it.', 'PD-318', true)">⊘ Exclude selected <span class="r2-pill">PD-318</span></button>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:12px;">
+          <div style="background:var(--white); border:1px solid #f9c6e0; border-radius:var(--radius); padding:10px 12px;"><div class="r2-inline" style="margin-bottom:2px;">PD-283 · Manual events</div><div class="cell-secondary" style="margin-top:0;">Add land rent, expert work, equipment rental by hand, tied to a product.</div></div>
+          <div style="background:var(--white); border:1px solid #f9c6e0; border-radius:var(--radius); padding:10px 12px;"><div class="r2-inline" style="margin-bottom:2px;">PD-277 · Edit before invoicing</div><div class="cell-secondary" style="margin-top:0;">Open an event with View, then Edit. Locked once the event is on a sent invoice.</div></div>
+          <div style="background:var(--white); border:1px solid #f9c6e0; border-radius:var(--radius); padding:10px 12px;"><div class="r2-inline" style="margin-bottom:2px;">PD-318 · Exclude (bulk)</div><div class="cell-secondary" style="margin-top:0;">Hold events out of a run individually or in bulk; return them later.</div></div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Event date</th>
+              <th>Customer / property</th>
+              <th>Product</th>
+              <th>Service resp.<span class="pd-label">PD-284</span></th>
+              <th>VAT<span class="pd-label">PD-299</span></th>
+              <th>Cost centre<span class="pd-label">PD-296</span></th>
+              <th>Account<span class="pd-label">PD-296</span></th>
+              <th style="text-align:right">Amount (€)</th>
+              <th>Status<span class="pd-label">PD-278</span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-status="invoiced" data-event-id="ev1">
+              <td class="cell-mono">2026-05-12</td>
+              <td><span class="cell-primary clickable" onclick="showEventDetail('ev1')">Korhonen Maija</span><span class="cell-secondary">Mäntytie 14, Hyvinkää</span></td>
+              <td>Sekajäte 240L tyhjennys<span class="cell-secondary">Route execution · vehicle 47</span></td>
+              <td><span class="badge badge-blue">Municipal</span></td>
+              <td class="cell-mono">25.5%</td>
+              <td class="cell-mono">20/200/3</td>
+              <td class="cell-mono">30002</td>
+              <td class="cell-amount">7.93</td>
+              <td><span class="badge badge-cyan">Invoiced 🔒</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev1')">View</button></td>
+            </tr>
+            <tr data-status="invoiced" data-event-id="ev2">
+              <td class="cell-mono">2026-05-12</td>
+              <td><span class="cell-primary clickable" onclick="showEventDetail('ev2')">Asunto Oy Lammitie 8</span><span class="cell-secondary">Lammitie 8, Hyvinkää</span></td>
+              <td>Biojäte 140L tyhjennys<span class="cell-secondary">Route execution · shared service</span></td>
+              <td><span class="badge badge-blue">Municipal</span></td>
+              <td class="cell-mono">25.5%</td>
+              <td class="cell-mono">20/200/3</td>
+              <td class="cell-mono">30002</td>
+              <td class="cell-amount">5.21</td>
+              <td><span class="badge badge-cyan">Invoiced 🔒</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev2')">View</button></td>
+            </tr>
+            <tr data-status="ready" data-event-id="ev3">
+              <td class="cell-mono">2026-05-12</td>
+              <td><span class="cell-primary clickable" onclick="showEventDetail('ev3')">Rakennus Virtanen Oy</span><span class="cell-secondary">Tehdaskuja 22, Riihimäki</span></td>
+              <td>Rakennusjäte vastaanotto<span class="cell-secondary">Weighbridge · 1 240 kg</span></td>
+              <td><span class="badge badge-purple">Market-based</span></td>
+              <td class="cell-mono">0.0% RC</td>
+              <td class="cell-mono">30/300/1</td>
+              <td class="cell-mono">30005</td>
+              <td class="cell-amount">98.40</td>
+              <td><span class="badge badge-green">Ready</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev3')">View</button></td>
+            </tr>
+            <tr data-status="missing" data-event-id="ev4">
+              <td class="cell-mono">2026-05-11</td>
+              <td><span class="cell-primary clickable" onclick="showEventDetail('ev4')">Lahtinen Pekka</span><span class="cell-secondary">Kotipolku 3, Hyvinkää</span></td>
+              <td>Sakokaivon tyhjennys 4 m³<span class="cell-secondary">Manual entry · Aino S.</span></td>
+              <td><span class="badge badge-amber">Municipal secondary</span></td>
+              <td class="cell-mono">25.5%</td>
+              <td class="cell-mono">25/250/2</td>
+              <td class="cell-mono">—</td>
+              <td class="cell-amount">142.00</td>
+              <td><span class="badge badge-amber">Missing account</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev4')">View</button></td>
+            </tr>
+            <tr data-status="invoiced" data-event-id="ev5">
+              <td class="cell-mono">2026-05-11</td>
+              <td><span class="cell-primary clickable" onclick="showEventDetail('ev5')">Korhonen Maija</span><span class="cell-secondary">Mäntytie 14, Hyvinkää</span></td>
+              <td>Vuosiperusmaksu 2026<span class="cell-secondary">Recurring · auto-generated</span></td>
+              <td><span class="badge badge-blue">Municipal</span></td>
+              <td class="cell-mono">25.5%</td>
+              <td class="cell-mono">20/200/1</td>
+              <td class="cell-mono">30001</td>
+              <td class="cell-amount">45.00</td>
+              <td><span class="badge badge-cyan">Invoiced 🔒</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev5')">View</button></td>
+            </tr>
+            <tr data-status="ready" data-event-id="ev6">
+              <td class="cell-mono">2026-05-10</td>
+              <td><span class="cell-primary clickable" onclick="showEventDetail('ev6')">Suomen Kierrätys Oy</span><span class="cell-secondary">Vantaa</span></td>
+              <td>Metalliromun vastaanotto<span class="cell-secondary">Weighbridge · 3 870 kg</span></td>
+              <td><span class="badge badge-purple">Market-based</span></td>
+              <td class="cell-mono">0.0% RC</td>
+              <td class="cell-mono">30/300/2</td>
+              <td class="cell-mono">30005</td>
+              <td class="cell-amount">231.55</td>
+              <td><span class="badge badge-green">Ready</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev6')">View</button></td>
+            </tr>
+            <tr data-status="missing" data-event-id="ev7">
+              <td class="cell-mono">2026-05-09</td>
+              <td><span class="cell-primary clickable" onclick="showEventDetail('ev7')">Niemi Tiina</span><span class="cell-secondary">Koivumäki 7, Riihimäki</span></td>
+              <td>Sekajäte 660L tyhjennys<span class="cell-secondary">Route execution · vehicle 42</span></td>
+              <td><span class="badge badge-blue">Municipal</span></td>
+              <td class="cell-mono">25.5%</td>
+              <td class="cell-mono">22/200/3</td>
+              <td class="cell-mono">—</td>
+              <td class="cell-amount">12.60</td>
+              <td><span class="badge badge-amber">Missing account</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev7')">View</button></td>
+            </tr>
+            <tr data-status="invoiced" data-event-id="ev8">
+              <td class="cell-mono">2026-05-09</td>
+              <td><span class="cell-primary clickable" onclick="showEventDetail('ev8')">Mäkelä Jarkko</span><span class="cell-secondary">Vihtikatu 5, Hyvinkää</span></td>
+              <td>Paperinkeräys 240L tyhjennys<span class="cell-secondary">Route execution · vehicle 47</span></td>
+              <td><span class="badge badge-blue">Municipal</span></td>
+              <td class="cell-mono">25.5%</td>
+              <td class="cell-mono">20/200/3</td>
+              <td class="cell-mono">30004</td>
+              <td class="cell-amount">3.80</td>
+              <td><span class="badge badge-cyan">Invoiced 🔒</span></td>
+              <td><button class="btn-view" onclick="showEventDetail('ev8')">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">Why this screen matters for R1</div>
+        <div class="callout-text">Every event in this table is a row in the new event schema (PD-299). The columns shown — VAT, cost centre, account, service responsibility — are the fields the old Danish model is missing. The "Missing account" status reflects PD-278 validation: events without mandatory fields cannot enter the invoicing pipeline.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: EVENT DETAIL (data-driven from JS based on which row View'd)     -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-event-detail">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%;">
+      <div class="page-head">
+        <a href="#" onclick="showTab('events'); return false;" style="color: var(--blue); font-size: 13px; text-decoration: none; display: inline-block; margin-bottom: 8px;">← Back to events</a>
+        <div class="page-title" id="evDetailTitle">Event detail</div>
+        <div class="page-subtitle" id="evDetailSubtitle">Loaded from the events table.</div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-299" target="_blank">PD-299 Event details</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-296" target="_blank">PD-296 Cost centres on events</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-278" target="_blank">PD-278 Mandatory data validation</a>
+        </div>
+        <div class="action-buttons" id="evDetailActions" style="margin-top:12px; flex-wrap:wrap;"></div>
+      </div>
+
+      <div id="evDetailBanner"></div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Event &amp; customer</div>
+              <div class="detail-card-pd">PD-299</div>
+            </div>
+            <div class="detail-card-body" id="evDetailIdentity"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Product &amp; quantity</div>
+              <div class="detail-card-pd">PD-299</div>
+            </div>
+            <div class="detail-card-body" id="evDetailProduct"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Price formation</div>
+              <div class="detail-card-pd">PD-299 · eco-fee per Päivi K</div>
+            </div>
+            <div class="detail-card-body" id="evDetailPricing"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Accounting &amp; classification</div>
+              <div class="detail-card-pd">PD-296 · PD-295 · PD-284/285</div>
+            </div>
+            <div class="detail-card-body" id="evDetailClassification"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Comments</div>
+              <div class="detail-card-pd">PD-299</div>
+            </div>
+            <div class="detail-card-body" id="evDetailComments"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Validation</div>
+              <div class="detail-card-pd">PD-278</div>
+            </div>
+            <div class="detail-card-body" id="evDetailValidation"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: COST CENTRES                                                      -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-cost-centres">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%;">
+      <div class="page-head">
+        <div class="page-title">Cost centres</div>
+        <div class="page-subtitle">Each event carries a cost centre. PD-296 lets office users manually add, update, and maintain cost centres. Each cost centre flows downstream into FINVOICE as accounting data.</div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-296" target="_blank">PD-296 Cost centres & accounts on events</a>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div></div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="openCreateForm('cost-centre')">+ New cost centre</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Region</th>
+              <th>Service type</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="cell-mono">20/200/1</td><td><span class="cell-primary">Hyvinkää · Perusmaksut</span></td><td>Hyvinkää</td><td>Annual base fee</td><td><button class="btn-view" onclick="showCostCentreDetail('cc1')">View</button></td></tr>
+            <tr><td class="cell-mono">20/200/3</td><td><span class="cell-primary">Hyvinkää · Kotitalousjäte</span></td><td>Hyvinkää</td><td>Mixed waste, bio-waste, paper</td><td><button class="btn-view" onclick="showCostCentreDetail('cc2')">View</button></td></tr>
+            <tr><td class="cell-mono">20/200/4</td><td><span class="cell-primary">Hyvinkää · Yhteispalvelut</span></td><td>Hyvinkää</td><td>Shared service splits</td><td><button class="btn-view" onclick="showCostCentreDetail('cc3')">View</button></td></tr>
+            <tr><td class="cell-mono">20/200/5</td><td><span class="cell-primary">Hyvinkää · Viranomaispalvelut</span></td><td>Hyvinkää</td><td>Regulatory, complaint handling</td><td><button class="btn-view" onclick="showCostCentreDetail('cc4')">View</button></td></tr>
+            <tr><td class="cell-mono">25/250/2</td><td><span class="cell-primary">Hyvinkää · TSV / toissijainen</span></td><td>Hyvinkää</td><td>Municipal secondary (Waste Act §33)</td><td><button class="btn-view" onclick="showCostCentreDetail('cc5')">View</button></td></tr>
+            <tr><td class="cell-mono">22/200/3</td><td><span class="cell-primary">Riihimäki · Kotitalousjäte</span></td><td>Riihimäki</td><td>Mixed waste, bio-waste, paper</td><td><button class="btn-view" onclick="showCostCentreDetail('cc6')">View</button></td></tr>
+            <tr><td class="cell-mono">22/200/4</td><td><span class="cell-primary">Riihimäki · Yhteispalvelut</span></td><td>Riihimäki</td><td>Shared service splits</td><td><button class="btn-view" onclick="showCostCentreDetail('cc7')">View</button></td></tr>
+            <tr><td class="cell-mono">30/300/1</td><td><span class="cell-primary">Vastaanotto · Hyvinkää-laitos</span></td><td>Hyvinkää</td><td>Weighbridge intake</td><td><button class="btn-view" onclick="showCostCentreDetail('cc8')">View</button></td></tr>
+            <tr><td class="cell-mono">30/300/2</td><td><span class="cell-primary">Vastaanotto · Riihimäki-laitos</span></td><td>Riihimäki</td><td>Weighbridge intake</td><td><button class="btn-view" onclick="showCostCentreDetail('cc9')">View</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: COST CENTRE DETAIL (data-driven from JS based on which row View'd)-->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-cost-centre-detail">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%;">
+      <div class="page-head">
+        <a href="#" onclick="showTab('cost-centres'); return false;" style="color: var(--blue); font-size: 13px; text-decoration: none; display: inline-block; margin-bottom: 8px;">← Back to cost centres</a>
+        <div class="page-title" id="ccDetailTitle">Cost centre detail</div>
+        <div class="page-subtitle" id="ccDetailSubtitle"></div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-296" target="_blank">PD-296 Cost centres & accounts on events</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-295" target="_blank">PD-295 Account & cost centre data</a>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Properties</div>
+              <div class="detail-card-pd">PD-296</div>
+            </div>
+            <div class="detail-card-body" id="ccDetailProperties"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Recent events tagged with this cost centre</div>
+              <div class="detail-card-pd">PD-299 · PD-296</div>
+            </div>
+            <div class="detail-card-body" style="padding: 0;">
+              <table style="width: 100%; font-size: 12px;">
+                <thead>
+                  <tr style="background: var(--surface);">
+                    <th style="padding: 8px 12px; text-align: left;">Date</th>
+                    <th style="padding: 8px 12px; text-align: left;">Customer</th>
+                    <th style="padding: 8px 12px; text-align: left;">Product</th>
+                    <th style="padding: 8px 12px; text-align: right;">Net (€)</th>
+                  </tr>
+                </thead>
+                <tbody id="ccDetailEvents"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Linked accounting accounts</div>
+              <div class="detail-card-pd">PD-295</div>
+            </div>
+            <div class="detail-card-body" id="ccDetailAccounts"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">FINVOICE export</div>
+              <div class="detail-card-pd">PD-296 · PD-310</div>
+            </div>
+            <div class="detail-card-body" style="padding: 16px;">
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">When events tagged with this cost centre are invoiced, the code is forwarded as part of the FINVOICE data on each invoice row:</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; background: #1e293b; color: #e2e8f0; padding: 12px; border-radius: 6px; overflow-x: auto;" id="ccDetailFinvoice"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: ACCOUNTING ACCOUNTS                                               -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-accounts">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%;">
+      <div class="page-head">
+        <div class="page-title">Accounting accounts</div>
+        <div class="page-subtitle">G/L accounts where revenue and VAT land. PD-295 allows main users to manage accounts (number, name, validity). PD-296 routes events to the right account based on product, region, and service responsibility — and forwards the account as part of FINVOICE.</div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-295" target="_blank">PD-295 Account & cost centre data</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-296" target="_blank">PD-296 Cost centres & accounts on events</a>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div></div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="openCreateForm('account')">+ New account</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Account #<span class="pd-label">PD-295</span></th>
+              <th>Name<span class="pd-label">PD-295</span></th>
+              <th>VAT rate<span class="pd-label">PD-278</span></th>
+              <th>Validity<span class="pd-label">PD-295</span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="cell-mono">30001</td><td><span class="cell-primary">Perusmaksutuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showAccountDetail('ac1')">View</button></td></tr>
+            <tr><td class="cell-mono">30002</td><td><span class="cell-primary">Kotitalousjätteen keräys — kunnallinen</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showAccountDetail('ac2')">View</button></td></tr>
+            <tr><td class="cell-mono">30003</td><td><span class="cell-primary">Sakokaivopalvelut</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showAccountDetail('ac3')">View</button></td></tr>
+            <tr><td class="cell-mono">30004</td><td><span class="cell-primary">Kierrätystuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showAccountDetail('ac4')">View</button></td></tr>
+            <tr><td class="cell-mono">30005</td><td><span class="cell-primary">Yritysjätteen vastaanotto</span></td><td class="cell-mono">0.0% RC</td><td class="cell-mono-muted">From 2018-01-01</td><td><button class="btn-view" onclick="showAccountDetail('ac5')">View</button></td></tr>
+            <tr><td class="cell-mono">30008</td><td><span class="cell-primary">Kuljetustuotot</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showAccountDetail('ac6')">View</button></td></tr>
+            <tr><td class="cell-mono">2939</td><td><span class="cell-primary">Maksettava ALV 25.5%</span></td><td class="cell-mono">25.5%</td><td class="cell-mono-muted">From 2024-09-01</td><td><button class="btn-view" onclick="showAccountDetail('ac7')">View</button></td></tr>
+            <tr><td class="cell-mono">2940</td><td><span class="cell-primary">Maksettava ALV 14%</span></td><td class="cell-mono">14.0%</td><td class="cell-mono-muted">From 2014-04-01</td><td><button class="btn-view" onclick="showAccountDetail('ac8')">View</button></td></tr>
+            <tr><td class="cell-mono">2942</td><td><span class="cell-primary">ALV 0% — käännetty verovelvollisuus</span></td><td class="cell-mono">0.0% RC</td><td class="cell-mono-muted">From 2018-01-01</td><td><button class="btn-view" onclick="showAccountDetail('ac9')">View</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: ACCOUNT DETAIL                                                    -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-account-detail">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%;">
+      <div class="page-head">
+        <a href="#" onclick="showTab('accounts'); return false;" style="color: var(--blue); font-size: 13px; text-decoration: none; display: inline-block; margin-bottom: 8px;">← Back to accounts</a>
+        <div class="page-title" id="acDetailTitle">Account detail</div>
+        <div class="page-subtitle" id="acDetailSubtitle"></div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-295" target="_blank">PD-295 Account & cost centre data</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-296" target="_blank">PD-296 Cost centres & accounts on events</a>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Properties</div>
+              <div class="detail-card-pd">PD-295</div>
+            </div>
+            <div class="detail-card-body" id="acDetailProperties"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Recent events posted to this account</div>
+              <div class="detail-card-pd">PD-299 · PD-296</div>
+            </div>
+            <div class="detail-card-body" style="padding: 0;">
+              <table style="width: 100%; font-size: 12px;">
+                <thead>
+                  <tr style="background: var(--surface);">
+                    <th style="padding: 8px 12px; text-align: left;">Date</th>
+                    <th style="padding: 8px 12px; text-align: left;">Customer</th>
+                    <th style="padding: 8px 12px; text-align: left;">Product</th>
+                    <th style="padding: 8px 12px; text-align: right;">Amount (€)</th>
+                  </tr>
+                </thead>
+                <tbody id="acDetailEvents"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Products / services routing to this account</div>
+              <div class="detail-card-pd">PD-295</div>
+            </div>
+            <div class="detail-card-body" id="acDetailProducts"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">FINVOICE export</div>
+              <div class="detail-card-pd">PD-295 · PD-310</div>
+            </div>
+            <div class="detail-card-body" style="padding: 16px;">
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">When events posted to this account are invoiced, the account number is forwarded as part of the FINVOICE data:</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; background: #1e293b; color: #e2e8f0; padding: 12px; border-radius: 6px; overflow-x: auto;" id="acDetailFinvoice"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: INVOICES                                                          -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-invoices">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%;">
+      <div class="page-head">
+        <div class="page-title">Invoices</div>
+        <div class="page-subtitle">Invoices produced by R1. Invoice numbers follow the PJH-defined Finnish-compliant sequence per PD-309. Each invoice carries everything FINVOICE 3.0 needs (PD-310): customer, dates, line totals, VAT, accounting identifiers. Credit notes attached via PD-269.</div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-309" target="_blank">PD-309 Invoice numbering</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-310" target="_blank">PD-310 FINVOICE data</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-269" target="_blank">PD-269 Credit notes</a>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Invoice #<span class="pd-label">PD-309</span></th>
+              <th>Customer<span class="pd-label">PD-278</span></th>
+              <th>Issued<span class="pd-label">PD-278</span></th>
+              <th>Legal class<span class="pd-label">PD-284 / PD-285</span></th>
+              <th style="text-align:right">Net (€)<span class="pd-label">PD-310</span></th>
+              <th style="text-align:right">VAT (€)<span class="pd-label">PD-310</span></th>
+              <th style="text-align:right">Total (€)<span class="pd-label">PD-310</span></th>
+              <th>Credit note<span class="pd-label">PD-269</span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="cell-mono">126000142</td><td><span class="cell-primary" onclick="showTab('invoice-detail')">Korhonen Maija</span><span class="cell-secondary">CID 100482</span></td><td class="cell-mono-muted">2026-05-15</td><td><span class="badge badge-blue">Public</span></td><td class="cell-amount">46.33</td><td class="cell-amount">11.81</td><td class="cell-amount">58.14</td><td>—</td><td><button class="btn-view" onclick="showTab('invoice-detail')">View</button></td></tr>
+            <tr><td class="cell-mono">126000143</td><td><span class="cell-primary">Asunto Oy Lammitie 8</span><span class="cell-secondary">CID 100719</span></td><td class="cell-mono-muted">2026-05-15</td><td><span class="badge badge-blue">Public</span></td><td class="cell-amount">208.40</td><td class="cell-amount">53.14</td><td class="cell-amount">261.54</td><td>—</td><td><button class="btn-view" onclick="showTab('invoice-detail')">View</button></td></tr>
+            <tr><td class="cell-mono">226000044</td><td><span class="cell-primary">Rakennus Virtanen Oy</span><span class="cell-secondary">CID 200314</span></td><td class="cell-mono-muted">2026-05-14</td><td><span class="badge badge-purple">Private</span></td><td class="cell-amount">98.40</td><td class="cell-amount">0.00</td><td class="cell-amount">98.40</td><td class="cell-mono-muted">→ 326000007</td><td><button class="btn-view" onclick="showTab('invoice-detail')">View</button></td></tr>
+            <tr><td class="cell-mono">126000141</td><td><span class="cell-primary">Lahtinen Pekka</span><span class="cell-secondary">CID 100612</span></td><td class="cell-mono-muted">2026-05-14</td><td><span class="badge badge-amber">Municipal sec.</span></td><td class="cell-amount">142.00</td><td class="cell-amount">36.21</td><td class="cell-amount">178.21</td><td>—</td><td><button class="btn-view" onclick="showTab('invoice-detail')">View</button></td></tr>
+            <tr><td class="cell-mono">126000139<br><span class="cell-mono-muted">+ 226000043</span></td><td><span class="cell-primary">Mäkelä Jarkko</span><span class="cell-secondary">CID 100501</span></td><td class="cell-mono-muted">2026-05-13</td><td><span class="badge badge-blue">Public</span> <span class="badge badge-purple">Private</span></td><td class="cell-amount">187.20</td><td class="cell-amount">38.04</td><td class="cell-amount">225.24</td><td>—</td><td><button class="btn-view" onclick="showTab('invoice-detail')">View</button></td></tr>
+            <tr><td class="cell-mono">226000042</td><td><span class="cell-primary">Suomen Kierrätys Oy</span><span class="cell-secondary">CID 200511</span></td><td class="cell-mono-muted">2026-05-12</td><td><span class="badge badge-purple">Private</span></td><td class="cell-amount">231.55</td><td class="cell-amount">0.00</td><td class="cell-amount">231.55</td><td>—</td><td><button class="btn-view" onclick="showTab('invoice-detail')">View</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">Invoice number sequence (PD-309)</div>
+        <div class="callout-text">Per PJH: first digit = <strong>1</strong> for public law, <strong>2</strong> for private law, <strong>3</strong> for credit notes. Second digit = year (6 = 2026). Last seven digits = running sequence. So <span class="mono">126000142</span> is the 142nd public-law invoice of 2026. Sequence numbers are never reused (accounts receivable requirement). Mixed-law customers get two parallel invoices, each with its own number.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: CREDIT NOTES                                                      -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-credit-notes">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%;">
+      <div class="page-head">
+        <div class="page-title">Credit notes (hyvityslaskut)</div>
+        <div class="page-subtitle">PD-269 — credit invoices. Each credit note has its own sequential number (per PD-309), references the credited invoice, carries custom text and an internal comment, and produces a FINVOICE INV02 file. Full or partial credit supported.</div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-269" target="_blank">PD-269 Credit invoices</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-309" target="_blank">PD-309 Numbering</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-310" target="_blank">PD-310 FINVOICE data</a>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div></div>
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="openCreateForm('credit-note')">+ Issue credit note</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Credit note #<span class="pd-label">PD-309</span></th>
+              <th>References invoice<span class="pd-label">PD-269</span></th>
+              <th>Customer<span class="pd-label">PD-278</span></th>
+              <th>Issued<span class="pd-label">PD-278</span></th>
+              <th>Credit text<span class="pd-label">PD-269</span></th>
+              <th style="text-align:right">Amount (€)<span class="pd-label">PD-310</span></th>
+              <th>FINVOICE<span class="pd-label">PD-310</span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="cell-mono">326000007</td><td class="cell-mono-muted">→ 226000044</td><td><span class="cell-primary">Rakennus Virtanen Oy</span></td><td class="cell-mono-muted">2026-05-14</td><td>Hyvitys virheellisestä hinnoittelusta</td><td class="cell-amount">−98.40</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showCreditNoteDetail('cn1')">View</button></td></tr>
+            <tr><td class="cell-mono">326000006</td><td class="cell-mono-muted">→ 126000132</td><td><span class="cell-primary">Toivonen Anne</span></td><td class="cell-mono-muted">2026-05-08</td><td>Hyvitys edelliselle haltijalle</td><td class="cell-amount">−42.18</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showCreditNoteDetail('cn2')">View</button></td></tr>
+            <tr><td class="cell-mono">326000005</td><td class="cell-mono-muted">→ 126000119</td><td><span class="cell-primary">Salonen Mika</span></td><td class="cell-mono-muted">2026-05-02</td><td>Palvelua ei suoritettu</td><td class="cell-amount">−12.60</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showCreditNoteDetail('cn3')">View</button></td></tr>
+            <tr><td class="cell-mono">326000004</td><td class="cell-mono-muted">→ 126000098</td><td><span class="cell-primary">Heinonen Sanna</span></td><td class="cell-mono-muted">2026-04-28</td><td>Asiakas muuttanut osoitteesta</td><td class="cell-amount">−84.36</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showCreditNoteDetail('cn4')">View</button></td></tr>
+            <tr><td class="cell-mono">326000003</td><td class="cell-mono-muted">→ 126000077</td><td><span class="cell-primary">Karjalainen Tomi</span></td><td class="cell-mono-muted">2026-04-22</td><td>ALV-prosenttikorjaus</td><td class="cell-amount">−5.20</td><td><span class="badge badge-cyan">INV02</span></td><td><button class="btn-view" onclick="showCreditNoteDetail('cn5')">View</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">Why credit notes are a first-class subtype</div>
+        <div class="callout-text">PD-269 specifies credit notes are standalone documents that carry their own custom text, internal comment, and an explicit reference to the credited invoice. FINVOICE distinguishes them with message code <span class="mono">INV02</span> (separate from <span class="mono">INV01</span>). Both full and partial credit are supported — partial means crediting only selected invoice rows. Credited transactions remain visible in customer transaction history.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: CREDIT NOTE DETAIL                                                -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-credit-note-detail">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%;">
+      <div class="page-head">
+        <a href="#" onclick="showTab('credit-notes'); return false;" style="color: var(--blue); font-size: 13px; text-decoration: none; display: inline-block; margin-bottom: 8px;">← Back to credit notes</a>
+        <div class="page-title" id="cnDetailTitle">Credit note detail</div>
+        <div class="page-subtitle" id="cnDetailSubtitle"></div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-269" target="_blank">PD-269 Credit invoices</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-309" target="_blank">PD-309 Numbering</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-310" target="_blank">PD-310 FINVOICE data</a>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Credit note properties</div>
+              <div class="detail-card-pd">PD-269 · PD-309</div>
+            </div>
+            <div class="detail-card-body" id="cnDetailProperties"></div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Credited invoice lines</div>
+              <div class="detail-card-pd">PD-269</div>
+            </div>
+            <div class="detail-card-body" style="padding: 0;">
+              <table style="width: 100%; font-size: 12px;">
+                <thead>
+                  <tr style="background: var(--surface);">
+                    <th style="padding: 8px 12px; text-align: left;">Product</th>
+                    <th style="padding: 8px 12px; text-align: right;">Net (€)</th>
+                    <th style="padding: 8px 12px; text-align: right;">VAT (€)</th>
+                    <th style="padding: 8px 12px; text-align: right;">Total (€)</th>
+                  </tr>
+                </thead>
+                <tbody id="cnDetailLines"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Customer-facing credit text</div>
+              <div class="detail-card-pd">PD-269</div>
+            </div>
+            <div class="detail-card-body" style="padding: 16px;">
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">This text appears on the credit note delivered to the customer:</div>
+              <div style="font-size: 13px; padding: 12px; background: var(--surface); border-left: 3px solid var(--blue); border-radius: 4px; font-style: italic;" id="cnDetailCreditText"></div>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Internal comment</div>
+              <div class="detail-card-pd">PD-269</div>
+            </div>
+            <div class="detail-card-body" style="padding: 16px;">
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 6px;">Visible only to office staff. Not on the FINVOICE export:</div>
+              <div style="font-size: 13px; padding: 12px; background: #fff7ed; border-left: 3px solid #f59e0b; border-radius: 4px;" id="cnDetailInternalComment"></div>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">FINVOICE INV02 export</div>
+              <div class="detail-card-pd">PD-310</div>
+            </div>
+            <div class="detail-card-body" style="padding: 16px;">
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">A credit note is exported as a separate FINVOICE message with code <span class="mono">INV02</span>:</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; background: #1e293b; color: #e2e8f0; padding: 12px; border-radius: 6px; overflow-x: auto;" id="cnDetailFinvoice"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: INVOICE DETAIL                                                    -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-invoice-detail">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%;">
+      <div class="page-head">
+        <div class="page-title">Invoice 126000142</div>
+        <div class="page-subtitle">Korhonen Maija — three lines, validated FINVOICE 3.0 INV01.</div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-310" target="_blank">PD-310 FINVOICE data</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-309" target="_blank">PD-309 Numbering</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-296" target="_blank">PD-296 Cost centres & accounts</a>
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Invoice lines</div>
+              <div class="detail-card-pd">PD-299 · PD-296</div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Date</th>
+                  <th>Qty</th>
+                  <th>Cost ctr</th>
+                  <th>Account</th>
+                  <th>VAT</th>
+                  <th style="text-align:right">Net</th>
+                  <th style="text-align:right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><span class="cell-primary">Sekajäte 240L tyhjennys</span></td><td class="cell-mono-muted">05-12</td><td>1</td><td class="cell-mono">20/200/3</td><td class="cell-mono">30002</td><td class="cell-mono">25.5%</td><td class="cell-amount">6.32</td><td class="cell-amount">7.93</td></tr>
+                <tr><td><span class="cell-primary">Biojäte 140L tyhjennys</span></td><td class="cell-mono-muted">05-12</td><td>1</td><td class="cell-mono">20/200/3</td><td class="cell-mono">30002</td><td class="cell-mono">25.5%</td><td class="cell-amount">4.15</td><td class="cell-amount">5.21</td></tr>
+                <tr><td><span class="cell-primary">Vuosiperusmaksu 2026</span></td><td class="cell-mono-muted">05-11</td><td>1</td><td class="cell-mono">20/200/1</td><td class="cell-mono">30001</td><td class="cell-mono">25.5%</td><td class="cell-amount">35.86</td><td class="cell-amount">45.00</td></tr>
+                <tr style="background: var(--surface);"><td colspan="6" style="text-align: right; font-weight: 500;">Total</td><td class="cell-amount" style="font-weight: 600;">46.33</td><td class="cell-amount" style="font-weight: 600;">58.14</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">FINVOICE 3.0 XML output</div>
+              <div class="detail-card-pd">PD-310 · INV01 message</div>
+            </div>
+<div class="xml-block"><span class="xml-comment">&lt;!-- Validated against Finanssiala XSD + EN16931 rules --&gt;</span>
+<span class="xml-tag">&lt;Finvoice</span> <span class="xml-attr">Version</span>=<span class="xml-string">"3.0"</span><span class="xml-tag">&gt;</span>
+  <span class="xml-tag">&lt;MessageTransmissionDetails&gt;</span>
+    <span class="xml-tag">&lt;MessageSenderDetails&gt;</span>
+      <span class="xml-tag">&lt;FromIdentifier&gt;</span>003717829345<span class="xml-tag">&lt;/FromIdentifier&gt;</span>
+      <span class="xml-tag">&lt;FromIntermediator&gt;</span>003723327487<span class="xml-tag">&lt;/FromIntermediator&gt;</span>
+    <span class="xml-tag">&lt;/MessageSenderDetails&gt;</span>
+  <span class="xml-tag">&lt;/MessageTransmissionDetails&gt;</span>
+
+  <span class="xml-tag">&lt;MessageDetails&gt;</span>
+    <span class="xml-tag">&lt;MessageIdentifier&gt;</span>126000142<span class="xml-tag">&lt;/MessageIdentifier&gt;</span>
+    <span class="xml-tag">&lt;MessageTimeStamp&gt;</span>2026-05-15T08:00:00<span class="xml-tag">&lt;/MessageTimeStamp&gt;</span>
+    <span class="xml-tag">&lt;SpecificationIdentifier&gt;</span>EN16931<span class="xml-tag">&lt;/SpecificationIdentifier&gt;</span>
+  <span class="xml-tag">&lt;/MessageDetails&gt;</span>
+
+  <span class="xml-tag">&lt;SellerPartyDetails&gt;</span>
+    <span class="xml-tag">&lt;SellerOrganisationName&gt;</span>Päijät-Hämeen Jätehuolto Oy<span class="xml-tag">&lt;/SellerOrganisationName&gt;</span>
+    <span class="xml-tag">&lt;SellerOrganisationTaxCode&gt;</span>1782934-5<span class="xml-tag">&lt;/SellerOrganisationTaxCode&gt;</span>
+  <span class="xml-tag">&lt;/SellerPartyDetails&gt;</span>
+
+  <span class="xml-tag">&lt;BuyerPartyDetails&gt;</span>
+    <span class="xml-tag">&lt;BuyerPartyIdentifier&gt;</span>100482<span class="xml-tag">&lt;/BuyerPartyIdentifier&gt;</span>
+    <span class="xml-tag">&lt;BuyerOrganisationName&gt;</span>Korhonen Maija<span class="xml-tag">&lt;/BuyerOrganisationName&gt;</span>
+    <span class="xml-tag">&lt;BuyerPostalAddressDetails&gt;</span>
+      <span class="xml-tag">&lt;BuyerStreetName&gt;</span>Mäntytie 14<span class="xml-tag">&lt;/BuyerStreetName&gt;</span>
+      <span class="xml-tag">&lt;BuyerTownName&gt;</span>Hyvinkää<span class="xml-tag">&lt;/BuyerTownName&gt;</span>
+      <span class="xml-tag">&lt;BuyerPostCodeIdentifier&gt;</span>05800<span class="xml-tag">&lt;/BuyerPostCodeIdentifier&gt;</span>
+      <span class="xml-tag">&lt;CountryCode&gt;</span>FI<span class="xml-tag">&lt;/CountryCode&gt;</span>
+    <span class="xml-tag">&lt;/BuyerPostalAddressDetails&gt;</span>
+  <span class="xml-tag">&lt;/BuyerPartyDetails&gt;</span>
+
+  <span class="xml-tag">&lt;InvoiceDetails&gt;</span>
+    <span class="xml-tag">&lt;InvoiceTypeCode&gt;</span>INV01<span class="xml-tag">&lt;/InvoiceTypeCode&gt;</span>
+    <span class="xml-tag">&lt;OriginCode&gt;</span>Original<span class="xml-tag">&lt;/OriginCode&gt;</span>
+    <span class="xml-tag">&lt;InvoiceNumber&gt;</span>126000142<span class="xml-tag">&lt;/InvoiceNumber&gt;</span>
+    <span class="xml-tag">&lt;InvoiceDate</span> <span class="xml-attr">Format</span>=<span class="xml-string">"CCYYMMDD"</span><span class="xml-tag">&gt;</span>20260515<span class="xml-tag">&lt;/InvoiceDate&gt;</span>
+    <span class="xml-tag">&lt;InvoiceTotalVatExcludedAmount</span> <span class="xml-attr">Currency</span>=<span class="xml-string">"EUR"</span><span class="xml-tag">&gt;</span>46,33<span class="xml-tag">&lt;/InvoiceTotalVatExcludedAmount&gt;</span>
+    <span class="xml-tag">&lt;InvoiceTotalVatAmount</span> <span class="xml-attr">Currency</span>=<span class="xml-string">"EUR"</span><span class="xml-tag">&gt;</span>11,81<span class="xml-tag">&lt;/InvoiceTotalVatAmount&gt;</span>
+    <span class="xml-tag">&lt;InvoiceTotalVatIncludedAmount</span> <span class="xml-attr">Currency</span>=<span class="xml-string">"EUR"</span><span class="xml-tag">&gt;</span>58,14<span class="xml-tag">&lt;/InvoiceTotalVatIncludedAmount&gt;</span>
+  <span class="xml-tag">&lt;/InvoiceDetails&gt;</span>
+
+  <span class="xml-comment">&lt;!-- Row 1: Sekajäte 240L tyhjennys --&gt;</span>
+  <span class="xml-tag">&lt;InvoiceRow&gt;</span>
+    <span class="xml-tag">&lt;ArticleName&gt;</span>Sekajätteen tyhjennys 240L<span class="xml-tag">&lt;/ArticleName&gt;</span>
+    <span class="xml-tag">&lt;DeliveredQuantity</span> <span class="xml-attr">QuantityUnitCode</span>=<span class="xml-string">"kpl"</span><span class="xml-tag">&gt;</span>1<span class="xml-tag">&lt;/DeliveredQuantity&gt;</span>
+    <span class="xml-tag">&lt;RowVatRatePercent&gt;</span>25.50<span class="xml-tag">&lt;/RowVatRatePercent&gt;</span>
+    <span class="xml-tag">&lt;RowVatCode&gt;</span>S<span class="xml-tag">&lt;/RowVatCode&gt;</span>
+    <span class="xml-tag">&lt;AccountDimensionText&gt;</span>30002<span class="xml-tag">&lt;/AccountDimensionText&gt;</span>
+    <span class="xml-tag">&lt;DimensionText&gt;</span>20/200/3<span class="xml-tag">&lt;/DimensionText&gt;</span>
+    <span class="xml-tag">&lt;RowAmount</span> <span class="xml-attr">Currency</span>=<span class="xml-string">"EUR"</span><span class="xml-tag">&gt;</span>7,93<span class="xml-tag">&lt;/RowAmount&gt;</span>
+  <span class="xml-tag">&lt;/InvoiceRow&gt;</span>
+
+  <span class="xml-comment">&lt;!-- Rows 2-3 omitted for brevity --&gt;</span>
+<span class="xml-tag">&lt;/Finvoice&gt;</span></div>
+          </div>
+        </div>
+
+        <!-- Right column: metadata -->
+        <div>
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Invoice metadata</div>
+              <div class="detail-card-pd">PD-309 · PD-278 · PD-310</div>
+            </div>
+            <div class="detail-card-body">
+              <div class="kv-row"><span class="kv-key">Invoice #</span><span class="kv-value kv-value-mono">126000142</span></div>
+              <div class="kv-row"><span class="kv-key">Type code</span><span class="kv-value"><span class="badge badge-cyan">INV01</span></span></div>
+              <div class="kv-row"><span class="kv-key">Issue date</span><span class="kv-value kv-value-mono">2026-05-15</span></div>
+              <div class="kv-row"><span class="kv-key">Due date</span><span class="kv-value kv-value-mono">2026-06-04</span></div>
+              <div class="kv-row"><span class="kv-key">Payment ref</span><span class="kv-value kv-value-mono">126 00 01425</span></div>
+              <div class="kv-row"><span class="kv-key">Language</span><span class="kv-value">FI</span></div>
+              <div class="kv-row"><span class="kv-key">Legal class</span><span class="kv-value"><span class="badge badge-blue">Public law</span></span></div>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Buyer</div>
+              <div class="detail-card-pd">PD-278</div>
+            </div>
+            <div class="detail-card-body">
+              <div class="kv-row"><span class="kv-key">Customer ID</span><span class="kv-value kv-value-mono">100482</span></div>
+              <div class="kv-row"><span class="kv-key">Name</span><span class="kv-value">Korhonen Maija</span></div>
+              <div class="kv-row"><span class="kv-key">Billing address</span><span class="kv-value">Mäntytie 14, 05800 Hyvinkää</span></div>
+            </div>
+          </div>
+
+          <div class="detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">FINVOICE validation</div>
+              <div class="detail-card-pd">PD-310</div>
+            </div>
+            <div class="detail-card-body">
+              <div class="kv-row"><span class="kv-key">XSD schema</span><span class="kv-value"><span class="badge badge-green">Passed</span></span></div>
+              <div class="kv-row"><span class="kv-key">EN16931 rules</span><span class="kv-value"><span class="badge badge-green">Passed</span></span></div>
+              <div class="kv-row"><span class="kv-key">Missing fields</span><span class="kv-value">None</span></div>
+              <div class="kv-row"><span class="kv-key">Transmission</span><span class="kv-value"><span class="badge badge-gray">Not in R1</span></span></div>
+            </div>
+          </div>
+
+          <div class="r2-detail-card">
+            <div class="detail-card-head">
+              <div class="detail-card-title">Invoice options <span class="r2-pill">R2</span></div>
+              <div class="detail-card-pd">R2</div>
+            </div>
+            <div class="detail-card-body">
+              <div class="kv-row"><span class="kv-key">Gross / net <span class="r2-inline">PD-301</span></span><span class="kv-value">Gross (VAT shown per line + summary)</span></div>
+              <div class="kv-row"><span class="kv-key">Reverse charge <span class="r2-inline">PD-300</span></span><span class="kv-value">Not applicable (public law)</span></div>
+              <div class="kv-row"><span class="kv-key">Custom text <span class="r2-inline">PD-302</span></span><span class="kv-value">InvoiceFreeText / RowFreeText</span></div>
+              <div class="kv-row"><span class="kv-key">Template <span class="r2-inline">PD-307</span></span><span class="kv-value">Default (code passed to operator)</span></div>
+              <div class="kv-row"><span class="kv-key">Language <span class="r2-inline">PD-308</span></span><span class="kv-value">FI (PJH: no per-customer language)</span></div>
+              <div class="kv-row"><span class="kv-key">Surcharge <span class="r2-inline">PD-294</span></span><span class="kv-value">Toggle off for PJH</span></div>
+              <div class="kv-row"><span class="kv-key">Pre-send checks <span class="r2-inline">PD-271</span></span><span class="kv-value"><span class="badge badge-pink">Passed</span></span></div>
+              <div class="kv-row"><span class="kv-key">AR / reporting data <span class="r2-inline">PD-289</span></span><span class="kv-value">Public/private, account, cost centre, VAT on every line</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: BILLING RUNS (R2)                                                 -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-billing-runs">
+  <div class="content-wrapper">
+    <div class="left-sidebar">
+      <div class="category-title">Run status <span style="font-size:9px; margin-left:4px;">(PD-297)</span></div>
+      <div class="category-item active" onclick="filterRuns('all', this)"><span>All runs</span><span class="category-count">4</span></div>
+      <div class="category-item" onclick="filterRuns('draft', this)"><span>Draft</span><span class="category-count">1</span></div>
+      <div class="category-item" onclick="filterRuns('ready', this)"><span>Ready to send</span><span class="category-count">1</span></div>
+      <div class="category-item" onclick="filterRuns('sent', this)"><span>Sent</span><span class="category-count">1</span></div>
+      <div class="category-item" onclick="filterRuns('error', this)"><span>Error</span><span class="category-count">1</span></div>
+    </div>
+
+    <div class="main-area">
+      <div class="page-head">
+        <div class="page-title">Billing runs <span class="r2-pill">R2</span></div>
+        <div class="page-subtitle">The heart of R2. A billing run gathers ready events by their cycle and filters, bundles them into invoice lines, and produces a dataset the billing user reviews and sends. Nothing is sent automatically — the user confirms each run.</div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-291" target="_blank">PD-291 Billing cycles</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-290" target="_blank">PD-290 Bundling</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-292" target="_blank">PD-292 Billing restrictions</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-293" target="_blank">PD-293 Run filtering</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-297" target="_blank">PD-297 Statuses</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-273" target="_blank">PD-273 Cancel before send</a>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input class="search-box" placeholder="Search billing runs…" oninput="filterTable('billing-runs-table', this.value)">
+        <div class="action-buttons">
+          <button class="btn btn-r2" onclick="openCreateForm('billing-run')">+ New billing run</button>
+        </div>
+      </div>
+
+      <!-- Run filters (PD-293) -->
+      <div class="r2-card">
+        <div class="r2-card-title">Run filters <span class="r2-pill">PD-293</span></div>
+        <div class="r2-card-sub">The fixed filter set from the requirement. A run includes only the events that match.</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span class="badge badge-pink">Municipality: Hyvinkää</span>
+          <span class="badge badge-pink">Min € threshold: 5.00</span>
+          <span class="badge badge-pink">Period: 2026-05</span>
+          <span class="badge badge-pink">Customer type: Residential</span>
+          <span class="badge badge-pink">Service type: All</span>
+          <span class="badge badge-pink">Reception location: Any</span>
+          <span class="badge badge-pink">Service responsibility: Municipal</span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table id="billing-runs-table">
+          <thead>
+            <tr>
+              <th>Run ID</th>
+              <th>Cycle<span class="pd-label">PD-291</span></th>
+              <th>Scope / filter<span class="pd-label">PD-293</span></th>
+              <th>Events</th>
+              <th>Invoices</th>
+              <th style="text-align:right">Total (€)</th>
+              <th>Status<span class="pd-label">PD-297</span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="r2-row" data-run-status="sent">
+              <td class="cell-mono">RUN-2026-05-001</td>
+              <td>Monthly</td>
+              <td>Hyvinkää · Residential · May<span class="cell-secondary">municipal</span></td>
+              <td>1 240</td>
+              <td>602</td>
+              <td class="cell-amount">48 210.55</td>
+              <td><span class="run-status run-sent">Sent</span></td>
+              <td><button class="btn-view" onclick="openRunDetail('RUN-2026-05-001')">View</button></td>
+            </tr>
+            <tr class="r2-row" data-run-status="ready">
+              <td class="cell-mono">RUN-2026-05-002</td>
+              <td>Quarterly</td>
+              <td>Riihimäki · Residential · Q2<span class="cell-secondary">municipal</span></td>
+              <td>3 580</td>
+              <td>1 790</td>
+              <td class="cell-amount">141 905.00</td>
+              <td><span class="run-status run-ready" id="run002-status">Ready to send</span></td>
+              <td><button class="btn-view" onclick="document.getElementById('send-controls').scrollIntoView({behavior:'smooth'}); toast('Review the dataset below, then Send or Cancel.', 'PD-273', true)">Review &amp; send</button></td>
+            </tr>
+            <tr class="r2-row" data-run-status="draft">
+              <td class="cell-mono">RUN-2026-05-003</td>
+              <td>Immediate</td>
+              <td>Sludge events · on completion<span class="cell-secondary">PD-292 separate invoice</span></td>
+              <td>14</td>
+              <td>14</td>
+              <td class="cell-amount">1 988.00</td>
+              <td><span class="run-status run-draft">Draft</span></td>
+              <td><button class="btn-view" onclick="openRunDetail('RUN-2026-05-003')">View</button></td>
+            </tr>
+            <tr class="r2-row" data-run-status="error">
+              <td class="cell-mono">RUN-2026-05-004</td>
+              <td>Monthly</td>
+              <td>Weighbridge customers · May<span class="cell-secondary">market-based</span></td>
+              <td>328</td>
+              <td>96</td>
+              <td class="cell-amount">62 540.20</td>
+              <td><span class="run-status run-error">Error</span></td>
+              <td><button class="btn-view" onclick="openRunDetail('RUN-2026-05-004')">View errors</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Bundling preview (PD-290) -->
+      <div class="r2-detail-card" style="margin-top:20px;">
+        <div class="detail-card-head">
+          <div class="detail-card-title">Bundling preview — one customer invoice <span class="r2-pill">R2</span></div>
+          <div class="detail-card-pd">PD-290</div>
+        </div>
+        <div style="padding:16px;">
+          <div class="r2-card-sub" style="margin-bottom:12px;">Customer-specific grouping decides what appears as one line vs many. The events stay separate underneath for accounting; only the invoice presentation is consolidated.</div>
+          <table>
+            <thead>
+              <tr><th>Invoice line (what the customer sees)</th><th>Bundled from</th><th>Rule</th><th style="text-align:right">Total (€)</th></tr>
+            </thead>
+            <tbody>
+              <tr class="r2-row"><td><span class="cell-primary">Waste container collection — 12 emptyings</span></td><td>12 emptying events</td><td><span class="r2-inline">Bundled by product group</span></td><td class="cell-amount">95.16</td></tr>
+              <tr class="r2-row"><td><span class="cell-primary">Monthly service fee</span></td><td>1 base-fee event</td><td><span class="r2-inline">Separate line</span></td><td class="cell-amount">35.86</td></tr>
+              <tr class="r2-row"><td><span class="cell-primary">Pallet delivery — 2026-05-08</span></td><td>1 of 3 pallet events</td><td><span class="r2-inline">Listed individually</span></td><td class="cell-amount">48.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Send controls (PD-273) -->
+      <div class="r2-detail-card" id="send-controls" style="margin-top:20px;">
+        <div class="detail-card-head">
+          <div class="detail-card-title">Send controls — RUN-2026-05-002 <span class="r2-pill">R2</span></div>
+          <div class="detail-card-pd">PD-273 · PD-297</div>
+        </div>
+        <div style="padding:16px;">
+          <div class="r2-card-sub" style="margin-bottom:14px;">Nothing is sent automatically. The billing user reviews the dataset and clicks Send. A run can be cancelled any time before send. Once Sent, the content locks and can no longer be edited.</div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+            <span class="run-status run-draft">Draft</span>
+            <span style="color:var(--text-faint);">→</span>
+            <span class="run-status run-ready" style="outline:2px solid var(--pink); outline-offset:1px;">Ready to send ● current</span>
+            <span style="color:var(--text-faint);">→</span>
+            <span class="run-status run-sent" id="run002-flow-sent">Sent · locked</span>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center; padding:14px; background:var(--white); border:1px solid #f9c6e0; border-radius:var(--radius);">
+            <div style="flex:1;">
+              <div style="font-weight:500; font-size:13px;">1 790 invoices · 141 905.00 €</div>
+              <div class="cell-secondary" style="margin-top:2px;">Riihimäki · Residential · Q2 · reviewed and ready</div>
+            </div>
+            <button class="btn btn-secondary" style="border-color:var(--pink); color:var(--pink);" onclick="cancelRun()">Cancel run</button>
+            <button class="btn btn-r2" onclick="sendRun()">Send to customer</button>
+          </div>
+          <div class="r2-inline" style="margin-top:10px;">Cancel before send returns the dataset to draft. The invoice numbers are not reused once issued (see PD-309).</div>
+        </div>
+      </div>
+
+      <!-- Re-price unbilled events (PD-319) -->
+      <div class="r2-detail-card" style="margin-top:20px;">
+        <div class="detail-card-head">
+          <div class="detail-card-title">Re-price unbilled events <span class="r2-pill">R2</span></div>
+          <div class="detail-card-pd">PD-319</div>
+        </div>
+        <div style="padding:16px;">
+          <div class="r2-card-sub" style="margin-bottom:12px;">The January tariff was corrected after some events were already recorded at the old price, but not yet invoiced. Select unbilled events by date and product, then re-price them against the corrected price list. Invoiced events are never touched.</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
+            <span class="badge badge-pink">Date: 2026-01-01 → 2026-01-31</span>
+            <span class="badge badge-pink">Product: Sekajäte 240L</span>
+            <span class="badge badge-pink">Status: unbilled only</span>
+          </div>
+          <table id="reprice-table">
+            <thead>
+              <tr><th>Event</th><th>Date</th><th style="text-align:right">Old price</th><th style="text-align:right">New price</th><th>Source</th></tr>
+            </thead>
+            <tbody>
+              <tr class="r2-row"><td>evt-2026-01-08-0412</td><td class="cell-mono">01-08</td><td class="cell-amount cell-amount-muted old-price">7.50</td><td class="cell-amount">7.93</td><td><span class="r2-inline">Corrected price list</span></td></tr>
+              <tr class="r2-row"><td>evt-2026-01-15-0533</td><td class="cell-mono">01-15</td><td class="cell-amount cell-amount-muted old-price">7.50</td><td class="cell-amount">7.93</td><td><span class="r2-inline">Corrected price list</span></td></tr>
+              <tr class="r2-row"><td>evt-2026-01-22-0690</td><td class="cell-mono">01-22</td><td class="cell-amount cell-amount-muted old-price">7.50</td><td class="cell-amount">7.93</td><td><span class="r2-inline">Corrected price list</span></td></tr>
+            </tbody>
+          </table>
+          <div style="display:flex; justify-content:flex-end; margin-top:14px;">
+            <button class="btn btn-r2" onclick="repriceEvents()">Re-price 3 selected events</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: SEASONAL FEES (R2)                                                -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-seasonal-fees">
+  <div class="content-wrapper">
+    <div class="main-area" style="width:100%;">
+      <div class="page-head">
+        <div class="page-title">Seasonal fees &amp; minimum charge <span class="r2-pill">R2</span></div>
+        <div class="page-subtitle">Fees that are not triggered by a truck. A scheduled job generates these as ordinary billing events from assignments on the property class or contract. Amount changes are price-list changes, so no separate fee engine.</div>
+        <div class="page-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-288" target="_blank">PD-288 Seasonal fees</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-286" target="_blank">PD-286 Minimum fee</a>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input class="search-box" placeholder="Search fee assignments…" oninput="filterTable('fee-table', this.value)">
+        <div class="action-buttons">
+          <button class="btn btn-r2" onclick="openCreateForm('fee-assignment')">+ New fee assignment</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table id="fee-table">
+          <thead>
+            <tr>
+              <th>Fee (product)</th>
+              <th>Applies to</th>
+              <th>Frequency</th>
+              <th>Invoiced</th>
+              <th style="text-align:right">Amount (€)</th>
+              <th>Next run</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="r2-row"><td><span class="cell-primary">Vuosiperusmaksu (annual base fee)</span></td><td>Permanent residences</td><td>Annually</td><td>January</td><td class="cell-amount">150.00</td><td class="cell-mono">2027-01</td></tr>
+            <tr class="r2-row"><td><span class="cell-primary">Vuosiperusmaksu (annual base fee)</span></td><td>Holiday homes</td><td>Annually</td><td>April</td><td class="cell-amount">75.00</td><td class="cell-mono">2027-04</td></tr>
+            <tr class="r2-row"><td><span class="cell-primary">Shared collection point fee</span></td><td>Shared-point participants</td><td>Monthly</td><td>1st of month</td><td class="cell-amount">10.00</td><td class="cell-mono">2026-07-01</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="r2-detail-card" style="margin-top:20px;">
+        <div class="detail-card-head">
+          <div class="detail-card-title">Minimum charge <span class="r2-pill">R2</span></div>
+          <div class="detail-card-pd">PD-286</div>
+        </div>
+        <div style="padding:16px;">
+          <div class="r2-card-sub" style="margin-bottom:12px;">Each customer is charged at least the period minimum. The comparison uses the VAT 0% net total (per Päivi). If the period falls short, an adjustment line tops it up. The minimum is not applied when the contract did not span the full period.</div>
+          <table>
+            <thead>
+              <tr><th>Customer</th><th>Period net (VAT 0%)</th><th>Minimum</th><th>Adjustment</th><th>Note</th></tr>
+            </thead>
+            <tbody>
+              <tr class="r2-row"><td><span class="cell-primary">Korhonen Maija</span></td><td class="cell-amount">128.40</td><td class="cell-amount">150.00</td><td class="cell-amount" style="color:var(--pink);">+21.60</td><td class="cell-secondary" style="margin-top:0;">Topped up to minimum</td></tr>
+              <tr class="r2-row"><td><span class="cell-primary">Asunto Oy Lammitie 8</span></td><td class="cell-amount">412.00</td><td class="cell-amount">150.00</td><td class="cell-amount">—</td><td class="cell-secondary" style="margin-top:0;">Above minimum</td></tr>
+              <tr class="r2-row"><td><span class="cell-primary">Niemi Tiina</span></td><td class="cell-amount">40.00</td><td class="cell-amount">150.00</td><td class="cell-amount">—</td><td class="cell-secondary" style="margin-top:0;">Contract started Sept — not applied</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB: DEMO FLOW (OVERVIEW)                                              -->
+<!-- ===================================================================== -->
+<div class="tab-panel" id="tab-overview">
+  <div class="content-wrapper">
+    <div class="main-area" style="width: 100%; max-width: 1100px;">
+      <div class="flow-intro">
+        <div class="flow-intro-title">Release 1 — The Finnish foundation</div>
+        <div class="flow-intro-subtitle">Rebuild the underlying data model so it's correct for Finland. Ship one narrow end-to-end scenario on top of it that PJH can click through and validate. Five steps. Each step lives on one of the tabs above — click any step to jump to its screen.</div>
+      </div>
+
+      <div class="flow-step" onclick="showTab('events')">
+        <div class="flow-step-num">01</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">Real event arrives</div>
+          <div class="flow-step-desc">A bin emptying event from route execution lands in the new event schema with all PJH-required fields: VAT, cost centre, account, service responsibility, public/private law tag.</div>
+          <div class="flow-step-screen">→ Events tab</div>
+        </div>
+        <div class="flow-step-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-299" target="_blank">PD-299</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-278" target="_blank">PD-278</a>
+        </div>
+      </div>
+
+      <div class="flow-step" onclick="showTab('cost-centres')">
+        <div class="flow-step-num">02</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">Event is priced and classified</div>
+          <div class="flow-step-desc">Pricing engine applies VAT and tariff, then stamps the line with cost centre, accounting account, and public/private law tag — using the cost centres and accounts configured during PJH implementation.</div>
+          <div class="flow-step-screen">→ Cost centres / Accounting accounts tabs</div>
+        </div>
+        <div class="flow-step-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-296" target="_blank">PD-296</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-295" target="_blank">PD-295</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-284" target="_blank">PD-284</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-285" target="_blank">PD-285</a>
+        </div>
+      </div>
+
+      <div class="flow-step" onclick="showTab('invoices')">
+        <div class="flow-step-num">03</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">Invoice is generated</div>
+          <div class="flow-step-desc">Events are bundled into one invoice. Invoice number comes from the Finnish-compliant sequence — 1xxxxxxxx for public law, 2xxxxxxxx for private law.</div>
+          <div class="flow-step-screen">→ Invoices tab</div>
+        </div>
+        <div class="flow-step-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-309" target="_blank">PD-309</a>
+        </div>
+      </div>
+
+      <div class="flow-step" onclick="showTab('invoice-detail')">
+        <div class="flow-step-num">04</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">FINVOICE XML is produced</div>
+          <div class="flow-step-desc">The invoice is serialised as a valid FINVOICE 3.0 INV01 XML message. Passes XSD validation and EN16931 business rules. Downloadable from the UI — not transmitted to Ropo in R1.</div>
+          <div class="flow-step-screen">→ Invoice detail tab</div>
+        </div>
+        <div class="flow-step-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-310" target="_blank">PD-310</a>
+        </div>
+      </div>
+
+      <div class="flow-step" onclick="showTab('credit-notes')">
+        <div class="flow-step-num">05</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">Credit note is issued</div>
+          <div class="flow-step-desc">Office staff trigger a credit note against the invoice. It carries its own sequential number (3xxxxxxxx), references the original invoice, and is serialised as a FINVOICE INV02 message.</div>
+          <div class="flow-step-screen">→ Credit notes tab</div>
+        </div>
+        <div class="flow-step-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-269" target="_blank">PD-269</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-310" target="_blank">PD-310</a>
+        </div>
+      </div>
+
+      <div class="flow-intro" style="background: var(--pink-bg); border-color:#f9c6e0; margin-top:28px;">
+        <div class="flow-intro-title">Release 2 — Production billing <span class="r2-pill">R2</span></div>
+        <div class="flow-intro-subtitle">R1 proves one event becomes one invoice. R2 makes it run by itself at scale: scheduled billing runs that gather, filter, bundle and send; correction tools; recurring fees; and the Finnish money rules. The pink tabs and pink blocks above are R2. Click to explore.</div>
+      </div>
+
+      <div class="flow-step" onclick="showTab('billing-runs')" style="border-left:3px solid var(--pink);">
+        <div class="flow-step-num" style="background:var(--pink-bg); color:var(--pink);">R2</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">Billing runs — the spine</div>
+          <div class="flow-step-desc">A run gathers ready events by cycle and filters, bundles them into invoice lines, and produces a dataset the billing user reviews and sends. Nothing sends automatically. Statuses track each run; a run can be cancelled before send.</div>
+          <div class="flow-step-screen">→ Billing runs tab</div>
+        </div>
+        <div class="flow-step-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-291" target="_blank">PD-291</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-290" target="_blank">PD-290</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-292" target="_blank">PD-292</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-293" target="_blank">PD-293</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-297" target="_blank">PD-297</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-273" target="_blank">PD-273</a>
+        </div>
+      </div>
+
+      <div class="flow-step" onclick="showTab('events')" style="border-left:3px solid var(--pink);">
+        <div class="flow-step-num" style="background:var(--pink-bg); color:var(--pink);">R2</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">Create &amp; correct events</div>
+          <div class="flow-step-desc">Office staff add manual events (land rent, expert work), edit events before invoicing, and exclude events from a run, individually or in bulk. Invoice-level checks run before send.</div>
+          <div class="flow-step-screen">→ Events tab (pink actions)</div>
+        </div>
+        <div class="flow-step-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-283" target="_blank">PD-283</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-277" target="_blank">PD-277</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-318" target="_blank">PD-318</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-271" target="_blank">PD-271</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-319" target="_blank">PD-319</a>
+        </div>
+      </div>
+
+      <div class="flow-step" onclick="showTab('seasonal-fees')" style="border-left:3px solid var(--pink);">
+        <div class="flow-step-num" style="background:var(--pink-bg); color:var(--pink);">R2</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">Recurring fees &amp; minimum charge</div>
+          <div class="flow-step-desc">Annual base fees and other time-based charges generate as events on a schedule. A minimum charge tops up customers below the period floor (compared on VAT 0% net).</div>
+          <div class="flow-step-screen">→ Seasonal fees tab</div>
+        </div>
+        <div class="flow-step-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-288" target="_blank">PD-288</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-286" target="_blank">PD-286</a>
+        </div>
+      </div>
+
+      <div class="flow-step" onclick="showTab('invoice-detail')" style="border-left:3px solid var(--pink);">
+        <div class="flow-step-num" style="background:var(--pink-bg); color:var(--pink);">R2</div>
+        <div class="flow-step-content">
+          <div class="flow-step-title">Finnish money rules &amp; invoice options</div>
+          <div class="flow-step-desc">Reverse-charge VAT for B2B reception, gross vs net invoicing with VAT breakdown, custom invoice text, template code, language, and surcharges. See the pink "Invoice options" card.</div>
+          <div class="flow-step-screen">→ Invoice detail tab (pink card)</div>
+        </div>
+        <div class="flow-step-pds">
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-300" target="_blank">PD-300</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-301" target="_blank">PD-301</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-302" target="_blank">PD-302</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-307" target="_blank">PD-307</a>
+          <a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-294" target="_blank">PD-294</a>
+        </div>
+      </div>
+
+      <div class="r2-card" style="margin-top:28px;">
+        <div class="r2-card-title">Where each R2 requirement lives <span class="r2-pill">R2 · MVP</span></div>
+        <div class="r2-card-sub">All 20 R2 requirements are on the mockup at requirement (MVP) level — the verbatim "Requirement" from each ticket, not the inflated acceptance criteria. This table is the locator: which tab, and what to look for.</div>
+        <div class="table-container" style="box-shadow:none;">
+          <table>
+            <thead>
+              <tr><th>PD</th><th>Requirement (one line)</th><th>Tab</th><th>What to look for</th></tr>
+            </thead>
+            <tbody>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-291" target="_blank">PD-291</a></td><td>Different billing rhythms per customer</td><td>Billing runs</td><td>Cycle column (Monthly / Quarterly / Immediate)</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-290" target="_blank">PD-290</a></td><td>Choose which transactions bundle onto one line</td><td>Billing runs</td><td>Bundling preview card (12 emptyings → 1 line)</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-292" target="_blank">PD-292</a></td><td>Invoice some transactions separately / immediately</td><td>Billing runs</td><td>RUN-003 — sludge, immediate, separate invoice</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-293" target="_blank">PD-293</a></td><td>Limit conditions for an invoicing run</td><td>Billing runs</td><td>Run filters card — the 7 named filters</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-297" target="_blank">PD-297</a></td><td>See what stage each invoice is at</td><td>Billing runs</td><td>Status column + left sidebar states</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-273" target="_blank">PD-273</a></td><td>Confirm / cancel before sending</td><td>Billing runs</td><td>RUN-002 "Review &amp; send"; manual send</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-283" target="_blank">PD-283</a></td><td>Create billing events manually via a product</td><td>Events</td><td>"+ New manual event" (pink card)</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-277" target="_blank">PD-277</a></td><td>Edit events before the invoice is created</td><td>Events / Event detail</td><td>"✎ Edit event" button</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-318" target="_blank">PD-318</a></td><td>Don't invoice certain events; bulk modify</td><td>Events / Event detail</td><td>"⊘ Exclude from invoicing" button</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-271" target="_blank">PD-271</a></td><td>Automatic checks on billing data</td><td>Billing runs / Invoice detail</td><td>RUN-004 errors; "Pre-send checks" row</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-319" target="_blank">PD-319</a></td><td>Retroactively change prices of unbilled events</td><td>Demo flow (R2 step)</td><td>"Create &amp; correct events" step — re-price</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-288" target="_blank">PD-288</a></td><td>Time-based fees with no event component</td><td>Seasonal fees</td><td>Fee assignment table (annual / monthly)</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-286" target="_blank">PD-286</a></td><td>Minimum charge per period</td><td>Seasonal fees</td><td>Minimum charge card (VAT 0% net compare)</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-300" target="_blank">PD-300</a></td><td>Reverse-charge VAT invoices</td><td>Invoice detail</td><td>Invoice options card — Reverse charge</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-301" target="_blank">PD-301</a></td><td>Gross or net invoicing</td><td>Invoice detail</td><td>Invoice options card — Gross / net</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-302" target="_blank">PD-302</a></td><td>Custom text, per-customer and in bulk</td><td>Invoice detail</td><td>Invoice options card — Custom text</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-307" target="_blank">PD-307</a></td><td>Choose the invoice template</td><td>Invoice detail</td><td>Invoice options card — Template</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-308" target="_blank">PD-308</a></td><td>Invoice language by customer choice</td><td>Invoice detail</td><td>Invoice options card — Language (FI; PJH n/a)</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-294" target="_blank">PD-294</a></td><td>Invoice surcharge by invoicing method</td><td>Invoice detail</td><td>Invoice options card — Surcharge (toggle off)</td></tr>
+              <tr class="r2-row"><td><a class="pd-chip" href="https://ioteelab.atlassian.net/browse/PD-289" target="_blank">PD-289</a></td><td>Mandatory AR / reporting data on lines</td><td>Invoice detail</td><td>Invoice options card — AR / reporting data</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="non-goal-section">
+        <div class="non-goal-title">Still later (R3)</div>
+        <ul class="non-goal-list">
+          <li>FINVOICE transmission to the operator — R3 with PD-107. WasteHero provides the data via API; the customer (PJH via Frends) transmits.</li>
+          <li>Reporting, AR ageing, PDF invoice preview — R3</li>
+          <li>Shared service splits, transfer/copy UI, simulation mode — R3</li>
+          <li>Per-customer invoice language, surcharge engine detail — deferred / out of scope per PJH</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Create form modal (opened by + New cost centre / + New account / + Issue credit note) ── -->
+<div class="modal-backdrop" id="createModal" onclick="if(event.target===this) closeCreateModal()">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="createModalTitle">Create</div>
+        <div class="modal-pd-row" id="createModalPds"></div>
+      </div>
+      <button class="modal-close" onclick="closeCreateModal()" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body" id="createModalBody"></div>
+    <div id="createModalFooter" style="padding: 16px 24px 20px; display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid var(--border);">
+      <button class="btn btn-secondary" onclick="closeCreateModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitCreateForm()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-wrap"></div>
+
+<script>
+function showTab(tabId) {
+  // Hide all panels
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  // Show target
+  const target = document.getElementById('tab-' + tabId);
+  if (target) target.classList.add('active');
+
+  // Update active tab
+  document.querySelectorAll('.tab-item').forEach(t => {
+    const onclickAttr = t.getAttribute('onclick') || '';
+    if (onclickAttr.includes("'" + tabId + "'")) {
+      t.classList.add('active');
+    } else {
+      t.classList.remove('active');
+    }
+  });
+
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===================================================================
+// Detail page data — sourced from PD-296, PD-295, PD-269 requirements
+// ===================================================================
+
+// ── COST CENTRES — anchored to PD-296 (example values from PD-296's own example) ──
+const COST_CENTRE_DATA = {
+  cc1: {
+    code: '20/200/1',
+    title: 'Cost centre 20/200/1 — Hyvinkää · Perusmaksut',
+    subtitle: 'Annual base fee collection for residential properties in Hyvinkää.',
+    properties: [
+      ['Code', '20/200/1', 'mono'],
+      ['Name', 'Hyvinkää · Perusmaksut'],
+      ['Region', 'Hyvinkää'],
+      ['Service type', 'Annual base fee']
+    ],
+    events: [
+      ['2026-05-11', 'Korhonen Maija', 'Vuosiperusmaksu 2026', '35.86'],
+      ['2026-05-11', 'Asunto Oy Lammitie 8', 'Vuosiperusmaksu 2026', '286.88'],
+      ['2026-05-10', 'Lahtinen Pekka', 'Vuosiperusmaksu 2026', '35.86']
+    ],
+    accounts: [
+      ['Revenue account', '30001 — Perusmaksutuotot', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;20/200/1&lt;/DimensionText&gt;'
+  },
+  cc2: {
+    code: '20/200/3',
+    title: 'Cost centre 20/200/3 — Hyvinkää · Kotitalousjäte',
+    subtitle: 'Household waste collection in Hyvinkää. This is the example cost centre called out in PD-296\'s acceptance criteria.',
+    properties: [
+      ['Code', '20/200/3', 'mono'],
+      ['Name', 'Hyvinkää · Kotitalousjäte'],
+      ['Region', 'Hyvinkää'],
+      ['Service type', 'Mixed waste, bio-waste, paper']
+    ],
+    events: [
+      ['2026-05-12', 'Korhonen Maija', 'Sekajäte 240L tyhjennys', '6.32'],
+      ['2026-05-12', 'Asunto Oy Lammitie 8', 'Biojäte 140L tyhjennys', '4.15'],
+      ['2026-05-09', 'Mäkelä Jarkko', 'Paperinkeräys 240L tyhjennys', '3.03']
+    ],
+    accounts: [
+      ['Waste treatment', '30002 — Kotitalousjätteen keräys', 'mono'],
+      ['Transport', '30005 — Kuljetustuotot', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;20/200/3&lt;/DimensionText&gt;'
+  },
+  cc3: {
+    code: '20/200/4',
+    title: 'Cost centre 20/200/4 — Hyvinkää · Yhteispalvelut',
+    subtitle: 'Shared services in Hyvinkää.',
+    properties: [
+      ['Code', '20/200/4', 'mono'],
+      ['Name', 'Hyvinkää · Yhteispalvelut'],
+      ['Region', 'Hyvinkää'],
+      ['Service type', 'Shared service splits']
+    ],
+    events: [
+      ['2026-05-12', 'Asunto Oy Lammitie 8', 'Yhteiskeräys 660L tyhjennys', '12.40']
+    ],
+    accounts: [
+      ['Waste treatment', '30002 — Kotitalousjätteen keräys', 'mono'],
+      ['Transport', '30005 — Kuljetustuotot', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;20/200/4&lt;/DimensionText&gt;'
+  },
+  cc4: {
+    code: '20/200/5',
+    title: 'Cost centre 20/200/5 — Hyvinkää · Viranomaispalvelut',
+    subtitle: 'Regulatory work in Hyvinkää.',
+    properties: [
+      ['Code', '20/200/5', 'mono'],
+      ['Name', 'Hyvinkää · Viranomaispalvelut'],
+      ['Region', 'Hyvinkää'],
+      ['Service type', 'Regulatory, complaint handling']
+    ],
+    events: [
+      ['2026-05-04', 'Anonymous property #4421', 'Tilauspakon valvonta', '85.00']
+    ],
+    accounts: [
+      ['Revenue account', '30002 — Kotitalousjätteen keräys', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;20/200/5&lt;/DimensionText&gt;'
+  },
+  cc5: {
+    code: '25/250/2',
+    title: 'Cost centre 25/250/2 — Hyvinkää · TSV / toissijainen',
+    subtitle: 'Municipal secondary service responsibility (Waste Act §33) in Hyvinkää.',
+    properties: [
+      ['Code', '25/250/2', 'mono'],
+      ['Name', 'Hyvinkää · TSV / toissijainen'],
+      ['Region', 'Hyvinkää'],
+      ['Service type', 'Municipal secondary (Waste Act §33)']
+    ],
+    events: [
+      ['2026-05-11', 'Lahtinen Pekka', 'Sakokaivon tyhjennys 4 m³', '113.15']
+    ],
+    accounts: [
+      ['Revenue account', '30003 — Sakokaivopalvelut', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;25/250/2&lt;/DimensionText&gt;'
+  },
+  cc6: {
+    code: '22/200/3',
+    title: 'Cost centre 22/200/3 — Riihimäki · Kotitalousjäte',
+    subtitle: 'Household waste collection in Riihimäki.',
+    properties: [
+      ['Code', '22/200/3', 'mono'],
+      ['Name', 'Riihimäki · Kotitalousjäte'],
+      ['Region', 'Riihimäki'],
+      ['Service type', 'Mixed waste, bio-waste, paper']
+    ],
+    events: [
+      ['2026-05-09', 'Niemi Tiina', 'Sekajäte 660L tyhjennys', '10.04']
+    ],
+    accounts: [
+      ['Waste treatment', '30002 — Kotitalousjätteen keräys', 'mono'],
+      ['Transport', '30005 — Kuljetustuotot', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;22/200/3&lt;/DimensionText&gt;'
+  },
+  cc7: {
+    code: '22/200/4',
+    title: 'Cost centre 22/200/4 — Riihimäki · Yhteispalvelut',
+    subtitle: 'Shared services in Riihimäki.',
+    properties: [
+      ['Code', '22/200/4', 'mono'],
+      ['Name', 'Riihimäki · Yhteispalvelut'],
+      ['Region', 'Riihimäki'],
+      ['Service type', 'Shared service splits']
+    ],
+    events: [
+      ['2026-04-30', 'Kimppakeräys Vihtikatu', 'Yhteiskeräys 660L tyhjennys', '12.40']
+    ],
+    accounts: [
+      ['Waste treatment', '30002 — Kotitalousjätteen keräys', 'mono'],
+      ['VAT account', '2939 — Maksettava ALV 25.5%', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;22/200/4&lt;/DimensionText&gt;'
+  },
+  cc8: {
+    code: '30/300/1',
+    title: 'Cost centre 30/300/1 — Vastaanotto · Hyvinkää-laitos',
+    subtitle: 'Weighbridge reception facility at the Hyvinkää processing plant.',
+    properties: [
+      ['Code', '30/300/1', 'mono'],
+      ['Name', 'Vastaanotto · Hyvinkää-laitos'],
+      ['Region', 'Hyvinkää'],
+      ['Service type', 'Weighbridge intake']
+    ],
+    events: [
+      ['2026-05-12', 'Rakennus Virtanen Oy', 'Rakennusjäte vastaanotto', '98.40']
+    ],
+    accounts: [
+      ['Revenue account', '30005 — Yritysjätteen vastaanotto', 'mono'],
+      ['VAT account', '2942 — ALV 0% käännetty verovelvollisuus', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;30/300/1&lt;/DimensionText&gt;'
+  },
+  cc9: {
+    code: '30/300/2',
+    title: 'Cost centre 30/300/2 — Vastaanotto · Riihimäki-laitos',
+    subtitle: 'Weighbridge reception facility at the Riihimäki processing plant.',
+    properties: [
+      ['Code', '30/300/2', 'mono'],
+      ['Name', 'Vastaanotto · Riihimäki-laitos'],
+      ['Region', 'Riihimäki'],
+      ['Service type', 'Weighbridge intake']
+    ],
+    events: [
+      ['2026-05-10', 'Suomen Kierrätys Oy', 'Metalliromun vastaanotto', '231.55']
+    ],
+    accounts: [
+      ['Revenue account', '30005 — Yritysjätteen vastaanotto', 'mono'],
+      ['VAT account', '2942 — ALV 0% käännetty verovelvollisuus', 'mono']
+    ],
+    finvoice: '&lt;DimensionText&gt;30/300/2&lt;/DimensionText&gt;'
+  }
+};
+
+// ── ACCOUNTS — anchored to PD-295: number, name, validity period ──
+const ACCOUNT_DATA = {
+  ac1: {
+    title: 'Account 30001 — Perusmaksutuotot',
+    subtitle: 'Revenue account for annual base fees.',
+    properties: [
+      ['Account number', '30001', 'mono'],
+      ['Name', 'Perusmaksutuotot'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Validity from', '2014-04-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-11', 'Korhonen Maija', 'Vuosiperusmaksu 2026', '35.86'],
+      ['2026-05-11', 'Asunto Oy Lammitie 8', 'Vuosiperusmaksu 2026', '286.88']
+    ],
+    products: [
+      ['Vuosiperusmaksu (annual base fee)'],
+      ['Note', 'PD-295: accounts are defined per pricing component of a product. The base fee component routes here.']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;30001&lt;/AccountDimensionText&gt;'
+  },
+  ac2: {
+    title: 'Account 30002 — Kotitalousjätteen keräys',
+    subtitle: 'Revenue account for household waste collection (PD-296\'s example).',
+    properties: [
+      ['Account number', '30002', 'mono'],
+      ['Name', 'Kotitalousjätteen keräys'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Validity from', '2014-04-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-12', 'Korhonen Maija', 'Sekajäte 240L · waste treatment portion', '3.49'],
+      ['2026-05-12', 'Asunto Oy Lammitie 8', 'Biojäte 140L · waste treatment portion', '2.29']
+    ],
+    products: [
+      ['Sekajäte (mixed waste) — treatment portion'],
+      ['Biojäte (bio waste) — treatment portion'],
+      ['Note', 'PD-296 example: a single 240L mixed waste emptying for €7.93 routes €3.49 to this account (waste treatment), €2.83 to account 30005 (transport), and €1.61 to account 2939 (VAT).']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;30002&lt;/AccountDimensionText&gt;'
+  },
+  ac3: {
+    title: 'Account 30003 — Sakokaivopalvelut',
+    subtitle: 'Revenue account for sludge tank services (TSV / municipal secondary).',
+    properties: [
+      ['Account number', '30003', 'mono'],
+      ['Name', 'Sakokaivopalvelut'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Validity from', '2014-04-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-11', 'Lahtinen Pekka', 'Sakokaivon tyhjennys 4 m³', '113.15']
+    ],
+    products: [
+      ['Sakokaivon tyhjennys (septic tank emptying)']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;30003&lt;/AccountDimensionText&gt;'
+  },
+  ac4: {
+    title: 'Account 30004 — Kierrätystuotot',
+    subtitle: 'Revenue account for recycling services.',
+    properties: [
+      ['Account number', '30004', 'mono'],
+      ['Name', 'Kierrätystuotot'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Validity from', '2014-04-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-09', 'Mäkelä Jarkko', 'Paperinkeräys 240L tyhjennys', '3.03']
+    ],
+    products: [
+      ['Paperinkeräys (paper collection)'],
+      ['Pakkauslasi (glass packaging)'],
+      ['Metallinkeräys (metal collection)']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;30004&lt;/AccountDimensionText&gt;'
+  },
+  ac5: {
+    title: 'Account 30005 — Yritysjätteen vastaanotto / Kuljetustuotot',
+    subtitle: 'Revenue account for commercial waste reception and transport portions.',
+    properties: [
+      ['Account number', '30005', 'mono'],
+      ['Name', 'Yritysjätteen vastaanotto'],
+      ['VAT rate', '0.0% Reverse charge', 'mono'],
+      ['Validity from', '2018-01-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-12', 'Rakennus Virtanen Oy', 'Rakennusjäte vastaanotto', '98.40'],
+      ['2026-05-12', 'Korhonen Maija', 'Sekajäte 240L · transport portion', '2.83']
+    ],
+    products: [
+      ['Commercial waste reception (weighbridge)'],
+      ['Transport portion of household collection (PD-296 example)']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;30005&lt;/AccountDimensionText&gt;'
+  },
+  ac6: {
+    title: 'Account 30008 — Kuljetustuotot',
+    subtitle: 'Revenue account for transport revenue (standalone).',
+    properties: [
+      ['Account number', '30008', 'mono'],
+      ['Name', 'Kuljetustuotot'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Validity from', '2014-04-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [],
+    products: [
+      ['Transport services billed separately from waste collection']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;30008&lt;/AccountDimensionText&gt;'
+  },
+  ac7: {
+    title: 'Account 2939 — Maksettava ALV 25.5%',
+    subtitle: 'VAT payable account at 25.5% rate.',
+    properties: [
+      ['Account number', '2939', 'mono'],
+      ['Name', 'Maksettava ALV 25.5%'],
+      ['VAT rate', '25.5%', 'mono'],
+      ['Validity from', '2024-09-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-12', 'Korhonen Maija', 'Sekajäte 240L · VAT portion', '1.61']
+    ],
+    products: [
+      ['VAT portion of any product taxed at 25.5%'],
+      ['Note', 'PD-296: a single product line is split across multiple accounts — VAT lands here regardless of which revenue account the rest of the line goes to.']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;2939&lt;/AccountDimensionText&gt;'
+  },
+  ac8: {
+    title: 'Account 2940 — Maksettava ALV 14%',
+    subtitle: 'VAT payable account at 14% rate.',
+    properties: [
+      ['Account number', '2940', 'mono'],
+      ['Name', 'Maksettava ALV 14%'],
+      ['VAT rate', '14.0%', 'mono'],
+      ['Validity from', '2014-04-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [],
+    products: [
+      ['VAT portion of products taxed at 14%']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;2940&lt;/AccountDimensionText&gt;'
+  },
+  ac9: {
+    title: 'Account 2942 — ALV 0% käännetty verovelvollisuus',
+    subtitle: 'Reverse-charge VAT account (0% rate).',
+    properties: [
+      ['Account number', '2942', 'mono'],
+      ['Name', 'ALV 0% käännetty verovelvollisuus'],
+      ['VAT rate', '0.0% Reverse charge', 'mono'],
+      ['Validity from', '2018-01-01', 'mono'],
+      ['Validity to', '—']
+    ],
+    events: [
+      ['2026-05-12', 'Rakennus Virtanen Oy', 'Rakennusjäte · reverse-charge VAT', '0.00']
+    ],
+    products: [
+      ['Construction waste reception (reverse charge)'],
+      ['Metal scrap reception (reverse charge)']
+    ],
+    finvoice: '&lt;AccountDimensionText&gt;2942&lt;/AccountDimensionText&gt;'
+  }
+};
+
+// ── CREDIT NOTES — anchored to PD-269 (custom text, internal comment, reference to original) ──
+const CREDIT_NOTE_DATA = {
+  cn1: {
+    title: 'Credit note 326000007',
+    subtitle: 'Issued 2026-05-14 against invoice 226000044 (Rakennus Virtanen Oy).',
+    properties: [
+      ['Credit note number', '326000007', 'mono'],
+      ['References invoice', '226000044', 'mono'],
+      ['Customer', 'Rakennus Virtanen Oy (CID 200314)'],
+      ['Issue date', '2026-05-14', 'mono'],
+      ['Credit type', 'Full credit'],
+      ['Total credited', '−98.40 €', 'mono'],
+      ['FINVOICE message type', 'INV02', 'mono']
+    ],
+    lines: [
+      ['Rakennusjäte vastaanotto 1 240 kg', '−98.40', '0.00', '−98.40']
+    ],
+    creditText: 'Hyvitys virheellisestä hinnoittelusta. Alkuperäinen lasku 226000044 hyvitetään kokonaisuudessaan.',
+    internalComment: 'Customer reported wrong tariff applied — should have been the 2025 commercial rate, not the 2024 rate. Reissue with correct pricing after credit.',
+    finvoice: '&lt;Finvoice Version="3.0"&gt;\n  &lt;InvoiceDetails&gt;\n    &lt;InvoiceTypeCode&gt;INV02&lt;/InvoiceTypeCode&gt;\n    &lt;InvoiceNumber&gt;326000007&lt;/InvoiceNumber&gt;\n    &lt;OriginalInvoiceNumber&gt;226000044&lt;/OriginalInvoiceNumber&gt;\n    &lt;InvoiceTotalVatExcludedAmount Currency="EUR"&gt;-98,40&lt;/InvoiceTotalVatExcludedAmount&gt;\n  &lt;/InvoiceDetails&gt;\n&lt;/Finvoice&gt;'
+  },
+  cn2: {
+    title: 'Credit note 326000006',
+    subtitle: 'Issued 2026-05-08 against invoice 126000132 (Toivonen Anne).',
+    properties: [
+      ['Credit note number', '326000006', 'mono'],
+      ['References invoice', '126000132', 'mono'],
+      ['Customer', 'Toivonen Anne'],
+      ['Issue date', '2026-05-08', 'mono'],
+      ['Credit type', 'Full credit'],
+      ['Total credited', '−42.18 €', 'mono'],
+      ['FINVOICE message type', 'INV02', 'mono']
+    ],
+    lines: [
+      ['Sekajäte 240L tyhjennys × 5', '−34.00', '−8.18', '−42.18']
+    ],
+    creditText: 'Hyvitys edelliselle haltijalle. Asiakas muuttanut osoitteesta 1.5.2026.',
+    internalComment: 'Previous tenant moved out before invoiced period. Reissue to new occupant once registered.',
+    finvoice: '&lt;Finvoice Version="3.0"&gt;\n  &lt;InvoiceDetails&gt;\n    &lt;InvoiceTypeCode&gt;INV02&lt;/InvoiceTypeCode&gt;\n    &lt;InvoiceNumber&gt;326000006&lt;/InvoiceNumber&gt;\n    &lt;OriginalInvoiceNumber&gt;126000132&lt;/OriginalInvoiceNumber&gt;\n    &lt;InvoiceTotalVatExcludedAmount Currency="EUR"&gt;-34,00&lt;/InvoiceTotalVatExcludedAmount&gt;\n  &lt;/InvoiceDetails&gt;\n&lt;/Finvoice&gt;'
+  },
+  cn3: {
+    title: 'Credit note 326000005',
+    subtitle: 'Issued 2026-05-02 against invoice 126000119 (Salonen Mika).',
+    properties: [
+      ['Credit note number', '326000005', 'mono'],
+      ['References invoice', '126000119', 'mono'],
+      ['Customer', 'Salonen Mika'],
+      ['Issue date', '2026-05-02', 'mono'],
+      ['Credit type', 'Partial credit'],
+      ['Total credited', '−12.60 €', 'mono'],
+      ['FINVOICE message type', 'INV02', 'mono']
+    ],
+    lines: [
+      ['Sekajäte 660L tyhjennys (1 of 3 lines)', '−10.04', '−2.56', '−12.60']
+    ],
+    creditText: 'Palvelua ei suoritettu — 24.4.2026 kerräys jäi tekemättä.',
+    internalComment: 'Driver could not access bin (locked gate). Only credit the failed pickup, leave the other two on the invoice.',
+    finvoice: '&lt;Finvoice Version="3.0"&gt;\n  &lt;InvoiceDetails&gt;\n    &lt;InvoiceTypeCode&gt;INV02&lt;/InvoiceTypeCode&gt;\n    &lt;InvoiceNumber&gt;326000005&lt;/InvoiceNumber&gt;\n    &lt;OriginalInvoiceNumber&gt;126000119&lt;/OriginalInvoiceNumber&gt;\n  &lt;/InvoiceDetails&gt;\n&lt;/Finvoice&gt;'
+  },
+  cn4: {
+    title: 'Credit note 326000004',
+    subtitle: 'Issued 2026-04-28 against invoice 126000098 (Heinonen Sanna).',
+    properties: [
+      ['Credit note number', '326000004', 'mono'],
+      ['References invoice', '126000098', 'mono'],
+      ['Customer', 'Heinonen Sanna'],
+      ['Issue date', '2026-04-28', 'mono'],
+      ['Credit type', 'Full credit'],
+      ['Total credited', '−84.36 €', 'mono'],
+      ['FINVOICE message type', 'INV02', 'mono']
+    ],
+    lines: [
+      ['Vuosiperusmaksu 2026 (proportional)', '−68.00', '−16.36', '−84.36']
+    ],
+    creditText: 'Asiakas muuttanut osoitteesta. Perusmaksu hyvitetty muuttopäivästä alkaen.',
+    internalComment: 'Customer moved out on March 31. Pro-rate refund for April-December.',
+    finvoice: '&lt;Finvoice Version="3.0"&gt;\n  &lt;InvoiceDetails&gt;\n    &lt;InvoiceTypeCode&gt;INV02&lt;/InvoiceTypeCode&gt;\n    &lt;InvoiceNumber&gt;326000004&lt;/InvoiceNumber&gt;\n    &lt;OriginalInvoiceNumber&gt;126000098&lt;/OriginalInvoiceNumber&gt;\n  &lt;/InvoiceDetails&gt;\n&lt;/Finvoice&gt;'
+  },
+  cn5: {
+    title: 'Credit note 326000003',
+    subtitle: 'Issued 2026-04-22 against invoice 126000077 (Karjalainen Tomi).',
+    properties: [
+      ['Credit note number', '326000003', 'mono'],
+      ['References invoice', '126000077', 'mono'],
+      ['Customer', 'Karjalainen Tomi'],
+      ['Issue date', '2026-04-22', 'mono'],
+      ['Credit type', 'Partial credit'],
+      ['Total credited', '−5.20 €', 'mono'],
+      ['FINVOICE message type', 'INV02', 'mono']
+    ],
+    lines: [
+      ['ALV-korjaus (VAT correction)', '0.00', '−5.20', '−5.20']
+    ],
+    creditText: 'ALV-prosenttikorjaus. Virheellinen 24% sovellettu, oikea 25.5%.',
+    internalComment: 'Old VAT rate (24%) applied in error. Issue correcting credit note then reissue with correct VAT.',
+    finvoice: '&lt;Finvoice Version="3.0"&gt;\n  &lt;InvoiceDetails&gt;\n    &lt;InvoiceTypeCode&gt;INV02&lt;/InvoiceTypeCode&gt;\n    &lt;InvoiceNumber&gt;326000003&lt;/InvoiceNumber&gt;\n    &lt;OriginalInvoiceNumber&gt;126000077&lt;/OriginalInvoiceNumber&gt;\n  &lt;/InvoiceDetails&gt;\n&lt;/Finvoice&gt;'
+  }
+};
+
+// ── CREATE FORM definitions — fields strictly from PD requirements ──
+const RUN_DATA = {
+  'RUN-2026-05-001': {
+    pds: ['PD-291','PD-290','PD-297'],
+    body: '<div class="modal-note" style="margin-bottom:16px;">Monthly cycle · Hyvinkää · Residential · May. Sent 2026-06-01, content locked (PD-297).</div>'
+      + '<div class="kv-row"><span class="kv-key">Status</span><span class="kv-value"><span class="run-status run-sent" id="run002-flow-sent">Sent · locked</span></span></div>'
+      + '<div class="kv-row"><span class="kv-key">Events gathered</span><span class="kv-value kv-value-mono">1 240</span></div>'
+      + '<div class="kv-row"><span class="kv-key">Invoices generated</span><span class="kv-value kv-value-mono">602</span></div>'
+      + '<div class="kv-row"><span class="kv-key">Total</span><span class="kv-value kv-value-mono">48 210.55 €</span></div>'
+      + '<div class="kv-row"><span class="kv-key">FINVOICE files</span><span class="kv-value">602 handed to API for PJH/Frends</span></div>',
+    footer: '<button class="btn btn-secondary" onclick="closeCreateModal()">Close</button>'
+  },
+  'RUN-2026-05-003': {
+    pds: ['PD-292','PD-291'],
+    body: '<div class="modal-note" style="margin-bottom:16px;">Immediate cycle. Sludge emptyings are billed on completion and on their own invoice, separate from the six-monthly mixed-waste cycle (PD-292).</div>'
+      + '<div class="kv-row"><span class="kv-key">Status</span><span class="kv-value"><span class="run-status run-draft">Draft</span></span></div>'
+      + '<div class="kv-row"><span class="kv-key">Events</span><span class="kv-value kv-value-mono">14</span></div>'
+      + '<div class="kv-row"><span class="kv-key">Invoices</span><span class="kv-value kv-value-mono">14 (one per emptying)</span></div>'
+      + '<div class="kv-row"><span class="kv-key">Total</span><span class="kv-value kv-value-mono">1 988.00 €</span></div>',
+    footer: '<button class="btn btn-secondary" onclick="closeCreateModal()">Close</button><button class="btn btn-r2" onclick="closeCreateModal(); toast(\'Run marked ready to send.\', \'PD-273\', true);">Mark ready to send</button>'
+  },
+  'RUN-2026-05-004': {
+    pds: ['PD-271','PD-297'],
+    body: '<div class="modal-note" style="margin-bottom:16px;">Pre-send checks (PD-271) found 3 invoices missing a valid e-invoice address. The run is held in Error until fixed (PD-297).</div>'
+      + '<div class="kv-row"><span class="kv-key">Status</span><span class="kv-value"><span class="run-status run-error">Error</span></span></div>'
+      + '<div class="kv-row"><span class="kv-key">Invoices</span><span class="kv-value kv-value-mono">96 (3 failing)</span></div>'
+      + '<div class="kv-row"><span class="kv-key">Failed check</span><span class="kv-value">e-invoice address format</span></div>'
+      + '<div style="margin-top:12px; background:var(--red-bg); color:var(--red); padding:10px 12px; border-radius:var(--radius); font-size:12px;">3 customers have no valid OVT/e-invoice address. Fix the addresses and re-run.</div>',
+    footer: '<button class="btn btn-secondary" onclick="closeCreateModal()">Close</button><button class="btn btn-r2" onclick="closeCreateModal(); toast(\'Re-running checks on the corrected dataset.\', \'PD-271\', true);">Re-run checks</button>'
+  }
+};
+
+const CREATE_FORMS = {
+  'cost-centre': {
+    title: 'New cost centre',
+    pds: [{code: 'PD-296', label: 'Cost centres & accounts on events'}],
+    intro: 'PD-296 acceptance criteria: "The system allows office users to manually add, update, and maintain cost centers."',
+    fields: [
+      {key: 'code', label: 'Code', type: 'text', mono: true, placeholder: '20/200/3', hint: 'Cost centre code in the configured format.'},
+      {key: 'name', label: 'Name', type: 'text', placeholder: 'Hyvinkää · Kotitalousjäte'},
+      {key: 'region', label: 'Region', type: 'text', placeholder: 'Hyvinkää'},
+      {key: 'serviceType', label: 'Service type', type: 'text', placeholder: 'Mixed waste, bio-waste, paper'}
+    ]
+  },
+  'account': {
+    title: 'New accounting account',
+    pds: [{code: 'PD-295', label: 'Account & cost centre data'}],
+    intro: 'PD-295: "Accounts are managed in the settings, where properties such as account number, name, and validity period can be defined."',
+    fields: [
+      {key: 'number', label: 'Account number', type: 'text', mono: true, placeholder: '30002', hint: 'G/L account number per company chart of accounts.'},
+      {key: 'name', label: 'Account name', type: 'text', placeholder: 'Kotitalousjätteen keräys'},
+      {key: 'vatRate', label: 'VAT rate', type: 'select', options: ['25.5%', '14%', '10%', '0% (Reverse charge)', '0% (Exempt)']},
+      {key: 'validityFrom', label: 'Validity period — from', type: 'date'},
+      {key: 'validityTo', label: 'Validity period — to (optional)', type: 'date'}
+    ]
+  },
+  'credit-note': {
+    title: 'Issue credit note',
+    pds: [
+      {code: 'PD-269', label: 'Credit invoices'},
+      {code: 'PD-310', label: 'FINVOICE INV02'}
+    ],
+    intro: 'PD-269: "It must be possible to create a refund invoice from the desired invoice. The desired text must be added to the refund invoice. In addition, it must be possible to add a comment intended for internal use only."',
+    fields: [
+      {key: 'originalInvoice', label: 'Credit which invoice?', type: 'select', options: ['126000142 — Korhonen Maija', '126000143 — Asunto Oy Lammitie 8', '226000044 — Rakennus Virtanen Oy', '126000141 — Lahtinen Pekka', '126000139 — Mäkelä Jarkko', '226000042 — Suomen Kierrätys Oy']},
+      {key: 'creditType', label: 'Credit type', type: 'select', options: ['Full credit (all lines)', 'Partial credit (selected lines)']},
+      {key: 'creditText', label: 'Credit text (customer-facing)', type: 'textarea', placeholder: 'e.g. Hyvitys virheellisestä hinnoittelusta', hint: 'Visible on the credit note delivered to the customer.'},
+      {key: 'internalComment', label: 'Internal comment (office staff only)', type: 'textarea', placeholder: 'Reason for crediting — not on FINVOICE export', hint: 'Visible only to office staff. Not shared with customer.'}
+    ]
+  },
+  'manual-event': {
+    title: 'New manual event',
+    pds: [{code: 'PD-283', label: 'Manual creation of billing events'}],
+    intro: 'PD-283 requirement: "Invoicing transactions must be able to be created manually by connecting to the underlying products in the system." The event inherits accounts, cost centre and VAT from the product.',
+    toast: 'Manual event created and validated (mockup).',
+    toastPd: 'PD-283',
+    fields: [
+      {key: 'product', label: 'Product', type: 'select', options: ['Maanvuokra (land rent)', 'Asiantuntijatyö (expert work, hourly)', 'Laitevuokra (equipment rental)', 'Vesimaksu (water consumption)']},
+      {key: 'customer', label: 'Customer', type: 'text', placeholder: 'Search customer…'},
+      {key: 'quantity', label: 'Quantity', type: 'text', mono: true, placeholder: '1'},
+      {key: 'comment', label: 'Free-text comment (optional)', type: 'textarea', placeholder: 'Event note'}
+    ]
+  },
+  'edit-event': {
+    title: 'Edit event',
+    pds: [{code: 'PD-277', label: 'Manual editing of events'}],
+    intro: 'PD-277 requirement: "It is possible to edit the events manually... and correct them before the invoice sent to the customer has been created." Edited events re-run through PD-278 validation.',
+    toast: 'Event updated. Change recorded in the log; re-running validation (mockup).',
+    toastPd: 'PD-277',
+    fields: [
+      {key: 'quantity', label: 'Quantity', type: 'text', mono: true, placeholder: '1'},
+      {key: 'product', label: 'Product / event type', type: 'select', options: ['Sekajäte 240L tyhjennys', 'Biojäte 140L tyhjennys', 'Paperinkeräys 240L tyhjennys', 'No collection (driver error)']},
+      {key: 'reason', label: 'Reason for edit', type: 'text', placeholder: 'e.g. wrong number of emptyings'}
+    ]
+  },
+  'billing-run': {
+    title: 'New billing run',
+    pds: [{code: 'PD-293', label: 'Run filtering'}, {code: 'PD-291', label: 'Billing cycles'}],
+    intro: 'PD-293 requirement: a run gathers ready events that match the chosen limit conditions. Pick a cycle and the filters; the run collects matching events.',
+    toast: 'Billing run created in Draft. Review the gathered events, then send.',
+    toastPd: 'PD-293',
+    fields: [
+      {key: 'cycle', label: 'Billing cycle', type: 'select', options: ['Monthly', 'Quarterly', 'Semi-annual', 'Annual', 'Immediate']},
+      {key: 'municipality', label: 'Municipality', type: 'select', options: ['Hyvinkää', 'Riihimäki', 'All']},
+      {key: 'customerType', label: 'Customer type', type: 'select', options: ['Residential', 'Business / weighbridge', 'All']},
+      {key: 'serviceType', label: 'Service type', type: 'select', options: ['All', 'Mixed waste', 'Bio-waste', 'Sludge', 'Reception']},
+      {key: 'threshold', label: 'Minimum € threshold', type: 'text', mono: true, placeholder: '5.00', hint: 'Invoices below this carry to the next run.'},
+      {key: 'period', label: 'Period', type: 'text', placeholder: '2026-05'}
+    ]
+  },
+  'fee-assignment': {
+    title: 'New fee assignment',
+    pds: [{code: 'PD-288', label: 'Seasonal fees'}],
+    intro: 'PD-288 requirement: time-based fees with no event component, recognised as their own billing events. The amount comes from the price list.',
+    toast: 'Fee assignment created. The scheduler will generate events on the chosen cadence.',
+    toastPd: 'PD-288',
+    fields: [
+      {key: 'product', label: 'Fee (product)', type: 'select', options: ['Vuosiperusmaksu (annual base fee)', 'Shared collection point fee', 'Lohkokeräysmaksu (block collection)']},
+      {key: 'appliesTo', label: 'Applies to', type: 'select', options: ['Permanent residences', 'Holiday homes', 'Shared-point participants']},
+      {key: 'frequency', label: 'Frequency', type: 'select', options: ['Annually', 'Quarterly', 'Monthly']},
+      {key: 'month', label: 'Invoiced (month / cadence)', type: 'text', placeholder: 'January'}
+    ]
+  }
+};
+
+// ===================================================================
+// Detail page renderers
+// ===================================================================
+
+function showCostCentreDetail(ccId) {
+  const d = COST_CENTRE_DATA[ccId];
+  if (!d) return;
+  document.getElementById('ccDetailTitle').textContent = d.title;
+  document.getElementById('ccDetailSubtitle').textContent = d.subtitle;
+  document.getElementById('ccDetailProperties').innerHTML = renderKvList(d.properties);
+  document.getElementById('ccDetailAccounts').innerHTML = renderKvList(d.accounts);
+  document.getElementById('ccDetailFinvoice').innerHTML = d.finvoice;
+  document.getElementById('ccDetailEvents').innerHTML = d.events.map(e =>
+    `<tr style="border-top: 1px solid var(--border);">
+      <td style="padding: 8px 12px; font-family: 'JetBrains Mono', monospace; color: var(--text-muted);">${e[0]}</td>
+      <td style="padding: 8px 12px;">${e[1]}</td>
+      <td style="padding: 8px 12px; color: var(--text-muted);">${e[2]}</td>
+      <td style="padding: 8px 12px; text-align: right; font-family: 'JetBrains Mono', monospace;">${e[3]}</td>
+    </tr>`
+  ).join('');
+  showTab('cost-centre-detail');
+}
+
+function showAccountDetail(acId) {
+  const d = ACCOUNT_DATA[acId];
+  if (!d) return;
+  document.getElementById('acDetailTitle').textContent = d.title;
+  document.getElementById('acDetailSubtitle').textContent = d.subtitle;
+  document.getElementById('acDetailProperties').innerHTML = renderKvList(d.properties);
+  document.getElementById('acDetailProducts').innerHTML = renderKvList(d.products);
+  document.getElementById('acDetailFinvoice').innerHTML = d.finvoice;
+  const eventsHtml = d.events.length ? d.events.map(e =>
+    `<tr style="border-top: 1px solid var(--border);">
+      <td style="padding: 8px 12px; font-family: 'JetBrains Mono', monospace; color: var(--text-muted);">${e[0]}</td>
+      <td style="padding: 8px 12px;">${e[1]}</td>
+      <td style="padding: 8px 12px; color: var(--text-muted);">${e[2]}</td>
+      <td style="padding: 8px 12px; text-align: right; font-family: 'JetBrains Mono', monospace;">${e[3]}</td>
+    </tr>`
+  ).join('') : '<tr><td colspan="4" style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 12px;">No events posted to this account yet.</td></tr>';
+  document.getElementById('acDetailEvents').innerHTML = eventsHtml;
+  showTab('account-detail');
+}
+
+function showCreditNoteDetail(cnId) {
+  const d = CREDIT_NOTE_DATA[cnId];
+  if (!d) return;
+  document.getElementById('cnDetailTitle').textContent = d.title;
+  document.getElementById('cnDetailSubtitle').textContent = d.subtitle;
+  document.getElementById('cnDetailProperties').innerHTML = renderKvList(d.properties);
+  document.getElementById('cnDetailCreditText').textContent = d.creditText;
+  document.getElementById('cnDetailInternalComment').textContent = d.internalComment;
+  document.getElementById('cnDetailFinvoice').innerHTML = d.finvoice;
+  document.getElementById('cnDetailLines').innerHTML = d.lines.map(l =>
+    `<tr style="border-top: 1px solid var(--border);">
+      <td style="padding: 8px 12px;">${l[0]}</td>
+      <td style="padding: 8px 12px; text-align: right; font-family: 'JetBrains Mono', monospace;">${l[1]}</td>
+      <td style="padding: 8px 12px; text-align: right; font-family: 'JetBrains Mono', monospace;">${l[2]}</td>
+      <td style="padding: 8px 12px; text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 500;">${l[3]}</td>
+    </tr>`
+  ).join('');
+  showTab('credit-note-detail');
+}
+
+// ===================================================================
+// Create form modal
+// ===================================================================
+
+function openCreateForm(kind) {
+  const form = CREATE_FORMS[kind];
+  if (!form) return;
+  _currentFormKind = kind;
+  document.getElementById('createModalTitle').textContent = form.title;
+  document.getElementById('createModalPds').innerHTML = form.pds.map(pd =>
+    `<a class="pd-chip" href="https://ioteelab.atlassian.net/browse/${pd.code}" target="_blank" rel="noopener">${pd.code} ${pd.label}</a>`
+  ).join('');
+
+  let html = `<div class="modal-note" style="margin-bottom: 18px;">${form.intro}</div>`;
+  for (const f of form.fields) {
+    html += `<div class="form-field">
+      <label>${f.label}</label>`;
+    if (f.type === 'select') {
+      html += `<select>${f.options.map(o => `<option>${o}</option>`).join('')}</select>`;
+    } else if (f.type === 'textarea') {
+      html += `<textarea rows="3" placeholder="${f.placeholder || ''}"></textarea>`;
+    } else {
+      const monoClass = f.mono ? ' class="mono"' : '';
+      html += `<input type="${f.type}" placeholder="${f.placeholder || ''}"${monoClass} />`;
+    }
+    if (f.hint) html += `<span class="form-hint">${f.hint}</span>`;
+    html += `</div>`;
+  }
+  document.getElementById('createModalBody').innerHTML = html;
+  document.getElementById('createModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCreateModal() {
+  document.getElementById('createModal').classList.remove('open');
+  document.body.style.overflow = '';
+  const footer = document.getElementById('createModalFooter');
+  if (footer) footer.innerHTML = '<button class="btn btn-secondary" onclick="closeCreateModal()">Cancel</button><button class="btn btn-primary" onclick="submitCreateForm()">Save</button>';
+  _currentFormKind = null;
+}
+
+function submitCreateForm() {
+  const form = CREATE_FORMS[_currentFormKind];
+  closeCreateModal();
+  if (form && form.toast) {
+    toast(form.toast, form.toastPd, true);
+  } else {
+    toast('Saved (mockup) — in production this would persist the record.');
+  }
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+let _currentFormKind = null;
+function toast(msg, pd, isR2) {
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = 'toast' + (isR2 ? ' r2' : '');
+  el.innerHTML = (pd ? '<span class="toast-pd">' + pd + '</span>' : '') + msg;
+  wrap.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('show'));
+  setTimeout(() => {
+    el.classList.remove('show');
+    setTimeout(() => el.remove(), 250);
+  }, 3200);
+}
+
+// ── Billing run actions (PD-273, PD-297, PD-319) ───────────────────────────
+function sendRun() {
+  const badge = document.getElementById('run002-status');
+  const flow = document.getElementById('run002-flow-sent');
+  if (badge) { badge.className = 'run-status run-sent'; badge.textContent = 'Sent'; }
+  if (flow) { flow.style.outline = '2px solid var(--pink)'; flow.style.outlineOffset = '1px'; }
+  toast('Run sent to customer. Content is now locked (PD-297).', 'PD-273', true);
+}
+function cancelRun() {
+  const badge = document.getElementById('run002-status');
+  if (badge) { badge.className = 'run-status run-draft'; badge.textContent = 'Draft'; }
+  toast('Run cancelled and returned to Draft. No invoice numbers reused.', 'PD-273', true);
+}
+function repriceEvents() {
+  document.querySelectorAll('#reprice-table .old-price').forEach(td => { td.style.textDecoration = 'line-through'; td.style.opacity = '0.5'; });
+  toast('3 events re-priced against the corrected price list. Invoiced events untouched.', 'PD-319', true);
+}
+
+// ── Exclude an event in place (PD-318) ─────────────────────────────────────
+function excludeEvent(eventId, btn) {
+  const row = document.querySelector('#tab-events tbody tr[data-event-id="' + eventId + '"]');
+  if (row) {
+    row.classList.toggle('excluded');
+    const excluded = row.classList.contains('excluded');
+    const statusCell = row.querySelector('td:nth-last-child(2)');
+    if (excluded) {
+      toast('Event excluded from invoicing. Flagged non-billable; can be returned later.', 'PD-318', true);
+    } else {
+      toast('Event returned to billable.', 'PD-318', true);
+    }
+  }
+}
+
+// ── Run detail (opens a per-run summary modal) ─────────────────────────────
+function openRunDetail(runId) {
+  const r = RUN_DATA[runId];
+  if (!r) return;
+  document.getElementById('createModalTitle').textContent = 'Billing run ' + runId;
+  document.getElementById('createModalPds').innerHTML = r.pds.map(pd =>
+    '<a class="pd-chip" href="https://ioteelab.atlassian.net/browse/' + pd + '" target="_blank" rel="noopener">' + pd + '</a>').join('');
+  document.getElementById('createModalBody').innerHTML = r.body;
+  // swap the footer save button for a context action
+  const footer = document.getElementById('createModalFooter');
+  if (footer) footer.innerHTML = r.footer;
+  document.getElementById('createModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeCreateModal();
+});
+
+// ── Billing runs: sidebar status filter ────────────────────────────────────
+function filterRuns(status, el) {
+  document.querySelectorAll('#tab-billing-runs .category-item').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.querySelectorAll('#billing-runs-table tbody tr').forEach(row => {
+    const s = row.getAttribute('data-run-status');
+    row.style.display = (status === 'all' || s === status) ? '' : 'none';
+  });
+}
+
+// ── Generic live table search ──────────────────────────────────────────────
+function filterTable(tableId, q) {
+  const t = document.getElementById(tableId);
+  if (!t) return;
+  q = (q || '').toLowerCase().trim();
+  t.querySelectorAll('tbody tr').forEach(row => {
+    if (row.querySelector('td[colspan]')) return; // skip total rows
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ── Events tab: sidebar filter ─────────────────────────────────────────────
+function filterEvents(filter, sidebarItem) {
+  // Update active state on sidebar
+  document.querySelectorAll('#tab-events .category-item').forEach(el => el.classList.remove('active'));
+  if (sidebarItem) sidebarItem.classList.add('active');
+
+  // Show/hide rows based on data-status
+  const rows = document.querySelectorAll('#tab-events tbody tr[data-event-id]');
+  rows.forEach(row => {
+    const status = row.getAttribute('data-status');
+    if (filter === 'all') {
+      row.style.display = '';
+    } else if (filter === 'ready' && status === 'ready') {
+      row.style.display = '';
+    } else if (filter === 'missing' && status === 'missing') {
+      row.style.display = '';
+    } else if (filter === 'invoiced' && status === 'invoiced') {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+// ── Event detail page (data-driven) ────────────────────────────────────────
+const EVENT_DATA = {
+  ev1: {
+    title: 'Event: Korhonen Maija — Sekajäte 240L tyhjennys',
+    subtitle: '2026-05-12 · Mäntytie 14, Hyvinkää · ready to invoice',
+    identity: [
+      ['Event ID', 'evt-2026-05-12-0001', 'mono'],
+      ['Date', '2026-05-12', 'mono'],
+      ['Customer number', 'Korhonen Maija (CID 100482)'],
+      ['Contractor', 'Kuljetus Hyvinkää Oy'],
+      ['Municipality', 'Hyvinkää'],
+      ['Origin', 'Mäntytie 14, 05800 Hyvinkää'],
+      ['Direction', 'Collection (inbound)'],
+      ['Registration number', 'HVK-247', 'mono'],
+      ['Place of unloading', 'Hyvinkää-laitos']
+    ],
+    product: [
+      ['Product / service', 'Emptying service'],
+      ['Product name', 'Sekajäte 240L tyhjennys'],
+      ['Quantity', '1 pcs', 'mono'],
+      ['Weight', '38 kg', 'mono']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '3.49 €', 'mono'],
+      ['Transport price', '2.33 €', 'mono'],
+      ['Eco-fee', '0.50 €', 'mono'],
+      ['Shared collection point group %', '—'],
+      ['Net total — VAT 0% base', '0.00 €', 'mono'],
+      ['Net total — VAT 25.5% base', '6.32 €', 'mono'],
+      ['Total with 0% VAT', '0.00 €', 'mono'],
+      ['Total with 25.5% VAT', '7.93 €', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Municipal (public law)', 'badge-blue'],
+      ['Cost centre', '20/200/3 — Hyvinkää · Kotitalousjäte', 'mono'],
+      ['Treatment → account', '30002 · 3.49 €', 'mono'],
+      ['Transport → account', '30005 · 2.33 €', 'mono'],
+      ['Eco-fee → account', '30007 · 0.50 €', 'mono'],
+      ['VAT → account', '2939 · 1.61 €', 'mono']
+    ],
+    comments: [
+      ['Free-text comment', '—'],
+      ['Event comments', 'Standard scheduled emptying']
+    ],
+    validation: [
+      ['Customer info', '✓ Present', 'good'],
+      ['Cost centre', '✓ Present', 'good'],
+      ['Accounting account', '✓ Present', 'good'],
+      ['VAT rate', '✓ Present', 'good'],
+      ['Service responsibility', '✓ Present', 'good'],
+      ['Status', 'Ready to invoice', 'badge-green']
+    ]
+  },
+  ev2: {
+    title: 'Event: Asunto Oy Lammitie 8 — Biojäte 140L tyhjennys',
+    subtitle: '2026-05-12 · Lammitie 8, Hyvinkää · ready to invoice',
+    identity: [
+      ['Event ID', 'evt-2026-05-12-0002', 'mono'],
+      ['Date', '2026-05-12', 'mono'],
+      ['Customer number', 'Asunto Oy Lammitie 8 (CID 100719)'],
+      ['Contractor', 'Kuljetus Hyvinkää Oy'],
+      ['Municipality', 'Hyvinkää'],
+      ['Origin', 'Lammitie 8, 05800 Hyvinkää'],
+      ['Direction', 'Collection (inbound)'],
+      ['Registration number', 'HVK-247', 'mono'],
+      ['Place of unloading', 'Hyvinkää-laitos']
+    ],
+    product: [
+      ['Product / service', 'Emptying service'],
+      ['Product name', 'Biojäte 140L tyhjennys'],
+      ['Quantity', '1 pcs', 'mono'],
+      ['Weight', '21 kg', 'mono']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '2.40 €', 'mono'],
+      ['Transport price', '1.45 €', 'mono'],
+      ['Eco-fee', '0.30 €', 'mono'],
+      ['Shared collection point group %', '12.5% (1 of 8 subscribers)'],
+      ['Net total — VAT 0% base', '0.00 €', 'mono'],
+      ['Net total — VAT 25.5% base', '4.15 €', 'mono'],
+      ['Total with 0% VAT', '0.00 €', 'mono'],
+      ['Total with 25.5% VAT', '5.21 €', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Municipal (public law)', 'badge-blue'],
+      ['Cost centre', '20/200/3 — Hyvinkää · Kotitalousjäte', 'mono'],
+      ['Treatment → account', '30002 · 2.40 €', 'mono'],
+      ['Transport → account', '30005 · 1.45 €', 'mono'],
+      ['Eco-fee → account', '30007 · 0.30 €', 'mono'],
+      ['VAT → account', '2939 · 1.06 €', 'mono']
+    ],
+    comments: [
+      ['Free-text comment', '—'],
+      ['Event comments', 'Shared collection point — group of 8']
+    ],
+    validation: [
+      ['All mandatory fields', '✓ Present', 'good'],
+      ['Status', 'Ready to invoice', 'badge-green']
+    ]
+  },
+  ev3: {
+    title: 'Event: Rakennus Virtanen Oy — Rakennusjäte vastaanotto',
+    subtitle: '2026-05-12 · Tehdaskuja 22, Riihimäki · ready to invoice',
+    identity: [
+      ['Event ID', 'evt-2026-05-12-0003', 'mono'],
+      ['Date', '2026-05-12', 'mono'],
+      ['Customer number', 'Rakennus Virtanen Oy (CID 200314)'],
+      ['Contractor', 'Customer-delivered (own truck)'],
+      ['Municipality', 'Riihimäki'],
+      ['Origin', 'Tehdaskuja 22, Riihimäki'],
+      ['Direction', 'Reception (inbound to facility)'],
+      ['Registration number', 'RKV-880', 'mono'],
+      ['Place of unloading', 'Hyvinkää-laitos']
+    ],
+    product: [
+      ['Product / service', 'Waste reception'],
+      ['Product name', 'Rakennusjäte vastaanotto'],
+      ['Quantity', '1 240 kg', 'mono'],
+      ['Weight', '1 240 kg', 'mono']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '98.40 €', 'mono'],
+      ['Transport price', '0.00 € (customer-delivered)', 'mono'],
+      ['Eco-fee', '—'],
+      ['Shared collection point group %', '—'],
+      ['Net total — VAT 0% base', '98.40 €', 'mono'],
+      ['Net total — VAT 25.5% base', '0.00 €', 'mono'],
+      ['Total with 0% VAT', '98.40 € (reverse charge)', 'mono'],
+      ['Total with 25.5% VAT', '0.00 €', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Market-based (private law)', 'badge-purple'],
+      ['Cost centre', '30/300/1 — Vastaanotto · Hyvinkää-laitos', 'mono'],
+      ['Treatment → account', '30005 · 98.40 €', 'mono'],
+      ['VAT treatment', '0% reverse charge (AVL 8 c §)', 'mono']
+    ],
+    comments: [
+      ['Free-text comment', 'Construction waste, sorted'],
+      ['Event comments', 'Reverse charge — customer has FI VAT number']
+    ],
+    validation: [
+      ['All mandatory fields', '✓ Present', 'good'],
+      ['Reverse charge eligibility', '✓ Customer has VAT number', 'good'],
+      ['Status', 'Ready to invoice', 'badge-green']
+    ]
+  },
+  ev4: {
+    title: 'Event: Lahtinen Pekka — Sakokaivon tyhjennys 4 m³',
+    subtitle: '2026-05-11 · Kotipolku 3, Hyvinkää · blocked from invoicing',
+    identity: [
+      ['Event ID', 'evt-2026-05-11-0007', 'mono'],
+      ['Date', '2026-05-11', 'mono'],
+      ['Customer number', 'Lahtinen Pekka (CID 100612)'],
+      ['Contractor', 'Lokahuolto Etelä-Suomi Oy'],
+      ['Municipality', 'Hyvinkää'],
+      ['Origin', 'Kotipolku 3, Hyvinkää'],
+      ['Direction', 'Collection (inbound)'],
+      ['Registration number', 'LOK-512', 'mono'],
+      ['Place of unloading', 'Hyvinkää-laitos']
+    ],
+    product: [
+      ['Product / service', 'Septic tank emptying'],
+      ['Product name', 'Sakokaivon tyhjennys 4 m³'],
+      ['Quantity', '4 m³', 'mono'],
+      ['Weight', '—']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '70.00 €', 'mono'],
+      ['Transport price', '43.15 €', 'mono'],
+      ['Eco-fee', '—'],
+      ['Shared collection point group %', '—'],
+      ['Net total — VAT 0% base', '0.00 €', 'mono'],
+      ['Net total — VAT 25.5% base', '113.15 €', 'mono'],
+      ['Total with 0% VAT', '0.00 €', 'mono'],
+      ['Total with 25.5% VAT', '142.00 €', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Municipal secondary (TSV)', 'badge-amber'],
+      ['Cost centre', '25/250/2 — Hyvinkää · TSV', 'mono'],
+      ['Treatment → account', '— MISSING', 'bad'],
+      ['Transport → account', '— MISSING', 'bad']
+    ],
+    comments: [
+      ['Free-text comment', 'Phone order, septic tank'],
+      ['Event comments', 'TSV product has no account configured yet']
+    ],
+    validation: [
+      ['Customer info', '✓ Present', 'good'],
+      ['Cost centre', '✓ Present', 'good'],
+      ['Accounting account', '✗ Missing — no account configured for TSV sakokaivo product', 'bad'],
+      ['VAT rate', '✓ Present', 'good'],
+      ['Service responsibility', '✓ Present', 'good'],
+      ['Status', 'Blocked — missing account', 'badge-amber']
+    ]
+  },
+  ev5: {
+    title: 'Event: Korhonen Maija — Vuosiperusmaksu 2026',
+    subtitle: '2026-05-11 · Mäntytie 14, Hyvinkää · ready to invoice',
+    identity: [
+      ['Event ID', 'evt-2026-05-11-0010', 'mono'],
+      ['Date', '2026-05-11', 'mono'],
+      ['Customer number', 'Korhonen Maija (CID 100482)'],
+      ['Contractor', '—'],
+      ['Municipality', 'Hyvinkää'],
+      ['Origin', 'Mäntytie 14, 05800 Hyvinkää'],
+      ['Direction', '—'],
+      ['Registration number', '—'],
+      ['Place of unloading', '—']
+    ],
+    product: [
+      ['Product / service', 'Annual base fee'],
+      ['Product name', 'Vuosiperusmaksu 2026'],
+      ['Quantity', '1 pcs', 'mono'],
+      ['Weight', '—']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '—'],
+      ['Transport price', '—'],
+      ['Eco-fee', '—'],
+      ['Shared collection point group %', '—'],
+      ['Base fee', '35.86 €', 'mono'],
+      ['Net total — VAT 25.5% base', '35.86 €', 'mono'],
+      ['Total with 0% VAT', '0.00 €', 'mono'],
+      ['Total with 25.5% VAT', '45.00 €', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Municipal (public law)', 'badge-blue'],
+      ['Cost centre', '20/200/1 — Hyvinkää · Perusmaksut', 'mono'],
+      ['Base fee → account', '30001 · 35.86 €', 'mono'],
+      ['VAT → account', '2939 · 9.14 €', 'mono']
+    ],
+    comments: [
+      ['Free-text comment', '—'],
+      ['Event comments', 'Annual recurring base fee']
+    ],
+    validation: [
+      ['All mandatory fields', '✓ Present', 'good'],
+      ['Status', 'Ready to invoice', 'badge-green']
+    ]
+  },
+  ev6: {
+    title: 'Event: Suomen Kierrätys Oy — Metalliromun vastaanotto',
+    subtitle: '2026-05-10 · Vantaa · ready to invoice',
+    identity: [
+      ['Event ID', 'evt-2026-05-10-0019', 'mono'],
+      ['Date', '2026-05-10', 'mono'],
+      ['Customer number', 'Suomen Kierrätys Oy (CID 200511)'],
+      ['Contractor', 'Customer-delivered (own truck)'],
+      ['Municipality', 'Riihimäki'],
+      ['Origin', 'Vantaa'],
+      ['Direction', 'Reception (inbound to facility)'],
+      ['Registration number', 'SKO-410', 'mono'],
+      ['Place of unloading', 'Riihimäki-laitos']
+    ],
+    product: [
+      ['Product / service', 'Waste reception'],
+      ['Product name', 'Metalliromun vastaanotto'],
+      ['Quantity', '3 870 kg', 'mono'],
+      ['Weight', '3 870 kg', 'mono']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '231.55 €', 'mono'],
+      ['Transport price', '0.00 € (customer-delivered)', 'mono'],
+      ['Eco-fee', '—'],
+      ['Shared collection point group %', '—'],
+      ['Net total — VAT 0% base', '231.55 €', 'mono'],
+      ['Net total — VAT 25.5% base', '0.00 €', 'mono'],
+      ['Total with 0% VAT', '231.55 € (reverse charge)', 'mono'],
+      ['Total with 25.5% VAT', '0.00 €', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Market-based (private law)', 'badge-purple'],
+      ['Cost centre', '30/300/2 — Vastaanotto · Riihimäki-laitos', 'mono'],
+      ['Treatment → account', '30005 · 231.55 €', 'mono'],
+      ['VAT treatment', '0% reverse charge (AVL 8 c §)', 'mono']
+    ],
+    comments: [
+      ['Free-text comment', 'Scrap metal'],
+      ['Event comments', 'Reverse charge — customer has FI VAT number']
+    ],
+    validation: [
+      ['All mandatory fields', '✓ Present', 'good'],
+      ['Status', 'Ready to invoice', 'badge-green']
+    ]
+  },
+  ev7: {
+    title: 'Event: Niemi Tiina — Sekajäte 660L tyhjennys',
+    subtitle: '2026-05-09 · Koivumäki 7, Riihimäki · blocked from invoicing',
+    identity: [
+      ['Event ID', 'evt-2026-05-09-0023', 'mono'],
+      ['Date', '2026-05-09', 'mono'],
+      ['Customer number', 'Niemi Tiina (CID 100488)'],
+      ['Contractor', 'Kuljetus Riihimäki Oy'],
+      ['Municipality', 'Riihimäki'],
+      ['Origin', 'Koivumäki 7, Riihimäki'],
+      ['Direction', 'Collection (inbound)'],
+      ['Registration number', 'RMK-142', 'mono'],
+      ['Place of unloading', 'Riihimäki-laitos']
+    ],
+    product: [
+      ['Product / service', 'Emptying service'],
+      ['Product name', 'Sekajäte 660L tyhjennys'],
+      ['Quantity', '1 pcs', 'mono'],
+      ['Weight', '92 kg', 'mono']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '5.50 €', 'mono'],
+      ['Transport price', '4.04 €', 'mono'],
+      ['Eco-fee', '0.50 €', 'mono'],
+      ['Shared collection point group %', '—'],
+      ['Net total — VAT 0% base', '0.00 €', 'mono'],
+      ['Net total — VAT 25.5% base', '10.04 €', 'mono'],
+      ['Total with 0% VAT', '0.00 €', 'mono'],
+      ['Total with 25.5% VAT', '12.60 €', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Municipal (public law)', 'badge-blue'],
+      ['Cost centre', '22/200/3 — Riihimäki · Kotitalousjäte', 'mono'],
+      ['Treatment → account', '— MISSING', 'bad'],
+      ['Transport → account', '— MISSING', 'bad'],
+      ['Eco-fee → account', '— MISSING', 'bad']
+    ],
+    comments: [
+      ['Free-text comment', '—'],
+      ['Event comments', 'Riihimäki municipal account not yet configured']
+    ],
+    validation: [
+      ['Customer info', '✓ Present', 'good'],
+      ['Cost centre', '✓ Present', 'good'],
+      ['Accounting account', '✗ Missing — Riihimäki municipal account not yet configured', 'bad'],
+      ['VAT rate', '✓ Present', 'good'],
+      ['Status', 'Blocked — missing account', 'badge-amber']
+    ]
+  },
+  ev8: {
+    title: 'Event: Mäkelä Jarkko — Paperinkeräys 240L tyhjennys',
+    subtitle: '2026-05-09 · Vihtikatu 5, Hyvinkää · ready to invoice',
+    identity: [
+      ['Event ID', 'evt-2026-05-09-0031', 'mono'],
+      ['Date', '2026-05-09', 'mono'],
+      ['Customer number', 'Mäkelä Jarkko (CID 100501)'],
+      ['Contractor', 'Kuljetus Hyvinkää Oy'],
+      ['Municipality', 'Hyvinkää'],
+      ['Origin', 'Vihtikatu 5, Hyvinkää'],
+      ['Direction', 'Collection (inbound)'],
+      ['Registration number', 'HVK-247', 'mono'],
+      ['Place of unloading', 'Hyvinkää-laitos']
+    ],
+    product: [
+      ['Product / service', 'Emptying service'],
+      ['Product name', 'Paperinkeräys 240L tyhjennys'],
+      ['Quantity', '1 pcs', 'mono'],
+      ['Weight', '14 kg', 'mono']
+    ],
+    pricing: [
+      ['Waste price (treatment)', '1.50 €', 'mono'],
+      ['Transport price', '1.23 €', 'mono'],
+      ['Eco-fee', '0.30 €', 'mono'],
+      ['Shared collection point group %', '—'],
+      ['Net total — VAT 0% base', '0.00 €', 'mono'],
+      ['Net total — VAT 25.5% base', '3.03 €', 'mono'],
+      ['Total with 0% VAT', '0.00 €', 'mono'],
+      ['Total with 25.5% VAT', '3.80 €', 'mono']
+    ],
+    classification: [
+      ['Service responsibility', 'Municipal (public law)', 'badge-blue'],
+      ['Cost centre', '20/200/3 — Hyvinkää · Kotitalousjäte', 'mono'],
+      ['Treatment → account', '30004 · 1.50 €', 'mono'],
+      ['Transport → account', '30005 · 1.23 €', 'mono'],
+      ['Eco-fee → account', '30007 · 0.30 €', 'mono'],
+      ['VAT → account', '2939 · 0.77 €', 'mono']
+    ],
+    comments: [
+      ['Free-text comment', '—'],
+      ['Event comments', 'Recyclable paper collection']
+    ],
+    validation: [
+      ['All mandatory fields', '✓ Present', 'good'],
+      ['Status', 'Ready to invoice', 'badge-green']
+    ]
+  }
+};
+
+// ── Event detail: view + inline edit (PD-277), gated on sent status ─────────
+// Only ev8 has been invoiced/sent in this mockup → it is locked.
+const EVENT_SENT = {
+  ev1: { info: 'Invoice 126000142 · sent 2026-05-15' },
+  ev2: { info: 'Invoice 126000143 · sent 2026-05-20' },
+  ev5: { info: 'Invoice 126000142 · sent 2026-05-15' },
+  ev8: { info: 'Invoice 126000139 · sent 2026-05-20' }
+};
+// Fields a person may legitimately correct on the event itself (operational).
+// Pricing, accounting, classification and system fields stay read-only — they
+// are resolved from the price list / CRM / trigger, not hand-edited.
+const EDITABLE_FIELDS = new Set([
+  'Date','Quantity','Weight','Product / service','Product name',
+  'Registration number','Place of unloading','Origin','Direction',
+  'Free-text comment','Event comments'
+]);
+
+let _currentEvent = null;
+let _editMode = false;
+
+function renderKvList(rows, editMode, cardName) {
+  return rows.map(r => {
+    const [key, value, modifier] = r;
+    let valueClass = 'kv-value';
+    let valueHtml = value;
+    if (editMode && EDITABLE_FIELDS.has(key)) {
+      const monoCls = modifier === 'mono' ? ' mono' : '';
+      const safe = String(value).replace(/"/g, '&quot;');
+      return `<div class="kv-row"><span class="kv-key">${key}</span>` +
+             `<input class="kv-edit${monoCls}" value="${safe}" data-card="${cardName}" data-key="${key}"></div>`;
+    }
+    if (modifier === 'mono') valueClass += ' kv-value-mono';
+    if (modifier === 'good') valueHtml = `<span style="color: #0a7c3a;">${value}</span>`;
+    if (modifier === 'bad') valueHtml = `<span style="color: #b94a00; font-weight: 500;">${value}</span>`;
+    if (modifier && modifier.startsWith('badge-')) valueHtml = `<span class="badge ${modifier}">${value}</span>`;
+    const lock = (editMode ? '<span class="lock-ico">read-only</span>' : '');
+    return `<div class="kv-row"><span class="kv-key">${key}</span><span class="${valueClass}">${valueHtml}${lock}</span></div>`;
+  }).join('');
+}
+
+function renderEventCards(eventId, editMode) {
+  const d = EVENT_DATA[eventId];
+  document.getElementById('evDetailIdentity').innerHTML = renderKvList(d.identity, editMode, 'identity');
+  document.getElementById('evDetailProduct').innerHTML = renderKvList(d.product, editMode, 'product');
+  document.getElementById('evDetailPricing').innerHTML = renderKvList(d.pricing, editMode, 'pricing');
+  document.getElementById('evDetailClassification').innerHTML = renderKvList(d.classification, editMode, 'classification');
+  document.getElementById('evDetailComments').innerHTML = renderKvList(d.comments, editMode, 'comments');
+  document.getElementById('evDetailValidation').innerHTML = renderKvList(d.validation, editMode, 'validation');
+}
+
+function renderEventChrome() {
+  const sent = EVENT_SENT[_currentEvent];
+  const banner = document.getElementById('evDetailBanner');
+  const actions = document.getElementById('evDetailActions');
+
+  if (_editMode) {
+    banner.innerHTML = '<div class="detail-banner editing"><span class="lock-badge">✎</span>' +
+      '<span>Editing this event (PD-277). Operational fields are editable; pricing, accounting and classification are resolved from the price list and shown read-only. Edited events re-run through PD-278 validation.</span></div>';
+    actions.innerHTML =
+      '<button class="btn btn-r2" onclick="saveEventEdit()">Save changes</button>' +
+      '<button class="btn btn-secondary" onclick="cancelEventEdit()">Cancel</button>';
+    return;
+  }
+
+  if (sent) {
+    banner.innerHTML = '<div class="detail-banner locked"><span class="lock-badge">🔒</span>' +
+      '<span>This event is on a sent invoice (' + sent.info + '). Locked per PD-297 — its content can no longer be edited.</span></div>';
+    actions.innerHTML =
+      '<button class="btn btn-secondary" disabled style="opacity:.5; cursor:not-allowed;">✎ Edit event <span class="r2-pill">PD-277</span></button>' +
+      '<button class="btn btn-secondary" disabled style="opacity:.5; cursor:not-allowed;">⊘ Exclude <span class="r2-pill">PD-318</span></button>';
+  } else {
+    banner.innerHTML = '';
+    actions.innerHTML =
+      '<button class="btn btn-r2-soft" onclick="enterEditMode()">✎ Edit event <span class="r2-pill">R2 · PD-277</span></button>' +
+      '<button class="btn btn-r2-soft" onclick="toast(\'Event excluded from invoicing. Flagged non-billable; can be returned later.\', \'PD-318\', true)">⊘ Exclude <span class="r2-pill">R2 · PD-318</span></button>';
+  }
+}
+
+function showEventDetail(eventId) {
+  const data = EVENT_DATA[eventId];
+  if (!data) return;
+  _currentEvent = eventId;
+  _editMode = false;
+
+  document.getElementById('evDetailTitle').textContent = data.title;
+  document.getElementById('evDetailSubtitle').textContent = data.subtitle;
+  renderEventCards(eventId, false);
+  renderEventChrome();
+  showTab('event-detail');
+}
+
+function enterEditMode() {
+  if (EVENT_SENT[_currentEvent]) {
+    toast('This event is on a sent invoice and is locked (PD-297).', 'PD-297', true);
+    return;
+  }
+  _editMode = true;
+  renderEventCards(_currentEvent, true);
+  renderEventChrome();
+}
+
+function cancelEventEdit() {
+  _editMode = false;
+  renderEventCards(_currentEvent, false);
+  renderEventChrome();
+}
+
+function saveEventEdit() {
+  // persist edited operational fields back into EVENT_DATA for the session
+  document.querySelectorAll('#tab-event-detail .kv-edit').forEach(inp => {
+    const arr = EVENT_DATA[_currentEvent][inp.dataset.card];
+    const row = arr && arr.find(r => r[0] === inp.dataset.key);
+    if (row) row[1] = inp.value;
+  });
+  _editMode = false;
+  renderEventCards(_currentEvent, false);
+  renderEventChrome();
+  toast('Event updated. Change recorded; re-running PD-278 validation.', 'PD-277', true);
+}
+
+</script>
+
+</body>
+</html>

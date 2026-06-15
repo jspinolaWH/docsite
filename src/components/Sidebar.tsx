@@ -331,6 +331,20 @@ function InvoicingSidebarContent() {
 
             {!isCollapsed && (
               <ul className="sidebar-docs">
+                {catId === 'inv-r2' && (
+                  <li>
+                    <a
+                      href="/docsite/invoicing/mockups/r2-mockup.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="sidebar-link"
+                      style={{ display: 'flex', alignItems: 'center' }}
+                    >
+                      R2 Mockup
+                      <ExternalIcon />
+                    </a>
+                  </li>
+                )}
                 {docs.map((doc) => (
                   <li key={doc.slug}>
                     <NavLink
