@@ -259,6 +259,62 @@ tr.excluded td:last-child { opacity: 1; text-decoration: none; }
 .detail-banner.locked { background: var(--surface); border: 1px solid var(--border-mid); border-left: 3px solid var(--text-muted); color: var(--text); }
 .detail-banner.editing { background: var(--pink-bg); border: 1px solid #f9c6e0; border-left: 3px solid var(--pink); color: var(--text); }
 .detail-banner .lock-badge { font-size: 16px; }
+
+/* ── Sectioned create forms (manual event, billing run) ───────────────────── */
+.modal.modal-wide { max-width: 680px; }
+.form-section { margin-bottom: 22px; }
+.form-section:last-of-type { margin-bottom: 0; }
+.form-section-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border-mid); flex-wrap: wrap; }
+.form-section-title { font-size: 11px; font-weight: 600; color: var(--text); text-transform: uppercase; letter-spacing: 0.05em; }
+.form-section-note { font-size: 11px; color: var(--text-muted); font-style: italic; }
+.form-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; }
+.form-grid2 .form-field { margin-bottom: 12px; }
+/* read-only / auto-resolved fields */
+.form-field input:disabled, .form-field select:disabled, .form-field textarea:disabled { background: var(--surface); color: var(--text-muted); cursor: not-allowed; border-color: var(--border); }
+.form-field input:disabled::placeholder, .form-field textarea:disabled::placeholder { color: var(--text-faint); }
+.resolved-tag { display: inline-block; font-size: 9px; color: var(--text-muted); background: var(--surface); border: 1px solid var(--border-mid); padding: 1px 6px; border-radius: 10px; margin-left: 6px; font-weight: 500; vertical-align: middle; }
+/* checkbox restriction rows (PD-292) */
+.form-check { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); margin-bottom: 10px; cursor: pointer; }
+.form-check input { width: auto; margin-top: 2px; flex-shrink: 0; }
+.form-check-label { display: block; font-size: 13px; font-weight: 500; color: var(--text); }
+.form-check .form-hint { margin-top: 2px; }
+/* bundling rows (PD-290) */
+.bundle-row { display: grid; grid-template-columns: 1fr 200px; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.bundle-row:last-child { border-bottom: none; }
+.bundle-row .bundle-group { font-size: 13px; color: var(--text); }
+.bundle-row select { width: 100%; padding: 6px 10px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); font-size: 12px; font-family: 'Poppins', sans-serif; background: var(--white); outline: none; }
+/* pink preview line for a draft run */
+.form-preview { background: var(--pink-bg); border-left: 3px solid var(--pink); border-radius: var(--radius); padding: 12px 16px; margin-top: 18px; font-size: 13px; color: var(--text); }
+.form-preview .form-preview-label { font-size: 10px; font-weight: 600; color: var(--pink); text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 4px; }
+.form-footnote { background: var(--surface); border-radius: var(--radius); padding: 12px 16px; margin-top: 16px; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+/* ── Invoice-options blocks (PD-300/301/302/307/308/294/289/271) ──────────── */
+.opt-block { padding: 14px 0; border-bottom: 1px solid var(--border); }
+.opt-block:first-child { padding-top: 0; }
+.opt-block:last-child { border-bottom: none; padding-bottom: 0; }
+.opt-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.opt-title { font-size: 12px; font-weight: 600; color: var(--text); }
+.opt-pd { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 2px 7px; border-radius: 4px; background: var(--pink-bg); color: var(--pink); text-decoration: none; font-weight: 500; }
+.opt-pd:hover { background: var(--pink); color: #fff; }
+.opt-body { font-size: 12px; color: var(--text); line-height: 1.55; }
+.opt-mini { border: 1px solid var(--border-mid); border-radius: var(--radius-sm); overflow: hidden; margin-top: 6px; }
+.opt-mini-row { display: flex; justify-content: space-between; gap: 10px; padding: 6px 10px; font-size: 11.5px; border-top: 1px solid var(--border); }
+.opt-mini-row:first-child { border-top: none; }
+.opt-mini-row .mono { font-family: 'JetBrains Mono', monospace; }
+.opt-mini-head { background: var(--surface); font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 500; }
+.opt-statute { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text); background: var(--surface); border-left: 2px solid var(--pink); padding: 6px 10px; border-radius: 3px; margin-top: 6px; }
+.opt-input { width: 100%; padding: 6px 10px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); font-size: 12px; font-family: 'Poppins', sans-serif; background: var(--white); outline: none; box-sizing: border-box; margin-top: 4px; }
+.opt-input:focus { border-color: var(--pink); }
+.opt-input:disabled { background: var(--surface); color: var(--text-muted); }
+.opt-field-name { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-muted); }
+.opt-toggle { display: inline-flex; border: 1px solid var(--border-mid); border-radius: 999px; overflow: hidden; margin-top: 6px; }
+.opt-toggle span { padding: 3px 12px; font-size: 11px; color: var(--text-muted); cursor: default; }
+.opt-toggle span.on { background: var(--pink); color: #fff; font-weight: 500; }
+.opt-toggle.off-state span.off { background: var(--surface); color: var(--text); font-weight: 500; }
+.opt-check { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; }
+.opt-check .tick { color: var(--green); font-weight: 600; }
+.opt-check .cross { color: var(--red); font-weight: 600; }
+.opt-note { font-size: 11px; color: var(--text-muted); margin-top: 6px; font-style: italic; }
 </style>
 </head>
 <body>
@@ -1117,14 +1173,88 @@ tr.excluded td:last-child { opacity: 1; text-decoration: none; }
               <div class="detail-card-pd">R2</div>
             </div>
             <div class="detail-card-body">
-              <div class="kv-row"><span class="kv-key">Gross / net <span class="r2-inline">PD-301</span></span><span class="kv-value">Gross (VAT shown per line + summary)</span></div>
-              <div class="kv-row"><span class="kv-key">Reverse charge <span class="r2-inline">PD-300</span></span><span class="kv-value">Not applicable (public law)</span></div>
-              <div class="kv-row"><span class="kv-key">Custom text <span class="r2-inline">PD-302</span></span><span class="kv-value">InvoiceFreeText / RowFreeText</span></div>
-              <div class="kv-row"><span class="kv-key">Template <span class="r2-inline">PD-307</span></span><span class="kv-value">Default (code passed to operator)</span></div>
-              <div class="kv-row"><span class="kv-key">Language <span class="r2-inline">PD-308</span></span><span class="kv-value">FI (PJH: no per-customer language)</span></div>
-              <div class="kv-row"><span class="kv-key">Surcharge <span class="r2-inline">PD-294</span></span><span class="kv-value">Toggle off for PJH</span></div>
-              <div class="kv-row"><span class="kv-key">Pre-send checks <span class="r2-inline">PD-271</span></span><span class="kv-value"><span class="badge badge-pink">Passed</span></span></div>
-              <div class="kv-row"><span class="kv-key">AR / reporting data <span class="r2-inline">PD-289</span></span><span class="kv-value">Public/private, account, cost centre, VAT on every line</span></div>
+
+              <!-- PD-300 reverse-charge VAT -->
+              <div class="opt-block">
+                <div class="opt-head"><span class="opt-title">Reverse-charge VAT</span><a class="opt-pd" href="https://ioteelab.atlassian.net/browse/PD-300" target="_blank">PD-300</a></div>
+                <div class="opt-body">When the buyer accounts for VAT, the line carries 0% and the buyer's VAT number, plus the statutory text.</div>
+                <div class="opt-mini">
+                  <div class="opt-mini-row opt-mini-head"><span>Example line</span><span>VAT</span><span>Amount</span></div>
+                  <div class="opt-mini-row"><span>Rakennusjäte vastaanotto</span><span class="mono">0%</span><span class="mono">98.40 €</span></div>
+                  <div class="opt-mini-row"><span>Buyer VAT number</span><span class="mono" style="flex:1; text-align:right;">FI17829345</span></div>
+                </div>
+                <div class="opt-statute">Käännetty verovelvollisuus AVL 8 c §</div>
+                <div class="opt-note">On this invoice: not applicable (public law). Shown for the market-based case.</div>
+              </div>
+
+              <!-- PD-301 gross / net -->
+              <div class="opt-block">
+                <div class="opt-head"><span class="opt-title">Gross / net presentation</span><a class="opt-pd" href="https://ioteelab.atlassian.net/browse/PD-301" target="_blank">PD-301</a></div>
+                <div class="opt-body">A VAT summary per rate, with a toggle for whether prices show gross or net.</div>
+                <div class="opt-mini">
+                  <div class="opt-mini-row opt-mini-head"><span>Rate</span><span>Base</span><span>VAT</span><span>Total</span></div>
+                  <div class="opt-mini-row"><span class="mono">25.5%</span><span class="mono">46.33</span><span class="mono">11.81</span><span class="mono">58.14</span></div>
+                  <div class="opt-mini-row"><span class="mono">0%</span><span class="mono">0.00</span><span class="mono">0.00</span><span class="mono">0.00</span></div>
+                </div>
+                <div class="opt-toggle"><span class="on">Gross</span><span>Net</span></div>
+              </div>
+
+              <!-- PD-302 custom text -->
+              <div class="opt-block">
+                <div class="opt-head"><span class="opt-title">Custom invoice text</span><a class="opt-pd" href="https://ioteelab.atlassian.net/browse/PD-302" target="_blank">PD-302</a></div>
+                <div class="opt-body">Free text at header and line level, mapped to the FINVOICE fields.</div>
+                <label class="opt-field-name">InvoiceFreeText (header)</label>
+                <input class="opt-input" placeholder="e.g. Kiitos asioinnista." />
+                <label class="opt-field-name" style="margin-top:6px; display:block;">RowFreeText (line)</label>
+                <input class="opt-input" placeholder="e.g. Tyhjennys viikolla 19." />
+              </div>
+
+              <!-- PD-307 template -->
+              <div class="opt-block">
+                <div class="opt-head"><span class="opt-title">Invoice template</span><a class="opt-pd" href="https://ioteelab.atlassian.net/browse/PD-307" target="_blank">PD-307</a></div>
+                <div class="opt-body">A template code is carried on the invoice and passed through.</div>
+                <input class="opt-input mono" placeholder="PJH-DEFAULT-01" style="font-family:'JetBrains Mono',monospace;" />
+                <div class="opt-note">Templates themselves are managed in the operator's system, not here.</div>
+              </div>
+
+              <!-- PD-308 language -->
+              <div class="opt-block">
+                <div class="opt-head"><span class="opt-title">Invoice language</span><a class="opt-pd" href="https://ioteelab.atlassian.net/browse/PD-308" target="_blank">PD-308</a></div>
+                <select class="opt-input" disabled><option>FI</option></select>
+                <div class="opt-note">Fixed to FI. PJH does not use per-customer language selection.</div>
+              </div>
+
+              <!-- PD-294 surcharge -->
+              <div class="opt-block">
+                <div class="opt-head"><span class="opt-title">Invoice surcharge</span><a class="opt-pd" href="https://ioteelab.atlassian.net/browse/PD-294" target="_blank">PD-294</a></div>
+                <div class="opt-body">An optional surcharge line, governed by a single global toggle.</div>
+                <div class="opt-mini">
+                  <div class="opt-mini-row" style="opacity:0.5;"><span>Laskutuslisä (surcharge)</span><span class="mono">0.00 €</span></div>
+                </div>
+                <div class="opt-toggle off-state"><span class="off">Off</span><span>On</span></div>
+                <div class="opt-note">Shown off for PJH.</div>
+              </div>
+
+              <!-- PD-289 AR / reporting data -->
+              <div class="opt-block">
+                <div class="opt-head"><span class="opt-title">AR / reporting data per line</span><a class="opt-pd" href="https://ioteelab.atlassian.net/browse/PD-289" target="_blank">PD-289</a></div>
+                <div class="opt-body">Every invoice line carries the data accounts receivable and reporting need.</div>
+                <div class="opt-mini">
+                  <div class="opt-mini-row opt-mini-head"><span>Line</span><span>Class</span><span>Acct</span><span>CC</span><span>VAT</span></div>
+                  <div class="opt-mini-row"><span>Sekajäte 240L</span><span><span class="badge badge-blue" style="font-size:9px; padding:1px 6px;">Public</span></span><span class="mono">30002</span><span class="mono">20/200/3</span><span class="mono">25.5%</span></div>
+                </div>
+              </div>
+
+              <!-- PD-271 pre-send checks -->
+              <div class="opt-block">
+                <div class="opt-head"><span class="opt-title">Pre-send checks</span><a class="opt-pd" href="https://ioteelab.atlassian.net/browse/PD-271" target="_blank">PD-271</a></div>
+                <div class="opt-body">The invoice must clear every check before it can be sent.</div>
+                <div class="opt-check"><span class="tick">✓</span><span>Billing address present</span></div>
+                <div class="opt-check"><span class="tick">✓</span><span>E-invoice address valid</span></div>
+                <div class="opt-check"><span class="tick">✓</span><span>Totals reconcile</span></div>
+                <div class="opt-check"><span class="tick">✓</span><span>FINVOICE mandatory fields complete</span></div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -2151,15 +2281,58 @@ const CREATE_FORMS = {
   },
   'manual-event': {
     title: 'New manual event',
-    pds: [{code: 'PD-283', label: 'Manual creation of billing events'}],
-    intro: 'PD-283 requirement: "Invoicing transactions must be able to be created manually by connecting to the underlying products in the system." The event inherits accounts, cost centre and VAT from the product.',
-    toast: 'Manual event created and validated (mockup).',
+    wide: true,
+    pds: [{code: 'PD-283', label: 'Manual creation of billing events'}, {code: 'PD-299', label: 'Event schema'}, {code: 'PD-278', label: 'Mandatory data validation'}],
+    intro: 'PD-283: "Invoicing transactions must be able to be created manually by connecting to the underlying products in the system." Operational fields are entered by hand; pricing and accounting are derived from the product, never typed.',
+    toast: 'Manual event created. Running PD-278 validation like any other event (mockup).',
     toastPd: 'PD-283',
-    fields: [
-      {key: 'product', label: 'Product', type: 'select', options: ['Maanvuokra (land rent)', 'Asiantuntijatyö (expert work, hourly)', 'Laitevuokra (equipment rental)', 'Vesimaksu (water consumption)']},
-      {key: 'customer', label: 'Customer', type: 'text', placeholder: 'Search customer…'},
-      {key: 'quantity', label: 'Quantity', type: 'text', mono: true, placeholder: '1'},
-      {key: 'comment', label: 'Free-text comment (optional)', type: 'textarea', placeholder: 'Event note'}
+    footerNote: 'On Save the event runs through PD-278 mandatory-data validation like any other event. A manual event connects to a product and inherits its accounts, cost centre and VAT (PD-283).',
+    sections: [
+      {
+        label: 'Event & customer', note: 'Grey fields resolve from the selected customer on save',
+        fields: [
+          {key: 'eventDate', label: 'Event date', type: 'date'},
+          {key: 'customer', label: 'Customer', type: 'text', placeholder: 'Search customer…'},
+          {key: 'customerNumber', label: 'Customer number', type: 'text', mono: true, readonly: true, placeholder: 'resolved on save'},
+          {key: 'municipality', label: 'Municipality', type: 'text', readonly: true, placeholder: 'resolved on save'},
+          {key: 'serviceResp', label: 'Service responsibility', type: 'text', readonly: true, placeholder: 'resolved on save'},
+          {key: 'contractor', label: 'Contractor', type: 'text', readonly: true, placeholder: 'resolved on save'}
+        ]
+      },
+      {
+        label: 'Product & quantity',
+        fields: [
+          {key: 'product', label: 'Product / service', type: 'select', options: ['Maanvuokra (land rent)', 'Asiantuntijatyö (expert work, hourly)', 'Laitevuokra (equipment rental)', 'Vastaanotto (reception)']},
+          {key: 'productName', label: 'Product name', type: 'text', readonly: true, placeholder: 'resolved from product'},
+          {key: 'quantity', label: 'Quantity', type: 'text', mono: true, placeholder: '1', hint: 'pcs or m³ depending on product.'},
+          {key: 'weight', label: 'Weight', type: 'text', mono: true, placeholder: 't / kg', hint: 'Weight-based products only.'},
+          {key: 'regNumber', label: 'Registration number', type: 'text', mono: true, placeholder: 'HVK-247'},
+          {key: 'unloading', label: 'Place of unloading', type: 'text', placeholder: 'Hyvinkää-laitos'},
+          {key: 'origin', label: 'Origin', type: 'text', placeholder: 'Street, postcode, town'},
+          {key: 'direction', label: 'Direction', type: 'select', options: ['Collection (inbound)', 'Reception (inbound to facility)', 'Delivery (outbound)']}
+        ]
+      },
+      {
+        label: 'Pricing & accounting', note: 'resolved from product + price list on save', cols: 2,
+        fields: [
+          {key: 'wastePrice', label: 'Waste / treatment price', type: 'text', mono: true, readonly: true, placeholder: '€'},
+          {key: 'transportPrice', label: 'Transport price', type: 'text', mono: true, readonly: true, placeholder: '€'},
+          {key: 'ecoFee', label: 'Eco-fee', type: 'text', mono: true, readonly: true, placeholder: '€'},
+          {key: 'vat0', label: 'VAT 0% amount', type: 'text', mono: true, readonly: true, placeholder: '€'},
+          {key: 'vat255', label: 'VAT 25.5% amount', type: 'text', mono: true, readonly: true, placeholder: '€'},
+          {key: 'total0', label: 'Total at 0%', type: 'text', mono: true, readonly: true, placeholder: '€'},
+          {key: 'total255', label: 'Total at 25.5%', type: 'text', mono: true, readonly: true, placeholder: '€'},
+          {key: 'accounts', label: 'Accounts', type: 'text', mono: true, readonly: true, placeholder: 'G/L accounts'},
+          {key: 'costCentre', label: 'Cost centre', type: 'text', mono: true, readonly: true, placeholder: 'e.g. 20/200/3'}
+        ]
+      },
+      {
+        label: 'Comments',
+        fields: [
+          {key: 'comment', label: 'Free-text comment', type: 'textarea', placeholder: 'Event note (e.g. phone order)'},
+          {key: 'eventComments', label: 'Event comments', type: 'textarea', placeholder: 'Internal context for this event'}
+        ]
+      }
     ]
   },
   'edit-event': {
@@ -2176,30 +2349,61 @@ const CREATE_FORMS = {
   },
   'billing-run': {
     title: 'New billing run',
-    pds: [{code: 'PD-293', label: 'Run filtering'}, {code: 'PD-291', label: 'Billing cycles'}],
-    intro: 'PD-293 requirement: a run gathers ready events that match the chosen limit conditions. Pick a cycle and the filters; the run collects matching events.',
-    toast: 'Billing run created in Draft. Review the gathered events, then send.',
+    wide: true,
+    pds: [{code: 'PD-291', label: 'Billing cycles'}, {code: 'PD-293', label: 'Run filtering'}, {code: 'PD-290', label: 'Bundling'}, {code: 'PD-292', label: 'Restrictions'}, {code: 'PD-297', label: 'Statuses'}],
+    intro: 'A run gathers ready events that match the chosen cycle and filters, bundles them into invoice lines, then is created in Draft for the billing user to review and send.',
+    toast: 'Billing run created in Draft. Review the gathered events, then send (PD-297).',
     toastPd: 'PD-293',
-    fields: [
-      {key: 'cycle', label: 'Billing cycle', type: 'select', options: ['Monthly', 'Quarterly', 'Semi-annual', 'Annual', 'Immediate']},
-      {key: 'municipality', label: 'Municipality', type: 'select', options: ['Hyvinkää', 'Riihimäki', 'All']},
-      {key: 'customerType', label: 'Customer type', type: 'select', options: ['Residential', 'Business / weighbridge', 'All']},
-      {key: 'serviceType', label: 'Service type', type: 'select', options: ['All', 'Mixed waste', 'Bio-waste', 'Sludge', 'Reception']},
-      {key: 'threshold', label: 'Minimum € threshold', type: 'text', mono: true, placeholder: '5.00', hint: 'Invoices below this carry to the next run.'},
-      {key: 'period', label: 'Period', type: 'text', placeholder: '2026-05'}
+    preview: '1 240 events gathered · 602 invoices · 48 210.55 € total',
+    footerNote: 'The run is created in Draft (PD-297). Nothing is sent until the billing user reviews the dataset and confirms.',
+    sections: [
+      {
+        label: 'Billing cycle', note: 'PD-291',
+        fields: [
+          {key: 'cycle', label: 'Cycle', type: 'select', options: ['Monthly', 'Quarterly', 'Semi-annual', 'Annual', 'Immediate']}
+        ]
+      },
+      {
+        label: 'Selection filters', note: 'PD-293 — fixed filter set', cols: 2,
+        fields: [
+          {key: 'municipality', label: 'Municipality', type: 'select', options: ['Hyvinkää', 'Riihimäki', 'All']},
+          {key: 'threshold', label: 'Minimum € threshold', type: 'text', mono: true, placeholder: '5.00', hint: 'Invoices below it carry to the next run.'},
+          {key: 'frequency', label: 'Invoicing frequency', type: 'select', options: ['Monthly', 'Quarterly', 'Semi-annual', 'Annual', 'All']},
+          {key: 'period', label: 'Time period', type: 'text', placeholder: '2026-05'},
+          {key: 'customerType', label: 'Customer type', type: 'select', options: ['Residential', 'Business / weighbridge', 'All']},
+          {key: 'serviceType', label: 'Service type', type: 'select', options: ['All', 'Mixed waste', 'Bio-waste', 'Sludge', 'Reception']},
+          {key: 'reception', label: 'Reception location', type: 'select', options: ['Any', 'Hyvinkää-laitos', 'Riihimäki-laitos']},
+          {key: 'serviceResp', label: 'Service responsibility', type: 'select', options: ['Municipal', 'Municipal secondary (TSV)', 'Market-based', 'All']}
+        ]
+      },
+      {
+        label: 'Bundling', note: 'PD-290 — one line or many, per product group',
+        fields: [
+          {key: 'bundling', type: 'bundle-group', label: 'Per product group', groups: ['Emptying services', 'Base & seasonal fees', 'Reception', 'Equipment rental'], hint: 'Events stay separate underneath for accounting; only the invoice presentation is consolidated.'}
+        ]
+      },
+      {
+        label: 'Restrictions', note: 'PD-292',
+        fields: [
+          {key: 'separateInvoice', type: 'checkbox', label: 'Bill on a separate invoice', hint: 'These events get their own invoice, not merged with the customer\u2019s other lines.'},
+          {key: 'invoiceImmediately', type: 'checkbox', label: 'Invoice immediately on completion', hint: 'Bypass the cycle and bill as soon as the event is ready (e.g. sludge emptyings).'}
+        ]
+      }
     ]
   },
   'fee-assignment': {
     title: 'New fee assignment',
     pds: [{code: 'PD-288', label: 'Seasonal fees'}],
-    intro: 'PD-288 requirement: time-based fees with no event component, recognised as their own billing events. The amount comes from the price list.',
-    toast: 'Fee assignment created. The scheduler will generate events on the chosen cadence.',
+    intro: 'PD-288: time-based fees with no event component, recognised as their own billing events. The amount comes from the price list.',
+    toast: 'Fee assignment created. The scheduler generates billing events on the chosen cadence (PD-288).',
     toastPd: 'PD-288',
+    footerNote: 'These assignments generate billing events automatically on the chosen cadence (PD-288). Amount changes are price-list changes, not a separate fee engine.',
     fields: [
-      {key: 'product', label: 'Fee (product)', type: 'select', options: ['Vuosiperusmaksu (annual base fee)', 'Shared collection point fee', 'Lohkokeräysmaksu (block collection)']},
-      {key: 'appliesTo', label: 'Applies to', type: 'select', options: ['Permanent residences', 'Holiday homes', 'Shared-point participants']},
-      {key: 'frequency', label: 'Frequency', type: 'select', options: ['Annually', 'Quarterly', 'Monthly']},
-      {key: 'month', label: 'Invoiced (month / cadence)', type: 'text', placeholder: 'January'}
+      {key: 'product', label: 'Fee product', type: 'select', options: ['Vuosiperusmaksu (annual base fee)', 'Shared collection point fee', 'Lohkokeräysmaksu (block collection)']},
+      {key: 'appliesTo', label: 'Applies to', type: 'select', options: ['Permanent residences', 'Holiday homes', 'Shared-point participants', 'Specific contract'], hint: 'A property class or an individual contract.'},
+      {key: 'frequency', label: 'Frequency', type: 'select', options: ['Monthly', 'Quarterly', 'Annually']},
+      {key: 'amount', label: 'Amount', type: 'text', mono: true, readonly: true, placeholder: 'from price list', hint: 'Read-only. The amount comes from the product price list.'},
+      {key: 'month', label: 'Invoiced (month / cadence)', type: 'text', placeholder: 'January / 1st of month'}
     ]
   }
 };
@@ -2271,6 +2475,42 @@ function showCreditNoteDetail(cnId) {
 // Create form modal
 // ===================================================================
 
+function renderFormField(f) {
+  // Restriction checkbox (PD-292)
+  if (f.type === 'checkbox') {
+    return `<label class="form-check">`
+      + `<input type="checkbox"${f.checked ? ' checked' : ''}${f.disabled ? ' disabled' : ''}>`
+      + `<span><span class="form-check-label">${f.label}</span>`
+      + (f.hint ? `<span class="form-hint">${f.hint}</span>` : '')
+      + `</span></label>`;
+  }
+  // Bundling per product group (PD-290)
+  if (f.type === 'bundle-group') {
+    let inner = `<div class="form-field"><label>${f.label}</label>`;
+    inner += f.groups.map(g =>
+      `<div class="bundle-row"><span class="bundle-group">${g}</span>`
+      + `<select><option>Bundle into one line</option><option>List individually</option></select></div>`
+    ).join('');
+    if (f.hint) inner += `<span class="form-hint">${f.hint}</span>`;
+    return inner + `</div>`;
+  }
+  // Standard field (text / select / textarea / date), optionally read-only
+  const dis = f.readonly ? ' disabled' : '';
+  const tag = f.readonly ? '<span class="resolved-tag">auto</span>' : '';
+  let inner;
+  if (f.type === 'select') {
+    inner = `<select${dis}>${f.options.map(o => `<option>${o}</option>`).join('')}</select>`;
+  } else if (f.type === 'textarea') {
+    inner = `<textarea rows="2" placeholder="${f.placeholder || ''}"${dis}></textarea>`;
+  } else {
+    const monoClass = f.mono ? ' class="mono"' : '';
+    inner = `<input type="${f.type || 'text'}" placeholder="${f.placeholder || ''}"${monoClass}${dis} />`;
+  }
+  return `<div class="form-field"><label>${f.label}${tag}</label>${inner}`
+    + (f.hint ? `<span class="form-hint">${f.hint}</span>` : '')
+    + `</div>`;
+}
+
 function openCreateForm(kind) {
   const form = CREATE_FORMS[kind];
   if (!form) return;
@@ -2281,21 +2521,32 @@ function openCreateForm(kind) {
   ).join('');
 
   let html = `<div class="modal-note" style="margin-bottom: 18px;">${form.intro}</div>`;
-  for (const f of form.fields) {
-    html += `<div class="form-field">
-      <label>${f.label}</label>`;
-    if (f.type === 'select') {
-      html += `<select>${f.options.map(o => `<option>${o}</option>`).join('')}</select>`;
-    } else if (f.type === 'textarea') {
-      html += `<textarea rows="3" placeholder="${f.placeholder || ''}"></textarea>`;
-    } else {
-      const monoClass = f.mono ? ' class="mono"' : '';
-      html += `<input type="${f.type}" placeholder="${f.placeholder || ''}"${monoClass} />`;
+
+  if (form.sections) {
+    for (const s of form.sections) {
+      html += `<div class="form-section"><div class="form-section-head">`
+        + `<span class="form-section-title">${s.label}</span>`
+        + (s.note ? `<span class="form-section-note">${s.note}</span>` : '')
+        + `</div>`;
+      const open = s.cols === 2 ? '<div class="form-grid2">' : '';
+      const close = s.cols === 2 ? '</div>' : '';
+      html += open + s.fields.map(renderFormField).join('') + close;
+      html += `</div>`;
     }
-    if (f.hint) html += `<span class="form-hint">${f.hint}</span>`;
-    html += `</div>`;
+  } else {
+    html += form.fields.map(renderFormField).join('');
   }
+
+  if (form.preview) {
+    html += `<div class="form-preview"><span class="form-preview-label">Preview</span>${form.preview}</div>`;
+  }
+  if (form.footerNote) {
+    html += `<div class="form-footnote">${form.footerNote}</div>`;
+  }
+
   document.getElementById('createModalBody').innerHTML = html;
+  const modal = document.querySelector('#createModal .modal');
+  if (modal) modal.classList.toggle('modal-wide', !!form.wide);
   document.getElementById('createModal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -2303,6 +2554,8 @@ function openCreateForm(kind) {
 function closeCreateModal() {
   document.getElementById('createModal').classList.remove('open');
   document.body.style.overflow = '';
+  const modal = document.querySelector('#createModal .modal');
+  if (modal) modal.classList.remove('modal-wide');
   const footer = document.getElementById('createModalFooter');
   if (footer) footer.innerHTML = '<button class="btn btn-secondary" onclick="closeCreateModal()">Cancel</button><button class="btn btn-primary" onclick="submitCreateForm()">Save</button>';
   _currentFormKind = null;
@@ -2374,6 +2627,8 @@ function openRunDetail(runId) {
   document.getElementById('createModalPds').innerHTML = r.pds.map(pd =>
     '<a class="pd-chip" href="https://ioteelab.atlassian.net/browse/' + pd + '" target="_blank" rel="noopener">' + pd + '</a>').join('');
   document.getElementById('createModalBody').innerHTML = r.body;
+  const modal = document.querySelector('#createModal .modal');
+  if (modal) modal.classList.remove('modal-wide');
   // swap the footer save button for a context action
   const footer = document.getElementById('createModalFooter');
   if (footer) footer.innerHTML = r.footer;
