@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WasteHero — Flow workbench (provisioning to FINVOICE)</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#155dfc;--blue-light:#e8efff;--blue-hover:#1250d4;
+  --text:#171717;--muted:#737373;--faint:#a3a3a3;
+  --border:#eef0f2;--border-mid:#e2e5e9;--bg:#f6f7f9;--white:#fff;--surface:#f4f5f7;
+  --green:#16a34a;--green-bg:#dcfce7;--amber:#d97706;--amber-bg:#fef3c7;
+  --red:#dc2626;--red-bg:#fee2e2;--purple:#7c3aed;--purple-bg:#ede9fe;
+  --pink:#db2777;--pink-bg:#fce7f3;--cyan:#0891b2;--cyan-bg:#cffafe;
+  --ink:#0f172a;--radius:10px;--radius-sm:6px;--radius-lg:14px;
+  --shadow:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --shadow-lg:0 10px 30px rgba(15,23,42,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+.mono{font-family:'JetBrains Mono',monospace}
+a{color:var(--blue);text-decoration:none}
+input,select{font-family:'Poppins',sans-serif}
+.top{background:var(--white);border-bottom:1px solid var(--border);padding:12px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .dot{width:11px;height:11px;border-radius:3px;background:var(--blue)}
+.brand h1{font-size:14.5px;font-weight:600}.brand .sub{font-size:11px;color:var(--muted)}
+.top-r{display:flex;gap:10px;align-items:center}
+.issues-pill{display:flex;align-items:center;gap:8px;padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:500;cursor:pointer}
+.issues-pill .led{width:9px;height:9px;border-radius:999px}
+.issues-pill.ok{background:var(--green-bg);color:var(--green)} .issues-pill.ok .led{background:var(--green)}
+.issues-pill.warn{background:var(--amber-bg);color:var(--amber)} .issues-pill.warn .led{background:var(--amber)}
+.issues-pill.err{background:var(--red-bg);color:var(--red)} .issues-pill.err .led{background:var(--red)}
+.shell{display:flex;min-height:calc(100vh - 50px)}
+.side{width:236px;background:var(--white);border-right:1px solid var(--border);padding:14px 12px;flex-shrink:0}
+.nav-group{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);font-weight:600;padding:12px 10px 6px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:var(--radius);cursor:pointer;font-size:13.5px;color:var(--text);margin-bottom:2px}
+.nav-item:hover{background:var(--surface)}.nav-item.active{background:var(--blue-light);color:var(--blue);font-weight:500}
+.nav-item .ic{width:18px;text-align:center;opacity:.8}
+.nav-item .ct{margin-left:auto;font-size:10.5px;font-family:'JetBrains Mono',monospace;color:var(--faint)}
+.nav-item .badge{margin-left:auto;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:999px;display:flex;align-items:center;justify-content:center;padding:0 5px}
+.nav-item .badge.err{background:var(--red);color:#fff}.nav-item .badge.warn{background:var(--amber);color:#fff}
+.main{flex:1;padding:24px 30px 60px;max-width:1100px}
+.page-head{margin-bottom:16px}
+.eyebrow{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--blue);font-weight:600;font-family:'JetBrains Mono',monospace}
+.page-title{font-size:23px;font-weight:600;margin:5px 0}.page-sub{font-size:13px;color:var(--muted);max-width:740px}
+.warns{margin-bottom:16px;display:flex;flex-direction:column;gap:7px}
+.warn-line{display:flex;gap:10px;align-items:flex-start;padding:10px 13px;border-radius:var(--radius);font-size:12.5px;line-height:1.45}
+.warn-line.err{background:var(--red-bg);color:#991b1b;border-left:3px solid var(--red)}
+.warn-line.warn{background:var(--amber-bg);color:#92400e;border-left:3px solid var(--amber)}
+.warn-line.info{background:var(--blue-light);color:#1e40af;border-left:3px solid var(--blue)}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;margin-bottom:18px}
+.card.flag{border-color:#fca5a5}
+.card-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface);gap:10px;flex-wrap:wrap}
+.card-title{font-size:13px;font-weight:600}.card-body{padding:15px 16px}
+.pds{display:flex;gap:6px;flex-wrap:wrap}
+.pd{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:2px 8px;border-radius:4px;background:var(--blue-light);color:var(--blue);font-weight:500}.pd:hover{background:var(--blue);color:#fff}
+table{width:100%;border-collapse:collapse}thead{background:var(--surface)}
+th{padding:9px 13px;text-align:left;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:500;white-space:nowrap}
+td{padding:11px 13px;border-top:1px solid var(--border);font-size:13px;vertical-align:middle}
+.right{text-align:right}.num-cell{font-family:'JetBrains Mono',monospace;text-align:right}
+.chip{display:inline-flex;align-items:center;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:500;white-space:nowrap}
+.chip.blue{background:var(--blue-light);color:var(--blue)}.chip.green{background:var(--green-bg);color:var(--green)}
+.chip.amber{background:var(--amber-bg);color:var(--amber)}.chip.purple{background:var(--purple-bg);color:var(--purple)}
+.chip.cyan{background:var(--cyan-bg);color:var(--cyan)}.chip.pink{background:var(--pink-bg);color:var(--pink)}
+.chip.gray{background:var(--surface);color:var(--muted)}.chip.red{background:var(--red-bg);color:var(--red)}
+.chip.wild{background:#f5f5f5;color:var(--faint);border:1px dashed var(--border-mid);font-family:'JetBrains Mono',monospace}
+.btn{height:36px;padding:0 14px;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:7px;transition:.15s}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:var(--blue-hover)}
+.btn-ghost{background:var(--white);border:1px solid var(--border-mid);color:var(--text)}.btn-ghost:hover{background:var(--surface)}
+.btn-sm{height:30px;padding:0 11px;font-size:12px;border-radius:var(--radius-sm)}
+.btn-danger{background:var(--white);border:1px solid #fca5a5;color:var(--red)}.btn-danger:hover{background:var(--red-bg)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.tog{position:relative;width:38px;height:22px;border-radius:999px;background:var(--border-mid);cursor:pointer;transition:.15s;flex-shrink:0}
+.tog.on{background:var(--blue)}.tog::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:999px;background:#fff;transition:.15s}.tog.on::after{transform:translateX(16px)}
+.in{padding:7px 10px;border:1px solid var(--border-mid);border-radius:var(--radius-sm);font-size:13px;outline:none;width:100%}
+.in:focus{border-color:var(--blue)}.in.mono{font-family:'JetBrains Mono',monospace}.in.w-sm{width:90px}.in.w-xs{width:74px}
+.field-inline{display:flex;align-items:center;gap:9px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.kv:last-child{border-bottom:none}.kv .k{color:var(--muted);font-size:12px}.kv .v{font-weight:500}
+.prop{border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--white);box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
+.prop.flag{border-color:#fca5a5}
+.prop .ph{padding:13px 15px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.prop .addr{font-weight:600;font-size:14px}.prop .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.prop .pb{padding:13px 15px}
+.ctr{border:1px solid var(--border);border-radius:var(--radius);padding:11px 13px;margin-bottom:10px}
+.ctr.pending{background:#fffdf6;border-color:#fde68a}.ctr.onroute{background:#f6f9ff;border-color:#bfdbfe}
+.ctr-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.attr-row{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}
+.eff{display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-radius:var(--radius);padding:8px 11px;margin-top:9px;font-size:12.5px}
+.eff.bad{background:var(--red-bg)}.eff .big{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:14px}
+.strike{text-decoration:line-through;color:var(--faint)}
+.trace{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-top:6px}
+.trace-step{padding:9px 12px;border-top:1px solid var(--border);font-size:12.5px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.trace-step:first-child{border-top:none}.trace-step.win{background:#f0fdf4}.trace-step.over{background:var(--pink-bg)}
+.score-pill{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:1px 7px;border-radius:999px;background:var(--surface);color:var(--muted)}
+.score-pill.top{background:var(--green-bg);color:var(--green);font-weight:600}
+.lifebar{display:flex;align-items:center;gap:6px;font-size:11px;margin-top:4px}
+.lifebar .seg{padding:2px 8px;border-radius:999px;background:var(--surface);color:var(--faint)}
+.lifebar .seg.on{background:var(--blue-light);color:var(--blue);font-weight:600}
+.lifebar .seg.done{background:var(--green-bg);color:var(--green);font-weight:600}
+.lifebar .ar{color:var(--faint)}
+.split{display:grid;grid-template-columns:1fr 372px;gap:20px;align-items:start}
+.phone{background:var(--ink);border-radius:26px;padding:11px;box-shadow:var(--shadow-lg);border:1px solid #0b1220}
+.phone-screen{background:#0b1426;border-radius:16px;min-height:560px;padding:15px;color:#e2e8f0;display:flex;flex-direction:column}
+.phone-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+.phone-top .app{font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.phone-top .who{font-size:11px;color:rgba(255,255,255,.55)}
+.dstop{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:11px;margin-bottom:8px;cursor:pointer}
+.dstop:hover{background:rgba(255,255,255,.09)}.dstop.done{opacity:.5}.dstop.prov{border-color:rgba(96,165,250,.45)}
+.dstop .a{font-size:13px;font-weight:600;color:#fff}.dstop .b{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+.dstop .row{display:flex;justify-content:space-between;align-items:center;margin-top:7px}
+.d-badge{font-size:10px;padding:2px 8px;border-radius:999px;font-weight:600}
+.d-pending{background:rgba(217,119,6,.2);color:#fbbf24}.d-done{background:rgba(22,163,74,.2);color:#4ade80}
+.d-prov{background:rgba(59,130,246,.2);color:#93c5fd}.d-bad{background:rgba(220,38,38,.25);color:#fca5a5}
+.phone-back{background:none;border:none;color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;margin-bottom:10px;padding:0}
+.d-section{font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.3);font-weight:700;margin:13px 0 7px}
+.d-kv{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.d-kv .dk{color:rgba(255,255,255,.45)}
+.d-svc{display:flex;align-items:flex-start;gap:9px;padding:8px 10px;border:1px solid rgba(255,255,255,.1);border-radius:9px;margin-bottom:6px;cursor:pointer}
+.d-svc.sel{border-color:#4ade80;background:rgba(74,222,128,.08)}.d-svc.locked{opacity:.6;cursor:default}
+.d-svc input{margin-top:2px}.d-svc .sn{font-size:12px;font-weight:600;color:#fff}.d-svc .sm{font-size:10.5px;color:rgba(255,255,255,.45)}
+.d-price{background:rgba(255,255,255,.06);border-radius:11px;padding:11px;margin:11px 0}
+.d-price .pl{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:rgba(255,255,255,.7)}
+.d-price .pl.tot{border-top:1px solid rgba(255,255,255,.12);margin-top:6px;padding-top:7px;font-weight:700;color:#fff;font-size:13px}
+.d-info{background:rgba(59,130,246,.12);border:1px solid rgba(96,165,250,.35);border-radius:10px;padding:11px;font-size:11.5px;color:#bfdbfe;margin:11px 0}
+.d-warn{background:rgba(220,38,38,.14);border:1px solid rgba(248,113,113,.4);border-radius:10px;padding:11px;font-size:11.5px;color:#fca5a5;margin:11px 0}
+.d-complete{width:100%;height:42px;border:none;border-radius:11px;background:#22c55e;color:#062b13;font-weight:700;font-size:13px;cursor:pointer;margin-top:auto}
+.d-complete.prov{background:#3b82f6;color:#fff}
+.d-complete:disabled{background:rgba(255,255,255,.1);color:rgba(255,255,255,.4);cursor:not-allowed}
+.d-done-box{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);border-radius:11px;padding:13px;text-align:center;margin-top:auto}
+.d-done-box .t{font-weight:700;color:#4ade80;font-size:14px}.d-done-box .s{font-size:11px;color:rgba(255,255,255,.55);margin-top:3px}
+.tk{display:flex;align-items:center;gap:11px;padding:10px 13px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;background:var(--white)}
+.tk.pending{border-color:#fde68a}.tk.onroute{border-color:#bfdbfe}
+.tk .info{flex:1;min-width:0}.tk .ta{font-size:13px;font-weight:500}.tk .tb{font-size:11.5px;color:var(--muted)}
+.route-item{display:flex;align-items:center;gap:11px;padding:10px 13px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;background:var(--white)}
+.route-item.done{opacity:.85}.route-item.bad{border-color:#fca5a5}.route-item.prov{border-color:#bfdbfe;background:#f6f9ff}
+.route-item .n{width:26px;height:26px;border-radius:999px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--muted);flex-shrink:0}
+.route-item.done .n{background:var(--green-bg);color:var(--green)}.route-item.prov .n{background:var(--blue-light);color:var(--blue)}
+.route-item .info{flex:1;min-width:0}.route-item .ra{font-size:13px;font-weight:500}.route-item .rb{font-size:11.5px;color:var(--muted)}
+.xml{background:#0f1322;color:#cdd6f4;padding:17px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.6;overflow-x:auto;white-space:pre;border-radius:var(--radius);max-height:560px;overflow-y:auto}
+.xml .t{color:#f5c2e7}.xml .a{color:#f9e2af}.xml .s{color:#a6e3a1}
+.empty{text-align:center;padding:46px 20px;color:var(--muted)}
+.empty .ico{font-size:30px;margin-bottom:8px;opacity:.5}.empty .t{font-weight:600;color:var(--text)}.empty .s{font-size:12.5px;margin-top:4px}
+.section-label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:16px 0 9px}
+.muted{color:var(--muted)}
+.add-form{background:var(--surface);border:1px dashed var(--border-mid);border-radius:var(--radius);padding:14px;margin-bottom:16px}
+.add-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.fld label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:500}
+.drawer{position:fixed;top:0;right:0;height:100vh;width:380px;background:var(--white);box-shadow:var(--shadow-lg);transform:translateX(100%);transition:.22s;z-index:40;display:flex;flex-direction:column}
+.drawer.open{transform:translateX(0)}
+.drawer-head{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.drawer-head h3{font-size:15px;font-weight:600}.drawer-body{padding:14px 18px;overflow-y:auto;flex:1}
+.di{display:flex;gap:10px;padding:11px 12px;border-radius:var(--radius);margin-bottom:9px;cursor:pointer;font-size:12.5px;line-height:1.45}
+.di.err{background:var(--red-bg)}.di.warn{background:var(--amber-bg)}.di:hover{outline:1px solid var(--border-mid)}
+.di .lvl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:4px;height:fit-content;flex-shrink:0}
+.di.err .lvl{background:var(--red);color:#fff}.di.warn .lvl{background:var(--amber);color:#fff}
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.35);z-index:35;opacity:0;pointer-events:none;transition:.2s}
+.overlay.open{opacity:1;pointer-events:auto}
+.toast-wrap{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--radius);font-size:13px;box-shadow:var(--shadow-lg);opacity:0;transform:translateY(8px);transition:.2s}
+.toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:900px){.shell{flex-direction:column}.side{width:100%;display:flex;flex-wrap:wrap;gap:4px;border-right:none;border-bottom:1px solid var(--border)}.nav-group{width:100%}.split,.grid2{grid-template-columns:1fr}.drawer{width:100%}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="brand"><span class="dot"></span><div><h1>WasteHero — Flow workbench</h1><div class="sub">Provision a container by ticket, activate it on a route, then bill it. Edit anywhere, watch it flow.</div></div></div>
+  <div class="top-r"><button class="btn btn-ghost btn-sm" onclick="resetSim()">↺ Reset</button><div id="issuesPill" onclick="toggleDrawer()"></div></div>
+</div>
+<div class="shell"><nav class="side" id="side"></nav><main class="main" id="main"></main></div>
+<div class="overlay" id="overlay" onclick="toggleDrawer()"></div>
+<div class="drawer" id="drawer"><div class="drawer-head"><h3>Issues</h3><button class="btn btn-ghost btn-sm" onclick="toggleDrawer()">Close</button></div><div class="drawer-body" id="drawerBody"></div></div>
+<div class="toast-wrap" id="toasts"></div>
+
+<script>
+// ===================== seed
+const SEED={
+  products:[
+    {id:'p1',code:'MW-240',name:'Mixed Waste Collection',category:'Collection',unit:'per ton',wasteFraction:'Mixed waste',containerType:'240 L bin',account:'30002'},
+    {id:'p2',code:'BIO-140',name:'Bio-Waste Collection',category:'Collection',unit:'per collection',wasteFraction:'Bio-waste',containerType:'140 L bin',account:'30004'}
+  ],
+  priceRows:[
+    {id:'r1',productId:'p1',customerType:'Private',zone:'Urban',serviceResp:'Municipal',rdCode:'R1',price:50},
+    {id:'r2',productId:'p1',customerType:'Business',zone:'Urban',serviceResp:'Municipal',rdCode:'R1',price:70},
+    {id:'r3',productId:'p1',customerType:'Any',zone:'Rural',serviceResp:'Any',rdCode:'R1',price:80},
+    {id:'r4',productId:'p1',customerType:'Private',zone:'Turku',serviceResp:'Market-based',rdCode:'R1',price:45},
+    {id:'r5',productId:'p1',customerType:'Any',zone:'Any',serviceResp:'Any',rdCode:'Any',price:60},
+    {id:'r6',productId:'p2',customerType:'Private',zone:'Urban',serviceResp:'Municipal',rdCode:'R3',price:45},
+    {id:'r7',productId:'p2',customerType:'Business',zone:'Any',serviceResp:'Municipal',rdCode:'R3',price:65},
+    {id:'r8',productId:'p2',customerType:'Any',zone:'Any',serviceResp:'Any',rdCode:'Any',price:50}
+  ],
+  customers:[
+    {id:'c1',name:'Emma Larsson',type:'Private',zone:'Urban',serviceResp:'Municipal',einvoiceAddr:'003712345671'},
+    {id:'c2',name:'TechCorp Oy',type:'Business',zone:'Urban',serviceResp:'Municipal',einvoiceAddr:'003719283742'},
+    {id:'c3',name:'GreenBuild Ltd',type:'Business',zone:'Suburban',serviceResp:'Market-based',einvoiceAddr:''},
+    {id:'c4',name:'Sofia Mäkinen',type:'Private',zone:'Turku',serviceResp:'Market-based',einvoiceAddr:'003755512348'}
+  ],
+  properties:[
+    {id:'prop1',address:'14 Maple Street, Helsinki',customerId:'c1'},
+    {id:'prop2',address:'5 Innovation Drive, Helsinki',customerId:'c2'},
+    {id:'prop3',address:'22 Commerce Park, Espoo',customerId:'c3'},
+    {id:'prop4',address:'7 Harbor View, Turku',customerId:'c4'}
+  ],
+  containers:[
+    {id:'ct1',propertyId:'prop1',productId:'p1',wasteFraction:'Mixed waste',qty:1.20,rdCode:'R1',costCentre:'20/200/3',agreement:{name:'AGR-1041',status:'active',overrideOn:false,overridePrice:55}},
+    {id:'ct2',propertyId:'prop2',productId:'p1',wasteFraction:'Mixed waste',qty:2.50,rdCode:'R1',costCentre:'20/200/4',agreement:{name:'AGR-1042',status:'active',overrideOn:true,overridePrice:62}},
+    {id:'ct3',propertyId:'prop3',productId:'p2',wasteFraction:'Bio-waste',qty:1,rdCode:'R3',costCentre:'21/210/3',agreement:{name:'AGR-1043',status:'active',overrideOn:false,overridePrice:48}},
+    {id:'ct4',propertyId:'prop4',productId:'p1',wasteFraction:'Mixed waste',qty:0.80,rdCode:'R1',costCentre:'23/230/3',agreement:{name:'AGR-1044',status:'active',overrideOn:false,overridePrice:40}}
+  ],
+  tickets:[]
+};
+const SERVICES=[
+  {id:'as1',name:'Cancellation Trip',appliesTo:'p1',affectsPrice:true,price:15,ticket:true,automatic:false},
+  {id:'as2',name:'Extra Container Wash',appliesTo:'p2',affectsPrice:true,price:20,ticket:false,automatic:false},
+  {id:'as3',name:'Weighing Fee',appliesTo:'p1',affectsPrice:true,price:5,ticket:false,automatic:true},
+  {id:'as4',name:'Return Visit',appliesTo:'any',affectsPrice:true,price:25,ticket:true,automatic:false},
+  {id:'as5',name:'Bin Inspection',appliesTo:'any',affectsPrice:false,price:0,ticket:true,automatic:false}
+];
+const VAT_RATE=25.5;
+const PAGES=[
+  {id:'products',ic:'📦',label:'Products'},{id:'prices',ic:'🏷️',label:'Price lists'},
+  {id:'properties',ic:'🏠',label:'Properties & containers'},{id:'route',ic:'🚛',label:'Route & driver app'},
+  {id:'events',ic:'⚡',label:'Events'},{id:'invoices',ic:'🧾',label:'Invoices'},{id:'finvoice',ic:'📄',label:'FINVOICE XML'}
+];
+
+// ===================== state
+let S;let _uid=200;function uid(p){return p+(_uid++);}
+function freshState(){
+  const s=JSON.parse(JSON.stringify(SEED));
+  return Object.assign(s,{page:'products',drawer:false,driverTask:null,draftServices:{},events:[],xmlInvoice:null,
+    newProd:{code:'',name:'',unit:'per ton',account:'',wasteFraction:'',containerType:''},
+    newProp:{address:'',customerId:'c1'},
+    newCt:{propertyId:'prop1',productId:'p1',qty:1,rdCode:'R1',pickup:'Every 2 weeks',priority:'Medium'}});
+}
+
+// ===================== engine (operates on a container)
+function propOf(ct){return S.properties.find(p=>p.id===ct.propertyId);}
+function custOf(ct){const p=propOf(ct);return S.customers.find(c=>c.id===p.customerId);}
+function ctxC(ct){const c=custOf(ct);return{customerType:c.type,zone:c.zone,serviceResp:c.serviceResp,rdCode:ct.rdCode,customer:c};}
+function scoreRows(ct){
+  const ctx=ctxC(ct);const attrs=['customerType','zone','serviceResp','rdCode'];
+  return S.priceRows.filter(r=>r.productId===ct.productId).map(r=>{
+    let compatible=true,score=0;
+    attrs.forEach(a=>{if(r[a]==='Any'){}else if(String(r[a])===String(ctx[a])){score++;}else{compatible=false;}});
+    return{row:r,compatible,score};
+  });
+}
+function winnerRow(ct){const c=scoreRows(ct).filter(s=>s.compatible);c.sort((a,b)=>b.score-a.score);return c[0];}
+function effectiveUnit(ct){
+  const w=winnerRow(ct);const overridden=ct.agreement.overrideOn;
+  if(overridden){const ok=ct.agreement.overridePrice>0;return{listPrice:w?w.row.price:null,unit:ok?ct.agreement.overridePrice:null,overridden:true,winner:w,badOverride:!ok};}
+  if(!w)return{listPrice:null,unit:null,overridden:false,winner:null,noMatch:true};
+  return{listPrice:w.row.price,unit:w.row.price,overridden:false,winner:w};
+}
+function resolve(ct,chosen){
+  const ctx=ctxC(ct);const product=S.products.find(p=>p.id===ct.productId);const eff=effectiveUnit(ct);
+  const publicLaw=ctx.serviceResp!=='Market-based';const prop=propOf(ct);
+  if(eff.unit==null)return{ctx,product,eff,lines:[],applied:[],noteSvc:[],net:0,vat:0,gross:0,publicLaw,ct,prop,error:eff.noMatch?'no-match':'bad-override'};
+  const baseNet=eff.unit*ct.qty;
+  const auto=SERVICES.filter(s=>s.automatic&&(s.appliesTo==='any'||s.appliesTo===product.id));
+  const chos=SERVICES.filter(s=>(chosen||[]).includes(s.id)&&!s.automatic);
+  const applied=[...auto,...chos];
+  const lines=[{name:product.name,qty:ct.qty,unitLabel:product.unit,unit:eff.unit,net:baseNet,account:product.account,primary:true}];
+  applied.filter(s=>s.affectsPrice).forEach(s=>lines.push({name:s.name,qty:1,unitLabel:'each',unit:s.price,net:s.price,account:'30009',primary:false}));
+  const noteSvc=applied.filter(s=>!s.affectsPrice);
+  const net=lines.reduce((t,l)=>t+l.net,0);const vat=net*VAT_RATE/100;
+  return{ctx,product,eff,lines,applied,noteSvc,net,vat,gross:net+vat,publicLaw,ct,prop};
+}
+function invoices(){
+  const map={};S.events.forEach(e=>{(map[e.custId]=map[e.custId]||[]).push(e);});
+  return Object.keys(map).map((cid,i)=>{
+    const evs=map[cid];const lines=[];
+    evs.forEach(e=>e.snap.lines.forEach(l=>lines.push(Object.assign({},l,{costCentre:e.snap.ct.costCentre,date:e.date,vatRate:VAT_RATE}))));
+    const net=lines.reduce((t,l)=>t+l.net,0);const vat=net*VAT_RATE/100;const c=S.customers.find(x=>x.id===cid);
+    return{number:'1260001'+(40+i),custId:cid,custName:c.name,einvoice:!!c.einvoiceAddr,held:!c.einvoiceAddr,einvoiceAddr:c.einvoiceAddr,events:evs,lines,net,vat,gross:net+vat};
+  });
+}
+
+// ===================== validation
+function computeIssues(){
+  const out=[];const codes={};
+  S.products.forEach(p=>{codes[p.code]=(codes[p.code]||0)+1;});
+  S.products.forEach(p=>{
+    if(codes[p.code]>1)out.push({lvl:'err',page:'products',msg:'Duplicate product code "'+p.code+'". Codes must be unique.'});
+    if(!p.account)out.push({lvl:'warn',page:'products',msg:p.name+' has no accounting account, invoice lines will miss AR data (PD-289).'});
+    if(!S.priceRows.filter(r=>r.productId===p.id).length)out.push({lvl:'err',page:'prices',msg:p.name+' has no price list rows, it cannot be priced anywhere it is used.'});
+  });
+  S.containers.forEach(ct=>{
+    const eff=effectiveUnit(ct);const prop=propOf(ct);const c=custOf(ct);
+    if(eff.noMatch)out.push({lvl:'err',page:'properties',msg:'No price row matches '+prop.address+' ('+c.type+' / '+c.zone+' / '+c.serviceResp+' / '+ct.rdCode+'). Add a matching or wildcard row.'});
+    if(eff.badOverride)out.push({lvl:'err',page:'properties',msg:'Agreement override is on for '+prop.address+' but the override price is not set.'});
+    if(!ct.costCentre)out.push({lvl:'warn',page:'properties',msg:prop.address+' container has no cost centre (PD-296).'});
+    if(ct.agreement.status!=='active')out.push({lvl:'warn',page:'properties',msg:'Container at '+prop.address+' ('+S.products.find(p=>p.id===ct.productId).name+') is '+(ct.agreement.status==='onroute'?'on a route, not yet activated':'pending')+'. It cannot be billed until its Add container ticket is completed.'});
+  });
+  invoices().forEach(v=>{if(!v.einvoice)out.push({lvl:'err',page:'invoices',msg:'Invoice '+v.number+' ('+v.custName+') has no valid e-invoice address. Pre-send checks fail (PD-271).'});});
+  return out;
+}
+function issuesFor(page){return computeIssues().filter(i=>i.page===page);}
+
+// ===================== helpers
+function $(id){return document.getElementById(id);}
+function money(n){return (n||0).toFixed(2);}
+function qtyLabel(ct){const p=S.products.find(x=>x.id===ct.productId);return p&&p.unit==='per ton'?ct.qty.toFixed(2)+' t':ct.qty+' ×';}
+function pd(code,label){return '<a class="pd" href="https://ioteelab.atlassian.net/browse/'+code+'" target="_blank" rel="noopener">'+code+(label?' '+label:'')+'</a>';}
+function toast(m){const w=$('toasts'),e=document.createElement('div');e.className='toast';e.textContent=m;w.appendChild(e);requestAnimationFrame(()=>e.classList.add('show'));setTimeout(()=>{e.classList.remove('show');setTimeout(()=>e.remove(),250);},2800);}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function statusChip(st){return st==='active'?'<span class="chip green">Agreement active</span>':st==='onroute'?'<span class="chip blue">On route</span>':'<span class="chip amber">Agreement pending</span>';}
+function lifebar(st){
+  const seg=(lab,state)=>'<span class="seg '+state+'">'+lab+'</span>';
+  const s1=st==='pending'?'on':'done', s2=st==='onroute'?'on':(st==='active'?'done':''), s3=st==='active'?'done':'';
+  return '<div class="lifebar">'+seg('Pending',s1)+'<span class="ar">→</span>'+seg('On route',s2)+'<span class="ar">→</span>'+seg('Active',s3)+'</div>';
+}
+
+// ===================== shell
+function go(p){S.page=p;if(p==='route')S.driverTask=null;render();}
+function toggleDrawer(){S.drawer=!S.drawer;syncDrawer();}
+function syncDrawer(){
+  $('drawer').classList.toggle('open',S.drawer);$('overlay').classList.toggle('open',S.drawer);
+  const iss=computeIssues();
+  $('drawerBody').innerHTML=iss.length?iss.map(i=>'<div class="di '+i.lvl+'" onclick="go(\''+i.page+'\');toggleDrawer()"><span class="lvl">'+(i.lvl==='err'?'Error':'Warn')+'</span><span>'+i.msg+'</span></div>').join(''):'<div class="empty"><div class="ico">✓</div><div class="t">No issues</div><div class="s">Everything resolves and the data is complete.</div></div>';
+}
+function renderPill(){
+  const iss=computeIssues();const e=iss.filter(i=>i.lvl==='err').length,w=iss.filter(i=>i.lvl==='warn').length;
+  let cls='ok',txt='No issues';
+  if(e){cls='err';txt=e+' error'+(e>1?'s':'')+(w?' · '+w+' warning'+(w>1?'s':''):'');}else if(w){cls='warn';txt=w+' warning'+(w>1?'s':'');}
+  $('issuesPill').className='issues-pill '+cls;$('issuesPill').innerHTML='<span class="led"></span> '+txt;
+}
+function renderSide(){
+  const iss=computeIssues();
+  $('side').innerHTML='<div class="nav-group">Catalogue</div>'+navItem('products',iss)+navItem('prices',iss)
+    +'<div class="nav-group">Operations</div>'+navItem('properties',iss)+navItem('route',iss)
+    +'<div class="nav-group">Billing</div>'+navItem('events',iss)+navItem('invoices',iss)+navItem('finvoice',iss);
+}
+function navItem(id,iss){
+  const p=PAGES.find(x=>x.id===id);const mine=iss.filter(i=>i.page===id);
+  const err=mine.filter(i=>i.lvl==='err').length,warn=mine.filter(i=>i.lvl==='warn').length;
+  let badge='';
+  if(err)badge='<span class="badge err">'+err+'</span>';else if(warn)badge='<span class="badge warn">'+warn+'</span>';
+  else{let ct='';if(id==='products')ct=S.products.length;else if(id==='prices')ct=S.priceRows.length;else if(id==='properties')ct=S.containers.length;else if(id==='route')ct=(S.containers.filter(c=>c.agreement.status==='active').length+S.tickets.filter(t=>t.status!=='completed').length)||'';else if(id==='events')ct=S.events.length||'';else if(id==='invoices')ct=invoices().length||'';badge=ct!==''?'<span class="ct">'+ct+'</span>':'';}
+  return '<div class="nav-item'+(S.page===id?' active':'')+'" onclick="go(\''+id+'\')"><span class="ic">'+p.ic+'</span>'+p.label+badge+'</div>';
+}
+function warnBanner(page){const m=issuesFor(page);if(!m.length)return '';return '<div class="warns">'+m.map(i=>'<div class="warn-line '+i.lvl+'"><span>'+(i.lvl==='err'?'⛔':'⚠️')+'</span><span>'+i.msg+'</span></div>').join('')+'</div>';}
+function render(){
+  renderPill();renderSide();syncDrawer();
+  const fn={products:pgProducts,prices:pgPrices,properties:pgProperties,route:pgRoute,events:pgEvents,invoices:pgInvoices,finvoice:pgFinvoice}[S.page];
+  $('main').innerHTML=fn();
+}
+
+// ===================== products
+function pgProducts(){
+  let h=head('The catalogue','Products','Add a product here, then add it to a property as a container (next page). A product with no price rows flags everywhere it is used.');
+  h+=warnBanner('products');
+  const np=S.newProd;
+  h+='<div class="add-form"><div class="section-label" style="margin-top:0">Add a product</div><div class="add-grid">'
+    +fld('Code','<input class="in mono" value="'+esc(np.code)+'" onchange="setNP(\'code\',this.value)" placeholder="MW-660">')
+    +fld('Name','<input class="in" value="'+esc(np.name)+'" onchange="setNP(\'name\',this.value)" placeholder="Bulky Waste Collection">')
+    +fld('Unit','<select class="in" onchange="setNP(\'unit\',this.value)"><option'+(np.unit==='per ton'?' selected':'')+'>per ton</option><option'+(np.unit==='per collection'?' selected':'')+'>per collection</option></select>')
+    +fld('Account','<input class="in mono" value="'+esc(np.account)+'" onchange="setNP(\'account\',this.value)" placeholder="30002">')
+    +fld('Waste fraction','<input class="in" value="'+esc(np.wasteFraction)+'" onchange="setNP(\'wasteFraction\',this.value)" placeholder="Bulky">')
+    +fld('Container type','<input class="in" value="'+esc(np.containerType)+'" onchange="setNP(\'containerType\',this.value)" placeholder="660 L bin">')
+    +'</div><button class="btn btn-primary btn-sm" onclick="addProduct()">+ Add product</button> <span class="muted" style="font-size:12px;margin-left:8px">Add a price row in Price lists, then provision it on a property.</span></div>';
+  h+='<div class="card"><div class="card-head"><div class="card-title">Products</div><div class="muted" style="font-size:11px">'+S.products.length+' total</div></div><table><thead><tr><th>Code</th><th>Product</th><th>Unit</th><th>Account</th><th>Waste fraction</th><th>Price rows</th><th></th></tr></thead><tbody>';
+  S.products.forEach(p=>{const rows=S.priceRows.filter(r=>r.productId===p.id).length;
+    h+='<tr><td class="mono">'+esc(p.code)+'</td><td style="font-weight:600">'+esc(p.name)+'</td><td class="muted">'+p.unit+'</td><td class="mono">'+(p.account?esc(p.account):'<span class="chip amber">missing</span>')+'</td><td>'+esc(p.wasteFraction||'—')+'</td><td>'+(rows?rows:'<span class="chip red">0 rows</span>')+'</td><td class="right"><button class="btn btn-ghost btn-sm" onclick="go(\'prices\')">Pricing →</button></td></tr>';});
+  h+='</tbody></table></div>';return h;
+}
+function setNP(k,v){S.newProd[k]=v;}
+function addProduct(){const np=S.newProd;if(!np.code||!np.name){toast('Code and name are required');return;}
+  S.products.push({id:uid('p'),code:np.code,name:np.name,category:'Collection',unit:np.unit,wasteFraction:np.wasteFraction,containerType:np.containerType,account:np.account});
+  S.newProd={code:'',name:'',unit:'per ton',account:'',wasteFraction:'',containerType:''};toast('Product added. Add a price row next.');render();}
+
+// ===================== prices
+function pgPrices(){
+  let h=head('The catalogue','Price lists','A product is priced by matching job attributes to a row. "Any" is a wildcard. Edit a price and every unbilled use updates live.');
+  h+=warnBanner('prices');
+  S.products.forEach(p=>{const rows=S.priceRows.filter(r=>r.productId===p.id);
+    h+='<div class="card'+(rows.length?'':' flag')+'"><div class="card-head"><div class="card-title">'+esc(p.name)+' <span class="muted mono" style="font-size:11px">'+esc(p.code)+'</span></div><button class="btn btn-ghost btn-sm" onclick="addRow(\''+p.id+'\')">+ Add row</button></div>';
+    if(!rows.length){h+='<div class="card-body"><span class="chip red">No price rows</span> <span class="muted" style="font-size:12px">Add at least a fallback row (all Any).</span></div></div>';return;}
+    h+='<table><thead><tr><th>Customer type</th><th>Zone</th><th>Service responsibility</th><th>R/D</th><th class="right">Price (€ '+p.unit.replace('per','/')+')</th><th></th></tr></thead><tbody>';
+    rows.forEach(r=>{h+='<tr>'
+      +'<td><input class="in w-sm" value="'+esc(r.customerType)+'" onchange="setRow(\''+r.id+'\',\'customerType\',this.value)"></td>'
+      +'<td><input class="in w-sm" value="'+esc(r.zone)+'" onchange="setRow(\''+r.id+'\',\'zone\',this.value)"></td>'
+      +'<td><input class="in w-sm" value="'+esc(r.serviceResp)+'" onchange="setRow(\''+r.id+'\',\'serviceResp\',this.value)"></td>'
+      +'<td><input class="in w-xs mono" value="'+esc(r.rdCode)+'" onchange="setRow(\''+r.id+'\',\'rdCode\',this.value)"></td>'
+      +'<td class="right"><input class="in w-xs mono right" type="number" value="'+r.price+'" onchange="setRow(\''+r.id+'\',\'price\',this.value)"></td>'
+      +'<td class="right"><button class="btn btn-danger btn-sm" onclick="delRow(\''+r.id+'\')">Delete</button></td></tr>';});
+    h+='</tbody></table></div>';});
+  return h;
+}
+function addRow(pid){S.priceRows.push({id:uid('r'),productId:pid,customerType:'Any',zone:'Any',serviceResp:'Any',rdCode:'Any',price:0});render();}
+function setRow(id,k,v){const r=S.priceRows.find(x=>x.id===id);if(!r)return;r[k]=k==='price'?(parseFloat(v)||0):v;render();}
+function delRow(id){S.priceRows=S.priceRows.filter(x=>x.id!==id);render();}
+
+// ===================== properties & containers
+function pgProperties(){
+  let h=head('Provisioning','Properties & containers','A container is added to a property by raising an Add container ticket. The ticket creates the agreement in Pending. It activates only when the ticket is completed on a route (next page).');
+  h+=warnBanner('properties');
+  const nc=S.newCt;
+  h+='<div class="add-form"><div class="section-label" style="margin-top:0">Add container (raises a ticket)</div><div class="add-grid">'
+    +fld('Property','<select class="in" onchange="setNC(\'propertyId\',this.value)">'+S.properties.map(p=>'<option value="'+p.id+'"'+(nc.propertyId===p.id?' selected':'')+'>'+esc(p.address)+'</option>').join('')+'</select>')
+    +fld('Product','<select class="in" onchange="setNC(\'productId\',this.value)">'+S.products.map(p=>'<option value="'+p.id+'"'+(nc.productId===p.id?' selected':'')+'>'+esc(p.name)+'</option>').join('')+'</select>')
+    +fld('Quantity','<input class="in mono w-xs" type="number" value="'+nc.qty+'" onchange="setNC(\'qty\',this.value)">')
+    +fld('R/D code','<input class="in mono w-xs" value="'+esc(nc.rdCode)+'" onchange="setNC(\'rdCode\',this.value)">')
+    +fld('Pickup setting','<input class="in" value="'+esc(nc.pickup)+'" onchange="setNC(\'pickup\',this.value)">')
+    +fld('Priority','<select class="in" onchange="setNC(\'priority\',this.value)"><option'+(nc.priority==='Low'?' selected':'')+'>Low</option><option'+(nc.priority==='Medium'?' selected':'')+'>Medium</option><option'+(nc.priority==='High'?' selected':'')+'>High</option></select>')
+    +'</div><button class="btn btn-primary btn-sm" onclick="addContainer()">+ Raise Add container ticket</button> '
+    +'<button class="btn btn-ghost btn-sm" onclick="toggleAddProp()">+ New empty property</button>';
+  if(S._showAddProp){const np=S.newProp;h+='<div style="margin-top:12px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">'
+    +fld('Address','<input class="in" value="'+esc(np.address)+'" onchange="setNPr(\'address\',this.value)" placeholder="9 Birch Lane, Espoo">')
+    +fld('Customer','<select class="in" onchange="setNPr(\'customerId\',this.value)">'+S.customers.map(c=>'<option value="'+c.id+'"'+(np.customerId===c.id?' selected':'')+'>'+esc(c.name)+'</option>').join('')+'</select>')
+    +'<button class="btn btn-primary btn-sm" onclick="addProp()">Create property</button></div>';}
+  h+='</div>';
+  S.properties.forEach(prop=>{
+    const c=S.customers.find(x=>x.id===prop.customerId);
+    const cts=S.containers.filter(x=>x.propertyId===prop.id);
+    const bad=cts.some(ct=>{const e=effectiveUnit(ct);return e.noMatch||e.badOverride;});
+    h+='<div class="prop'+(bad?' flag':'')+'"><div class="ph"><div><div class="addr">'+esc(prop.address)+'</div><div class="meta">'+esc(c.name)+' · '+c.type+' / '+c.zone+' / '+c.serviceResp+(c.einvoiceAddr?'':' · <span style="color:var(--red)">no e-invoice address</span>')+'</div></div><span class="chip gray">'+cts.length+' container'+(cts.length===1?'':'s')+'</span></div><div class="pb">';
+    if(!cts.length)h+='<div class="muted" style="font-size:12.5px">No containers yet. Use Add container above to provision one.</div>';
+    cts.forEach(ct=>{
+      const prod=S.products.find(p=>p.id===ct.productId);const eff=effectiveUnit(ct);const st=ct.agreement.status;
+      h+='<div class="ctr '+(st==='active'?'':st)+'"><div class="ctr-head"><div><span style="font-weight:600">'+esc(prod.name)+'</span> <span class="muted" style="font-size:12px">'+esc(prod.containerType)+' · '+qtyLabel(ct)+' · '+esc(ct.wasteFraction)+'</span></div>'+statusChip(st)+'</div>';
+      h+=lifebar(st);
+      h+='<div class="attr-row"><span class="chip gray mono">R/D '+ct.rdCode+'</span><span class="chip gray mono">CC '+(ct.costCentre||'—')+'</span><span class="muted mono" style="font-size:11px;align-self:center">'+ct.agreement.name+'</span></div>';
+      h+='<div class="field-inline"><div class="tog'+(ct.agreement.overrideOn?' on':'')+'" onclick="togOverride(\''+ct.id+'\')"></div><div style="flex:1"><div style="font-weight:600;font-size:12px">Agreement price override</div><div class="muted" style="font-size:11px">Negotiated rate for this customer</div></div><input class="in w-sm mono" type="number" value="'+ct.agreement.overridePrice+'" '+(ct.agreement.overrideOn?'':'disabled')+' onchange="setOverride(\''+ct.id+'\',this.value)"> €</div>';
+      if(eff.noMatch)h+='<div class="eff bad"><span style="color:var(--red);font-weight:500">No price row matches this customer</span><span class="big" style="color:var(--red)">— €</span></div>';
+      else if(eff.badOverride)h+='<div class="eff bad"><span style="color:var(--red);font-weight:500">Override on but price not set</span><span class="big" style="color:var(--red)">— €</span></div>';
+      else h+='<div class="eff"><span class="muted">Effective unit price'+(st==='active'?'':' (once active)')+'</span><span class="big">'+(eff.overridden?'<span class="strike">'+money(eff.listPrice)+'</span> '+money(eff.unit)+' € <span class="chip pink">agreement</span>':money(eff.unit)+' € <span class="chip green">price list</span>')+'</span></div>';
+      h+='<div style="display:flex;justify-content:flex-end;margin-top:10px;gap:8px">'+(st==='pending'?'<button class="btn btn-ghost btn-sm" onclick="go(\'route\')">Add ticket to a route →</button>':'')+'<button class="btn btn-danger btn-sm" onclick="delContainer(\''+ct.id+'\')">Remove</button></div>';
+      h+='</div>';
+    });
+    h+='</div></div>';
+  });
+  return h;
+}
+function setNC(k,v){S.newCt[k]=(k==='qty')?(parseFloat(v)||0):v;}
+function setNPr(k,v){S.newProp[k]=v;}
+function toggleAddProp(){S._showAddProp=!S._showAddProp;render();}
+function addProp(){const np=S.newProp;if(!np.address){toast('Address is required');return;}S.properties.push({id:uid('prop'),address:np.address,customerId:np.customerId});S.newProp={address:'',customerId:'c1'};S._showAddProp=false;toast('Property created. Now add a container.');render();}
+function addContainer(){
+  const nc=S.newCt;const prop=S.properties.find(p=>p.id===nc.propertyId);const prod=S.products.find(p=>p.id===nc.productId);
+  if(!prop||!prod){toast('Pick a property and product');return;}
+  const n=S.containers.length+S.tickets.length+1;
+  const agrName='AGR-10'+(44+n);
+  const ct={id:uid('ct'),propertyId:nc.propertyId,productId:nc.productId,wasteFraction:prod.wasteFraction,qty:nc.qty,rdCode:nc.rdCode,costCentre:'00/000/'+n,agreement:{name:agrName,status:'pending',overrideOn:false,overridePrice:0}};
+  S.containers.push(ct);
+  S.tickets.push({id:uid('tk'),type:'add-container',containerId:ct.id,propertyId:nc.propertyId,status:'pending',priority:nc.priority,pickup:nc.pickup,preferredDate:'As soon as possible'});
+  S.newCt={propertyId:nc.propertyId,productId:S.products[0].id,qty:1,rdCode:'R1',pickup:'Every 2 weeks',priority:'Medium'};
+  toast('Add container ticket raised. '+agrName+' is pending. Add it to a route to activate.');render();
+}
+function delContainer(id){S.containers=S.containers.filter(x=>x.id!==id);S.tickets=S.tickets.filter(t=>t.containerId!==id);S.events=S.events.filter(e=>e.ctId!==id);render();}
+function togOverride(id){const ct=S.containers.find(x=>x.id===id);ct.agreement.overrideOn=!ct.agreement.overrideOn;render();}
+function setOverride(id,v){const ct=S.containers.find(x=>x.id===id);ct.agreement.overridePrice=parseFloat(v)||0;render();}
+
+// ===================== route & driver
+function addTicketToRoute(tid){const t=S.tickets.find(x=>x.id===tid);t.status='onroute';const ct=S.containers.find(c=>c.id===t.containerId);ct.agreement.status='onroute';toast('Ticket added to route RT-2026-06-16. Complete it in the app to activate.');render();}
+function pgRoute(){
+  let h=head('The trigger','Route & driver app','Two kinds of work ride a route: Add container tickets (provisioning) and collections (billing). Completing a provisioning ticket activates the agreement. Completing a collection on an active container creates a billable event.');
+  h+=warnBanner('properties');
+  h+='<div class="split"><div>';
+  // open tickets
+  const openTk=S.tickets.filter(t=>t.status!=='completed');
+  h+='<div class="card"><div class="card-head"><div class="card-title">Add container tickets</div><div class="pds">'+pd('PD-299')+'</div></div><div class="card-body">';
+  if(!openTk.length)h+='<div class="muted" style="font-size:13px">No open provisioning tickets. Raise one on the Properties page.</div>';
+  openTk.forEach(t=>{const ct=S.containers.find(c=>c.id===t.containerId);const prop=S.properties.find(p=>p.id===t.propertyId);const prod=S.products.find(p=>p.id===ct.productId);
+    h+='<div class="tk '+t.status+'"><div class="info"><div class="ta">Add container · '+esc(prod.name)+'</div><div class="tb">'+esc(prop.address)+' · '+ct.agreement.name+' · priority '+t.priority+'</div></div>'
+      +(t.status==='pending'?'<button class="btn btn-primary btn-sm" onclick="addTicketToRoute(\''+t.id+'\')">Add to route</button>':'<span class="chip blue">on route, complete in app</span>')+'</div>';});
+  h+='</div></div>';
+  // route work list
+  h+='<div class="card"><div class="card-head"><div class="card-title">Route RT-2026-06-16</div><div class="pds">'+pd('PD-296')+'</div></div><div class="card-body">';
+  let n=0;
+  S.tickets.filter(t=>t.status==='onroute').forEach(t=>{n++;const ct=S.containers.find(c=>c.id===t.containerId);const prop=S.properties.find(p=>p.id===t.propertyId);
+    h+='<div class="route-item prov"><div class="n">'+n+'</div><div class="info"><div class="ra">'+esc(prop.address)+'</div><div class="rb">Install '+S.products.find(p=>p.id===ct.productId).name+' · '+ct.agreement.name+'</div></div><button class="btn btn-ghost btn-sm" onclick="openProv(\''+t.id+'\')">Open in app</button></div>';});
+  S.containers.filter(c=>c.agreement.status==='active').forEach(ct=>{n++;const ev=S.events.find(e=>e.ctId===ct.id);const prop=propOf(ct);const eff=effectiveUnit(ct);const bad=eff.unit==null;
+    h+='<div class="route-item'+(ev?' done':'')+(bad&&!ev?' bad':'')+'"><div class="n">'+(ev?'✓':n)+'</div><div class="info"><div class="ra">'+esc(prop.address)+'</div><div class="rb">Collect '+S.products.find(p=>p.id===ct.productId).name+' · '+qtyLabel(ct)+'</div></div>'+(ev?'<span class="chip green">event created</span>':(bad?'<span class="chip red">no price</span>':'<button class="btn btn-ghost btn-sm" onclick="openColl(\''+ct.id+'\')">Open in app</button>'))+'</div>';});
+  if(!n)h+='<div class="muted" style="font-size:13px">Route is empty. Add a container ticket to the route, or all containers are pending.</div>';
+  h+='</div></div>';
+  // event feed
+  h+='<div class="card"><div class="card-head"><div class="card-title">Back office · live event feed</div><div class="pds">'+pd('PD-278')+'</div></div><div class="card-body">';
+  if(!S.events.length)h+='<div class="muted" style="font-size:13px">No events yet. Complete a collection in the app.</div>';
+  else h+='<table><thead><tr><th>Event</th><th>Customer</th><th class="right">Net</th></tr></thead><tbody>'+S.events.map(e=>'<tr><td class="mono">'+e.id+'</td><td>'+e.custName+'</td><td class="num-cell">'+money(e.snap.net)+' €</td></tr>').join('')+'</tbody></table>';
+  h+='</div></div></div><div>'+phone()+'</div></div>';
+  return h;
+}
+function phone(){
+  let inner;
+  if(!S.driverTask)inner=driverList();
+  else if(S.driverTask.kind==='prov')inner=driverProv(S.driverTask.id);
+  else inner=driverColl(S.driverTask.id);
+  return '<div class="phone"><div class="phone-screen"><div class="phone-top"><span class="app">WasteHero Driver</span><span class="who">Janne K · HVK-247</span></div>'+inner+'</div></div>';
+}
+function driverList(){
+  const prov=S.tickets.filter(t=>t.status==='onroute');
+  const coll=S.containers.filter(c=>c.agreement.status==='active'&&!S.events.find(e=>e.ctId===c.id));
+  const done=S.containers.filter(c=>S.events.find(e=>e.ctId===c.id));
+  let h='';
+  if(prov.length){h+='<div class="d-section">Install ('+prov.length+')</div>';prov.forEach(t=>{const ct=S.containers.find(c=>c.id===t.containerId);const prop=S.properties.find(p=>p.id===t.propertyId);
+    h+='<div class="dstop prov" onclick="openProv(\''+t.id+'\')"><div class="a">'+esc(prop.address.split(',')[0])+'</div><div class="b">Add container · '+S.products.find(p=>p.id===ct.productId).name+'</div><div class="row"><span style="font-size:11px;color:rgba(255,255,255,.4)">'+ct.agreement.name+'</span><span class="d-badge d-prov">Provision</span></div></div>';});}
+  h+='<div class="d-section">Collection ('+coll.length+')</div>';
+  if(!coll.length&&!prov.length)h+='<div style="color:rgba(255,255,255,.4);font-size:12px;padding:6px 0">Nothing assigned. Add a container ticket to the route, or activate a container.</div>';
+  coll.forEach(ct=>{const prop=propOf(ct);const bad=effectiveUnit(ct).unit==null;
+    h+='<div class="dstop'+(bad?' bad':'')+'" onclick="openColl(\''+ct.id+'\')"><div class="a">'+esc(prop.address.split(',')[0])+'</div><div class="b">'+custOf(ct).name+' · '+S.products.find(p=>p.id===ct.productId).name+'</div><div class="row"><span style="font-size:11px;color:rgba(255,255,255,.4)">'+qtyLabel(ct)+'</span><span class="d-badge '+(bad?'d-bad':'d-pending')+'">'+(bad?'No price':'Pending')+'</span></div></div>';});
+  if(done.length){h+='<div class="d-section">Completed</div>';done.forEach(ct=>{const prop=propOf(ct);h+='<div class="dstop done"><div class="a">'+esc(prop.address.split(',')[0])+'</div><div class="b">'+custOf(ct).name+'</div><div class="row"><span style="font-size:11px;color:rgba(255,255,255,.4)">'+qtyLabel(ct)+'</span><span class="d-badge d-done">Done</span></div></div>';});}
+  return h;
+}
+function openProv(tid){S.driverTask={kind:'prov',id:tid};render();}
+function openColl(cid){S.driverTask={kind:'coll',id:cid};if(!S.draftServices[cid])S.draftServices[cid]=[];render();}
+function backToList(){S.driverTask=null;render();}
+function driverProv(tid){
+  const t=S.tickets.find(x=>x.id===tid);const ct=S.containers.find(c=>c.id===t.containerId);const prop=S.properties.find(p=>p.id===t.propertyId);const prod=S.products.find(p=>p.id===ct.productId);
+  let h='<button class="phone-back" onclick="backToList()">← Route</button>';
+  h+='<div style="font-size:15px;font-weight:700;color:#fff">Add container</div><div style="font-size:11px;color:rgba(255,255,255,.45);margin-bottom:6px">'+esc(prop.address)+'</div>';
+  h+='<div class="d-kv"><span class="dk">Product</span><span>'+prod.name+'</span></div><div class="d-kv"><span class="dk">Container</span><span>'+prod.containerType+'</span></div><div class="d-kv"><span class="dk">Waste fraction</span><span>'+esc(ct.wasteFraction)+'</span></div><div class="d-kv"><span class="dk">Pickup</span><span>'+esc(t.pickup)+'</span></div><div class="d-kv"><span class="dk">Agreement</span><span>'+ct.agreement.name+' · pending</span></div>';
+  h+='<div class="d-info">Completing this installs the container and flips '+ct.agreement.name+' to active. Only then can it be collected and billed.</div>';
+  h+='<button class="d-complete prov" onclick="completeProv(\''+tid+'\')">Complete &amp; activate agreement</button>';
+  return h;
+}
+function completeProv(tid){
+  const t=S.tickets.find(x=>x.id===tid);t.status='completed';const ct=S.containers.find(c=>c.id===t.containerId);ct.agreement.status='active';
+  S.driverTask=null;toast('Container installed. '+ct.agreement.name+' is now active and billable.');render();
+}
+function toggleDraftSvc(cid,sid){const a=S.draftServices[cid];const i=a.indexOf(sid);if(i>=0)a.splice(i,1);else a.push(sid);render();}
+function driverColl(cid){
+  const ct=S.containers.find(c=>c.id===cid);const ev=S.events.find(e=>e.ctId===cid);const prod=S.products.find(p=>p.id===ct.productId);const prop=propOf(ct);const c=custOf(ct);
+  let h='<button class="phone-back" onclick="backToList()">← Route</button>';
+  h+='<div style="font-size:15px;font-weight:700;color:#fff">'+esc(prop.address.split(',')[0])+'</div><div style="font-size:11px;color:rgba(255,255,255,.45);margin-bottom:4px">'+esc(prop.address)+'</div>';
+  h+='<div class="d-kv"><span class="dk">Customer</span><span>'+esc(c.name)+'</span></div><div class="d-kv"><span class="dk">Product</span><span>'+prod.name+'</span></div><div class="d-kv"><span class="dk">Quantity</span><span>'+qtyLabel(ct)+'</span></div>';
+  if(ev){h+='<div class="d-section">Result</div><div class="d-price">'+priceLines(ev.snap)+'</div><div class="d-done-box"><div class="t">✓ Collection completed</div><div class="s">Event '+ev.id+' created.</div></div>';return h;}
+  const snap=resolve(ct,S.draftServices[cid]);
+  if(snap.error){h+='<div class="d-warn">⛔ '+(snap.error==='no-match'?'No price row matches this customer. Add a matching or wildcard row in Price lists.':'Agreement override is on but no price is set.')+'</div><button class="d-complete" disabled>Cannot complete, no price</button>';return h;}
+  h+='<div class="d-section">Price preview</div><div class="d-price">'+priceLines(snap)+'</div>';
+  h+='<div class="d-section">Add service / ticket</div>';
+  SERVICES.filter(s=>s.appliesTo==='any'||s.appliesTo===prod.id).forEach(s=>{
+    if(s.automatic)h+='<div class="d-svc locked sel"><input type="checkbox" checked disabled><div><div class="sn">'+s.name+'</div><div class="sm">Applied automatically · +'+money(s.price)+' €</div></div></div>';
+    else{const sel=S.draftServices[cid].includes(s.id);h+='<div class="d-svc'+(sel?' sel':'')+'" onclick="toggleDraftSvc(\''+cid+'\',\''+s.id+'\')"><input type="checkbox" '+(sel?'checked':'')+' onclick="event.stopPropagation();toggleDraftSvc(\''+cid+'\',\''+s.id+'\')"><div><div class="sn">'+s.name+'</div><div class="sm">'+(s.affectsPrice?'+'+money(s.price)+' €':'no price effect')+(s.ticket?' · creates ticket':'')+'</div></div></div>';}
+  });
+  h+='<button class="d-complete" onclick="completeColl(\''+cid+'\')">Complete collection</button>';
+  return h;
+}
+function priceLines(snap){
+  let h='';snap.lines.forEach(l=>h+='<div class="pl"><span>'+l.name+(l.primary?' · '+(l.unitLabel==='per ton'?l.qty.toFixed(2)+' t':l.qty+'×')+' @ '+money(l.unit):'')+'</span><span class="mono">'+money(l.net)+' €</span></div>');
+  snap.noteSvc.forEach(s=>h+='<div class="pl" style="opacity:.6"><span>'+s.name+' (logged)</span><span class="mono">—</span></div>');
+  h+='<div class="pl"><span>VAT '+VAT_RATE+'%</span><span class="mono">'+money(snap.vat)+' €</span></div><div class="pl tot"><span>Total</span><span class="mono">'+money(snap.gross)+' €</span></div>';return h;
+}
+function completeColl(cid){
+  const ct=S.containers.find(c=>c.id===cid);const snap=resolve(ct,S.draftServices[cid]);
+  if(snap.error){toast('Cannot complete, no price resolved');return;}
+  const c=custOf(ct);const seq=S.events.length+1;
+  S.events.push({id:'evt-2026-06-16-'+String(seq).padStart(4,'0'),ctId:cid,custId:c.id,custName:c.name,date:'2026-06-16',snap});
+  const ticket=snap.applied.some(s=>s.ticket)||snap.noteSvc.some(s=>s.ticket);
+  S.driverTask=null;toast('Event created'+(ticket?' · ticket raised':''));render();
+}
+
+// ===================== events
+function pgEvents(){
+  let h=head('Operations become money','Events','Each completed collection is a billable event with a frozen price. An event whose customer fails pre-send is held here and cannot be invoiced until the data is fixed.');
+  if(!S.events.length)return h+emptyCard('⚡','No events yet','Activate a container, then complete a collection in the driver app.','route','Open the route');
+  const heldCust=[...new Set(S.events.filter(e=>!S.customers.find(c=>c.id===e.custId).einvoiceAddr).map(e=>e.custName))];
+  if(heldCust.length)h+='<div class="warns"><div class="warn-line warn"><span>⚠️</span><span>'+heldCust.length+' customer'+(heldCust.length>1?'s have':' has')+' events held by pre-send checks ('+heldCust.join(', ')+'). These events stay open and cannot be invoiced until a valid e-invoice address is added on the Invoices page (PD-271).</span></div></div>';
+  h+='<div class="pds" style="margin-bottom:14px">'+pd('PD-299','Event schema')+pd('PD-278','Mandatory data')+pd('PD-296','Cost centres')+pd('PD-319','Time-of-event price')+'</div>';
+  S.events.forEach(e=>h+=eventCard(e));return h;
+}
+function eventCard(e){
+  const s=e.snap;const heldE=!S.customers.find(c=>c.id===e.custId).einvoiceAddr;let h='<div class="card'+(heldE?' flag':'')+'"><div class="card-head"><div class="card-title">'+e.id+' · '+e.custName+'</div>'+(heldE?'<span class="chip red">Held · pre-send failed</span>':'<span class="chip green">Ready to invoice</span>')+'</div><div class="card-body"><div class="grid2"><div><div class="section-label" style="margin-top:0">How the price was resolved</div><div class="trace">';
+  const scored=scoreRows(s.ct).filter(x=>x.compatible).sort((a,b)=>b.score-a.score);
+  scored.forEach((sc,i)=>{const r=sc.row;const win=i===0&&!s.eff.overridden;h+='<div class="trace-step'+(win?' win':'')+'"><span>'+r.customerType+' · '+r.zone+' · '+r.serviceResp+' · '+r.rdCode+'</span><span><span class="score-pill'+(i===0?' top':'')+'">'+sc.score+' match'+(sc.score===1?'':'es')+'</span> <span class="mono">'+money(r.price)+' €</span></span></div>';});
+  if(s.eff.overridden)h+='<div class="trace-step over"><span>Agreement override '+s.ct.agreement.name+'</span><span><span class="strike mono">'+money(s.eff.listPrice)+'</span> <span class="mono">'+money(s.eff.unit)+' €</span> <span class="chip pink">wins</span></span></div>';
+  h+='<div class="trace-step"><span>Quantity × unit</span><span class="mono">'+(s.product.unit==='per ton'?s.ct.qty.toFixed(2)+' t':s.ct.qty+'×')+' × '+money(s.eff.unit)+' = '+money(s.lines[0].net)+' €</span></div>';
+  s.lines.filter(l=>!l.primary).forEach(l=>h+='<div class="trace-step"><span>+ '+l.name+'</span><span class="mono">'+money(l.net)+' €</span></div>');
+  s.noteSvc.forEach(x=>h+='<div class="trace-step"><span>'+x.name+' (logged)</span><span class="mono">—</span></div>');
+  h+='<div class="trace-step win"><span style="font-weight:600">Net · VAT · gross</span><span class="mono">'+money(s.net)+' + '+money(s.vat)+' = '+money(s.gross)+' €</span></div></div></div>';
+  h+='<div><div class="section-label" style="margin-top:0">What each line carries</div><div class="kv"><span class="k">Event date</span><span class="v mono">'+e.date+'</span></div><div class="kv"><span class="k">Agreement</span><span class="v mono">'+s.ct.agreement.name+'</span></div><div class="kv"><span class="k">Service resp.</span><span class="v">'+s.ctx.serviceResp+'</span></div><div class="kv"><span class="k">Legal class</span><span class="v"><span class="chip '+(s.publicLaw?'blue':'purple')+'">'+(s.publicLaw?'Public law':'Private law')+'</span></span></div><div class="kv"><span class="k">Cost centre</span><span class="v mono">'+(s.ct.costCentre||'—')+'</span></div><div class="kv"><span class="k">Accounts</span><span class="v mono">'+[...new Set(s.lines.map(l=>l.account||'—'))].join(', ')+'</span></div><div class="kv"><span class="k">VAT rate</span><span class="v mono">'+VAT_RATE+'%</span></div></div></div></div></div>';
+  return h;
+}
+
+// ===================== invoices
+function pgInvoices(){
+  let h=head('Bundling','Invoices','A billing run bundles ready events per customer. Each line keeps its account, cost centre and VAT. Pre-send checks flag any invoice that cannot be sent.');
+  h+=warnBanner('invoices');
+  const inv=invoices();
+  if(!inv.length)return h+emptyCard('🧾','Nothing to invoice yet','Complete a collection to create events first.','route','Open the route');
+  h+='<div class="pds" style="margin-bottom:14px">'+pd('PD-291','Cycles')+pd('PD-290','Bundling')+pd('PD-309','Numbering')+pd('PD-271','Pre-send checks')+pd('PD-289','AR data')+'</div>';
+  inv.forEach(v=>{
+    h+='<div class="card'+(v.held?' flag':'')+'"><div class="card-head"><div class="card-title">Invoice '+v.number+' · '+v.custName+'</div><div class="pds">'+(v.held?'<span class="chip red">Held · cannot send</span>':'<span class="chip green">Ready to send</span>')+'<span class="chip blue">'+v.events.length+' event'+(v.events.length>1?'s':'')+'</span></div></div>';
+    h+='<table><thead><tr><th>Article / service</th><th>Date</th><th class="right">Qty</th><th>Account</th><th>Cost ctr</th><th>VAT</th><th class="right">Net</th><th class="right">Gross</th></tr></thead><tbody>';
+    v.lines.forEach(l=>h+='<tr><td style="font-weight:500">'+l.name+'</td><td class="mono muted">'+l.date.slice(5)+'</td><td class="num-cell">'+(l.unitLabel==='per ton'?l.qty.toFixed(2):l.qty)+'</td><td class="mono">'+(l.account||'<span class="chip amber">—</span>')+'</td><td class="mono">'+(l.costCentre||'—')+'</td><td class="mono">'+l.vatRate+'%</td><td class="num-cell">'+money(l.net)+'</td><td class="num-cell">'+money(l.net*1.255)+'</td></tr>');
+    h+='<tr style="background:var(--surface)"><td colspan="6" class="right" style="font-weight:600">Net '+money(v.net)+' · VAT '+money(v.vat)+'</td><td colspan="2" class="num-cell" style="font-weight:700;font-size:14px">'+money(v.gross)+' €</td></tr></tbody></table>';
+    if(v.held){
+      h+='<div class="card-body" style="background:#fffdf6;border-top:1px solid #fde68a">'
+        +'<div class="warn-line warn" style="margin-bottom:11px"><span>⛔</span><span>Held by pre-send checks (PD-271): '+v.custName+' has no valid e-invoice address. The invoice cannot be generated or sent, and its '+v.events.length+' event'+(v.events.length>1?'s stay':' stays')+' open until this is fixed.</span></div>'
+        +'<div class="field-inline"><input class="in mono" id="ein-'+v.custId+'" placeholder="e-invoice address, e.g. 003744455566" style="max-width:300px"><button class="btn btn-primary btn-sm" onclick="fixEinvoice(\''+v.custId+'\')">Save address &amp; release</button><button class="btn btn-ghost btn-sm" disabled>Generate (blocked)</button></div>'
+        +'</div>';
+    } else {
+      h+='<div class="card-body" style="display:flex;justify-content:flex-end"><button class="btn btn-primary btn-sm" onclick="S.xmlInvoice=\''+v.custId+'\';go(\'finvoice\')">Generate FINVOICE →</button></div>';
+    }
+    h+='</div>';
+  });
+  return h;
+}
+
+// ===================== finvoice
+function pgFinvoice(){
+  let h=head('The output contract','FINVOICE 3.0 XML','The invoice as structured XML, not a PDF. Only invoices that pass pre-send can be generated. A held invoice is not exportable until its e-invoice address is fixed on the Invoices page.');
+  const inv=invoices();const ready=inv.filter(v=>!v.held);const held=inv.filter(v=>v.held);
+  if(!inv.length)return h+emptyCard('📄','No invoice to export','Create events and an invoice first.','route','Open the route');
+  if(held.length)h+='<div class="warns"><div class="warn-line err"><span>⛔</span><span>'+held.length+' invoice'+(held.length>1?'s are':' is')+' held by pre-send checks ('+held.map(v=>v.custName).join(', ')+') and cannot be generated. Fix the e-invoice address on the Invoices page.</span></div></div>';
+  if(!ready.length)return h+'<div class="card"><div class="empty"><div class="ico">⛔</div><div class="t">Nothing can be generated</div><div class="s">Every invoice is held by pre-send checks. Fix the e-invoice addresses to release them.</div><div style="margin-top:14px"><button class="btn btn-primary" onclick="go(\'invoices\')">Go to Invoices</button></div></div></div>';
+  h+='<div class="pds" style="margin-bottom:12px">'+pd('PD-310','FINVOICE data')+pd('PD-289','AR data')+'</div>';
+  if(!ready.find(v=>v.custId===S.xmlInvoice))S.xmlInvoice=ready[0].custId;
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">'+ready.map(v=>{const on=S.xmlInvoice===v.custId;return '<button class="btn '+(on?'btn-primary':'btn-ghost')+' btn-sm" onclick="S.xmlInvoice=\''+v.custId+'\';render()">'+v.number+' · '+v.custName+'</button>';}).join('')+'</div>';
+  const v=ready.find(x=>x.custId===S.xmlInvoice)||ready[0];
+  h+='<div class="card"><div class="card-head"><div class="card-title">'+v.number+' · '+v.custName+'</div><span class="chip green">released · INV01</span></div><div class="xml">'+finvoice(v)+'</div></div>';
+  return h;
+}
+function fixEinvoice(cid){
+  const inp=document.getElementById('ein-'+cid);const val=inp?inp.value.trim():'';
+  if(!val){toast('Enter an e-invoice address to release the invoice');return;}
+  const c=S.customers.find(x=>x.id===cid);c.einvoiceAddr=val;
+  toast('E-invoice address saved. '+c.name+' invoice released, pre-send now passes.');render();
+}
+function finvoice(v){
+  const T=t=>'<span class="t">'+t+'</span>';let rows='';
+  v.lines.forEach(l=>{rows+='\n  '+T('&lt;InvoiceRow&gt;')
+    +'\n    '+T('&lt;ArticleName&gt;')+esc(l.name)+T('&lt;/ArticleName&gt;')
+    +'\n    '+T('&lt;DeliveredQuantity ')+'<span class="a">QuantityUnitCode</span>=<span class="s">"'+(l.unitLabel==='per ton'?'TNE':'kpl')+'"</span>'+T('&gt;')+(l.unitLabel==='per ton'?l.qty.toFixed(2):l.qty)+T('&lt;/DeliveredQuantity&gt;')
+    +'\n    '+T('&lt;RowVatRatePercent&gt;')+l.vatRate.toFixed(2)+T('&lt;/RowVatRatePercent&gt;')
+    +'\n    '+T('&lt;AccountDimensionText&gt;')+(l.account||'')+T('&lt;/AccountDimensionText&gt;')
+    +'\n    '+T('&lt;DimensionText&gt;')+(l.costCentre||'')+T('&lt;/DimensionText&gt;')
+    +'\n    '+T('&lt;RowAmount ')+'<span class="a">Currency</span>=<span class="s">"EUR"</span>'+T('&gt;')+money(l.net*1.255).replace('.',',')+T('&lt;/RowAmount&gt;')
+    +'\n  '+T('&lt;/InvoiceRow&gt;');});
+  return T('&lt;Finvoice ')+'<span class="a">Version</span>=<span class="s">"3.0"</span>'+T('&gt;')
+    +'\n  '+T('&lt;SellerPartyDetails&gt;')+'\n    '+T('&lt;SellerOrganisationName&gt;')+'Päijät-Hämeen Jätehuolto Oy'+T('&lt;/SellerOrganisationName&gt;')+'\n  '+T('&lt;/SellerPartyDetails&gt;')
+    +'\n  '+T('&lt;BuyerPartyDetails&gt;')+'\n    '+T('&lt;BuyerOrganisationName&gt;')+esc(v.custName)+T('&lt;/BuyerOrganisationName&gt;')+'\n  '+T('&lt;/BuyerPartyDetails&gt;')
+    +'\n  '+T('&lt;InvoiceDetails&gt;')
+    +'\n    '+T('&lt;InvoiceNumber&gt;')+v.number+T('&lt;/InvoiceNumber&gt;')
+    +'\n    '+T('&lt;InvoiceDate ')+'<span class="a">Format</span>=<span class="s">"CCYYMMDD"</span>'+T('&gt;')+'20260616'+T('&lt;/InvoiceDate&gt;')
+    +'\n    '+T('&lt;InvoiceTotalVatExcludedAmount ')+'<span class="a">Currency</span>=<span class="s">"EUR"</span>'+T('&gt;')+money(v.net).replace('.',',')+T('&lt;/InvoiceTotalVatExcludedAmount&gt;')
+    +'\n    '+T('&lt;InvoiceTotalVatAmount ')+'<span class="a">Currency</span>=<span class="s">"EUR"</span>'+T('&gt;')+money(v.vat).replace('.',',')+T('&lt;/InvoiceTotalVatAmount&gt;')
+    +'\n    '+T('&lt;InvoiceTotalVatIncludedAmount ')+'<span class="a">Currency</span>=<span class="s">"EUR"</span>'+T('&gt;')+money(v.gross).replace('.',',')+T('&lt;/InvoiceTotalVatIncludedAmount&gt;')
+    +'\n  '+T('&lt;/InvoiceDetails&gt;')+rows+'\n'+T('&lt;/Finvoice&gt;');
+}
+
+// ===================== ui helpers
+function head(eyebrow,title,sub){return '<div class="page-head"><div class="eyebrow">'+eyebrow+'</div><div class="page-title">'+title+'</div><div class="page-sub">'+sub+'</div></div>';}
+function fld(label,inner){return '<div class="fld"><label>'+label+'</label>'+inner+'</div>';}
+function emptyCard(ico,t,s,page,btn){return '<div class="card"><div class="empty"><div class="ico">'+ico+'</div><div class="t">'+t+'</div><div class="s">'+s+'</div><div style="margin-top:14px"><button class="btn btn-primary" onclick="go(\''+page+'\')">'+btn+'</button></div></div></div>';}
+function resetSim(){S=freshState();render();toast('Simulation reset');}
+S=freshState();render();
+</script>
+</body>
+</html>

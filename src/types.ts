@@ -129,6 +129,16 @@ export const INVOICING_CATEGORIES: Record<string, CategoryConfig> = {
     darkBgColor: '#3b0764',
     darkBorderColor: '#a21caf',
   },
+  'inv-sim': {
+    id: 'inv-sim',
+    label: 'Flow Workbench',
+    color: '#0d9488',
+    bgColor: '#f0fdfa',
+    borderColor: '#99f6e4',
+    darkColor: '#2dd4bf',
+    darkBgColor: '#042f2e',
+    darkBorderColor: '#0d9488',
+  },
   'inv-arch': {
     id: 'inv-arch',
     label: 'Architecture & Analysis',

@@ -136,6 +136,10 @@ function PPSidebarContent() {
         Home
       </NavLink>
 
+      <NavLink to="/doc/products-and-pricing-explainer" className="sidebar-home">
+        PM Products &amp; Pricing Overview
+      </NavLink>
+
       <NavLink to="/cycles" className="sidebar-home">
         Cycles
       </NavLink>
@@ -264,6 +268,53 @@ function InvoicingSidebarContent() {
         const isCollapsed = localCollapsed[catId] ?? catId === 'inv-r2';
         const categoryColor = theme === 'dark' ? config.darkColor : config.color;
         const docs = grouped[catId] || [];
+
+        if (catId === 'inv-sim') {
+          return (
+            <div key={catId} className="sidebar-category">
+              <button
+                className="sidebar-category-header"
+                onClick={() => toggle(catId)}
+                style={{ borderLeftColor: categoryColor }}
+              >
+                <span className="sidebar-category-label" style={{ color: categoryColor }}>
+                  {config.label}
+                </span>
+                <span className={`sidebar-chevron ${isCollapsed ? '' : 'open'}`}>
+                  <svg width="12" height="12" viewBox="0 0 12 12">
+                    <path d="M4 2l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="2" />
+                  </svg>
+                </span>
+              </button>
+              {!isCollapsed && (
+                <ul className="sidebar-docs">
+                  <li>
+                    <a
+                      href="/docsite/invoicing/mockups/e2e-workbench.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="sidebar-link"
+                      style={{ display: 'flex', alignItems: 'center' }}
+                    >
+                      E2E Flow Workbench
+                      <ExternalIcon />
+                    </a>
+                  </li>
+                  {docs.map((doc) => (
+                    <li key={doc.slug}>
+                      <NavLink
+                        to={`/invoicing/doc/${doc.slug}`}
+                        className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}
+                      >
+                        {doc.title}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          );
+        }
 
         if (catId === 'inv-mockup') {
           return (
