@@ -186,3 +186,21 @@ final price. The adjustments to match this model:
 3. **Add the pickup-rule table** (waste fraction × property type → pickup
    setting), bounded by the fraction's emptying interval [min, max]. This is
    the one genuinely new piece; everything downstream is the existing engine.
+
+### Where pickup setting lives (today → target)
+
+It stops being one field on the product and splits into three roles — none of
+them on the product:
+
+| | Today | Target |
+| --- | --- | --- |
+| **Product** | `pickup_setting_fk` (stored) | ❌ removed — not a product attribute |
+| **Price row** | not present | ✅ add as a **matching dimension** (price varies by it) |
+| **Rule table** | — | ✅ **new** — derives it from waste fraction × property type |
+| **Agreement** | — | ✅ stores the **final resolved value** for the placement |
+
+So "move it to the price list" is only role #2. The full move is: **add it to
+the price row** (price reacts to it), **add the rule table** (so it's *derived*,
+not chosen), **store the result on the agreement**, and **remove it from the
+product**. Property type follows the same idea — it becomes a price-row
+dimension too (sourced from the property, not stored on the product).
